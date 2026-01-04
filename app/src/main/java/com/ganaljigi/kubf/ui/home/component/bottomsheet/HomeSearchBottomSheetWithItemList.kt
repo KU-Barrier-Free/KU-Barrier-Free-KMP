@@ -89,7 +89,7 @@ private fun HomeSearchBottomSheetItem(
         modifier = modifier
             .fillMaxWidth()
             .noRippleClickableSingle {
-                onItemClick(searchResult.getBuildingId())
+                onItemClick(searchResult.getBuildingIdByType())
             },
     ) {
         Row(
