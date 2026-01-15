@@ -19,6 +19,10 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -30,6 +34,7 @@ import coil3.compose.AsyncImagePainter.State.Empty.painter
 import com.ganalijigi.kubf.R
 import com.ganaljigi.kubf.ui.common.component.ConvenienceChip
 import com.ganaljigi.kubf.ui.common.component.DoorComponent
+import com.ganaljigi.kubf.ui.common.component.ImageViewerDialog
 import com.ganaljigi.kubf.ui.common.model.Convenience
 import com.ganaljigi.kubf.ui.common.model.DoorInfo
 import com.ganaljigi.kubf.ui.home.viewmodel.HomeBuildingInfo
@@ -47,8 +52,11 @@ fun HomeBuildingInfoSheetContent(
     onItemClick: (Long) -> Unit = {},
 ) {
     val buildingNumber = if(buildingInfo.buildingNumber == 0) "없음" else buildingInfo.buildingNumber.toString()
+    var selectedDoorImages by remember { mutableStateOf<List<String>>(emptyList()) }
+    var showDoorImageDialog by remember { mutableStateOf(false) }
 
-    Column(
+    Box(modifier = modifier) {
+        Column(
         modifier = modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp))
@@ -123,15 +131,29 @@ fun HomeBuildingInfoSheetContent(
                 contentPadding = PaddingValues(horizontal = 16.dp),
             ) {
                 items(buildingInfo.doorInfoList.size) { index ->
+                    val doorInfo = buildingInfo.doorInfoList[index]
                     DoorComponent(
                         modifier = Modifier
                             .width(80.dp),
-                        doorInfo = buildingInfo.doorInfoList[index]
+                        doorInfo = doorInfo,
+                        onClick = {
+                            selectedDoorImages = doorInfo.imageUrls.ifEmpty {
+                                listOfNotNull(doorInfo.imageUrl.takeIf { it.isNotEmpty() })
+                            }
+                            showDoorImageDialog = true
+                        }
                     )
                 }
             }
         }
         Spacer(Modifier.height(13.dp))
+        }
+
+        ImageViewerDialog(
+            visible = showDoorImageDialog,
+            images = selectedDoorImages,
+            onDismiss = { showDoorImageDialog = false }
+        )
     }
 }
 

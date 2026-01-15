@@ -1,6 +1,7 @@
 package com.ganaljigi.kubf.ui.common.component
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -34,9 +35,10 @@ import com.ganaljigi.kubf.ui.theme.MainGreen
 fun DoorComponent(
     modifier: Modifier = Modifier,
     doorInfo: DoorInfo,
+    onClick: () -> Unit = {},
 ) {
     Column(
-        modifier = modifier,
+        modifier = modifier.clickable { onClick() },
         verticalArrangement = Arrangement.spacedBy(4.dp),
     ) {
         Box(
