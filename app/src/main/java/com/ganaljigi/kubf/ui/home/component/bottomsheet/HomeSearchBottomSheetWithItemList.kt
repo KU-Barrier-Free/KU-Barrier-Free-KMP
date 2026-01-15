@@ -38,7 +38,7 @@ fun HomeSearchBottomSheetWithItemList(
     searchResults: List<SearchResult> = emptyList(),
     onFromClick: (SearchResult) -> Unit = {},
     onToClick: (SearchResult) -> Unit = {},
-    onItemClick: (Long) -> Unit = {},
+    onItemClick: (SearchResult) -> Unit = {},
 ) {
     val scrollState = rememberScrollState()
     Column(
@@ -81,7 +81,7 @@ fun HomeSearchBottomSheetWithItemList(
 private fun HomeSearchBottomSheetItem(
     modifier: Modifier = Modifier,
     searchResult: SearchResult,
-    onItemClick: (Long) -> Unit = {},
+    onItemClick: (SearchResult) -> Unit = {},
     onFromClick: (SearchResult) -> Unit = {},
     onToClick: (SearchResult) -> Unit = {},
 ) {
@@ -89,7 +89,7 @@ private fun HomeSearchBottomSheetItem(
         modifier = modifier
             .fillMaxWidth()
             .noRippleClickableSingle {
-                onItemClick(searchResult.getBuildingIdByType())
+                onItemClick(searchResult)
             },
     ) {
         Row(

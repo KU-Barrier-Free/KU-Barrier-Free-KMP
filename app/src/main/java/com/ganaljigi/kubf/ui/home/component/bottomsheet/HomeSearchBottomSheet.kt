@@ -26,7 +26,7 @@ fun HomeSearchBottomSheet(
     searchResults: List<SearchResult> = emptyList(),
     onFromClick: (SearchResult) -> Unit = {},
     onToClick: (SearchResult) -> Unit = {},
-    onItemClick: (Long) -> Unit = {},
+    onItemClick: (SearchResult) -> Unit = {},
     onInquireClick: () -> Unit = {},
 ) {
     Column {

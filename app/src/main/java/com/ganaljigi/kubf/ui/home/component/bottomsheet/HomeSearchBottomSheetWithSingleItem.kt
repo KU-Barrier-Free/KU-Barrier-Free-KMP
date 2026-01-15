@@ -31,7 +31,7 @@ fun HomeSearchBottomSheetSingleItem(
     searchResult: SearchResult,
     onFromClick: (SearchResult) -> Unit = {},
     onToClick: (SearchResult) -> Unit = {},
-    onShowBuildingClick: (Long) -> Unit = {},
+    onShowBuildingClick: (SearchResult) -> Unit = {},
 ) {
     Column(
         modifier = modifier.padding(horizontal = 16.dp),
@@ -114,7 +114,7 @@ fun HomeSearchBottomSheetSingleItem(
                             shape = RoundedCornerShape(20.dp)
                         )
                         .noRippleClickable {
-                            onShowBuildingClick(searchResult.getBuildingIdByType())
+                            onShowBuildingClick(searchResult)
                         }
                 ) {
                     Text(

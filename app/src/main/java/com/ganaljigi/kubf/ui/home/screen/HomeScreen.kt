@@ -57,6 +57,7 @@ import com.ganaljigi.kubf.ui.home.component.BarrierFreeInfoChip
 import com.ganaljigi.kubf.ui.home.component.BarrierFreeInfoItem
 import com.ganaljigi.kubf.ui.home.component.FindWayButton
 import com.ganaljigi.kubf.ui.home.component.HomeToggle
+import com.ganaljigi.kubf.ui.home.component.MyLocationButton
 import com.ganaljigi.kubf.ui.home.component.NoticeButton
 import com.ganaljigi.kubf.ui.home.component.bottomsheet.HomeBuildingInfoSheetContent
 import com.ganaljigi.kubf.ui.home.component.bottomsheet.HomeSearchBottomSheet
@@ -219,8 +220,8 @@ fun HomeScreen(
                             onToClick = { searchResult ->
                                 viewModel.onToClick(searchResult)
                             },
-                            onItemClick = { buildingId ->
-                                navigateToBuildingInfo(buildingId)
+                            onItemClick = { searchResult ->
+                                viewModel.onSearchResultItemClick(searchResult)
                             },
                         )
                     }
@@ -439,10 +440,41 @@ fun HomeScreen(
                             viewModel.setHomeUiMode(HomeUiMode.BARRIER_FREE_SHOWN)
                         }
 
-                        NoticeButton(
+                        Row(
+                            horizontalArrangement = Arrangement.spacedBy(8.dp),
                             modifier = Modifier.padding(end = 40.dp)
                         ) {
-                            navigateToHelper()
+                            MyLocationButton {
+                                if (isLocationPermissionGranted) {
+                                    try {
+                                        val fusedLocationClient =
+                                            LocationServices.getFusedLocationProviderClient(context)
+                                        fusedLocationClient.getCurrentLocation(
+                                            Priority.PRIORITY_HIGH_ACCURACY,
+                                            null
+                                        ).addOnSuccessListener { location ->
+                                            location?.let {
+                                                viewModel.updateUserLocation(
+                                                    LatLng(it.latitude, it.longitude)
+                                                )
+                                                viewModel.moveToUserLocation()
+                                            }
+                                        }
+                                    } catch (e: SecurityException) {
+                                        // Handle security exception
+                                    }
+                                } else {
+                                    locationPermissionResultLauncher.launch(
+                                        arrayOf(
+                                            Manifest.permission.ACCESS_FINE_LOCATION,
+                                            Manifest.permission.ACCESS_COARSE_LOCATION
+                                        )
+                                    )
+                                }
+                            }
+                            NoticeButton {
+                                navigateToHelper()
+                            }
                         }
                     }
                 }

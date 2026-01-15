@@ -534,4 +534,80 @@ class HomeViewModel @Inject constructor(
             it.copy(userLocation = location)
         }
     }
+
+    /**
+     * 카메라를 사용자의 현재 위치로 이동합니다.
+     */
+    fun moveToUserLocation() {
+        val userLocation = _uiState.value.userLocation ?: return
+        _uiState.value.cameraPositionState.move(
+            com.google.android.gms.maps.CameraUpdateFactory.newLatLng(userLocation)
+        )
+    }
+
+    /**
+     * 카메라를 특정 좌표로 이동합니다.
+     * @param latitude 위도
+     * @param longitude 경도
+     */
+    fun moveCameraToLocation(latitude: Double, longitude: Double) {
+        if (latitude == 0.0 && longitude == 0.0) return
+        _uiState.value.cameraPositionState.move(
+            com.google.android.gms.maps.CameraUpdateFactory.newLatLng(
+                LatLng(latitude, longitude)
+            )
+        )
+    }
+
+    /**
+     * 검색 결과 아이템 클릭을 처리합니다.
+     * @param searchResult 선택된 검색 결과
+     */
+    fun onSearchResultItemClick(searchResult: SearchResult) {
+        if (searchResult.isBuilding) {
+            // 빌딩인 경우: 해당 빌딩 정보를 가져오고 마커를 업데이트
+            getBuildingInfoBySearchResult(searchResult)
+        }
+        // 좌표로 카메라 이동
+        moveCameraToLocation(searchResult.latitude, searchResult.longitude)
+    }
+
+    /**
+     * 검색 결과로부터 건물 정보를 가져오고, 마커를 업데이트합니다.
+     * @param searchResult 검색 결과
+     */
+    private fun getBuildingInfoBySearchResult(searchResult: SearchResult) {
+        viewModelScope.launch {
+            buildingRepository.getBuildingInfo(buildingId = searchResult.id)
+                .onSuccess { response ->
+                    // 선택된 빌딩의 마커 생성
+                    val selectedMarker = BuildingMarker(
+                        id = searchResult.id,
+                        name = searchResult.name,
+                        latitude = searchResult.latitude,
+                        longitude = searchResult.longitude
+                    )
+                    _uiState.update {
+                        it.copy(
+                            buildingInfo = response.toHomeBuildingInfo(),
+                            showingDoorMarkers = response.toDoorMarkers().toImmutableList(),
+                            homeUiMode = HomeUiMode.DEFAULT,
+                            selectedBuildingMarker = selectedMarker,
+                            showingToggleMarkers = persistentListOf(),
+                            showingBuildingMarkers = persistentListOf(selectedMarker),
+                            selectedSpecialMarker = null,
+                            searchResults = persistentListOf(),
+                        )
+                    }
+                    setBottomSheetType(HomeBottomSheetType.BUILDING_INFO)
+                }
+                .onFailure { error ->
+                    Log.e(
+                        "HomeViewModel",
+                        "getBuildingInfoBySearchResult: Error fetching building info",
+                        error
+                    )
+                }
+        }
+    }
 }
