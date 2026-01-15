@@ -53,8 +53,8 @@ import com.ganaljigi.kubf.ui.buildinginfo.component.FacilityComponent
 import com.ganaljigi.kubf.ui.buildinginfo.component.FloorComponent
 import com.ganaljigi.kubf.ui.buildinginfo.component.NoteComponent
 import com.ganaljigi.kubf.ui.buildinginfo.component.SearchPopup
-import com.ganaljigi.kubf.ui.buildinginfo.component.TransformableImage
 import com.ganaljigi.kubf.ui.buildinginfo.model.Room
+import com.ganaljigi.kubf.ui.common.component.TransformableImage
 import com.ganaljigi.kubf.ui.buildinginfo.viewmodel.BuildingViewModel
 import com.ganaljigi.kubf.ui.theme.Gray3
 import com.ganaljigi.kubf.ui.theme.Gray4
