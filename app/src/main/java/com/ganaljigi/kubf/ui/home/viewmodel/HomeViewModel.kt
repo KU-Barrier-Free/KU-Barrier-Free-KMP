@@ -8,6 +8,7 @@ import com.ganaljigi.kubf.data.remote.repository.BuildingRepository
 import com.ganaljigi.kubf.data.remote.repository.HomeRepository
 import com.ganaljigi.kubf.data.remote.repository.RouteRepository
 import com.ganaljigi.kubf.mapper.toDoorMarkers
+import com.ganaljigi.kubf.mapper.toGateMarkerInfo
 import com.ganaljigi.kubf.mapper.toHomeBuildingInfo
 import com.ganaljigi.kubf.mapper.toRouteResults
 import com.ganaljigi.kubf.mapper.toSpecialMarkerInfo
@@ -110,6 +111,7 @@ class HomeViewModel @Inject constructor(
                             specialMarkerInfo = response.toSpecialMarkerInfo(),
                             selectedBuildingMarker = null,
                             selectedSpecialMarker = selectedSpecialMarker,
+                            selectedGateMarker = null,
                             bottomSheetType = HomeBottomSheetType.NONE,
                             searchResults = persistentListOf(),
                             showingBuildingMarkers = it.buildingMarkers
@@ -126,6 +128,37 @@ class HomeViewModel @Inject constructor(
             )
         }
 
+    }
+
+    /**
+     * 선택된 교문 마커의 정보를 가져옵니다.
+     * @param selectedGateMarker 선택된 교문 마커
+     */
+    fun getGateMarkerInfo(selectedGateMarker: ToggleMarker) {
+        viewModelScope.launch {
+            homeRepository.getGateInfo(selectedGateMarker.id).fold(
+                onSuccess = { response ->
+                    _uiState.update {
+                        it.copy(
+                            gateMarkerInfo = response.toGateMarkerInfo(),
+                            selectedBuildingMarker = null,
+                            selectedSpecialMarker = null,
+                            selectedGateMarker = selectedGateMarker,
+                            bottomSheetType = HomeBottomSheetType.NONE,
+                            searchResults = persistentListOf(),
+                            showingBuildingMarkers = it.buildingMarkers
+                        )
+                    }
+                },
+                onFailure = { error ->
+                    Log.e(
+                        "HomeViewModel",
+                        "updateGateMarkerInfo: Error fetching gate info",
+                        error
+                    )
+                }
+            )
+        }
     }
 
     /**
@@ -350,6 +383,7 @@ class HomeViewModel @Inject constructor(
                 showingToggleMarkers = persistentListOf(),
                 showingBuildingMarkers = persistentListOf(selectedBuildingMarker),
                 selectedSpecialMarker = null,
+                selectedGateMarker = null,
                 searchResults = persistentListOf(),
             )
         }
@@ -373,6 +407,7 @@ class HomeViewModel @Inject constructor(
             it.copy(
                 selectedBuildingMarker = null,
                 selectedSpecialMarker = null,
+                selectedGateMarker = null,
             )
         }
     }
@@ -389,12 +424,13 @@ class HomeViewModel @Inject constructor(
                 isBottomSheetExpanded = isBottomSheetExpanded,
                 showingDoorMarkers = if (bottomSheetType == HomeBottomSheetType.BUILDING_INFO) it.showingDoorMarkers else persistentListOf(),
                 showingBuildingMarkers = if (bottomSheetType == HomeBottomSheetType.BUILDING_INFO) it.showingBuildingMarkers else it.buildingMarkers,
-                showingToggleMarkers = if (bottomSheetType == HomeBottomSheetType.BUILDING_INFO) it.showingToggleMarkers else it.toggleUiStates.map { toggleUiState ->
+                showingToggleMarkers = if (bottomSheetType == HomeBottomSheetType.BUILDING_INFO) it.showingToggleMarkers else it.toggleUiStates.filter { toggleUiState -> toggleUiState.isSelected }.map { toggleUiState ->
                     when (toggleUiState.toggle) {
                         MapToggle.CURB -> uiState.value.curbMarkers
                         MapToggle.SLOPE -> uiState.value.slopeMarkers
                         MapToggle.STAIRS -> uiState.value.stairsMarkers
                         MapToggle.SPECIAL_MARK -> uiState.value.specialMarkers
+                        MapToggle.GATE -> uiState.value.gateMarkers
                     }
                 }.toPersistentList()
             )
@@ -439,6 +475,8 @@ class HomeViewModel @Inject constructor(
                 showSpecialImageDialog = showSpecialImageDialog,
                 selectedSpecialMarker =
                     if (showSpecialImageDialog) it.selectedSpecialMarker else null,
+                selectedGateMarker =
+                    if (showSpecialImageDialog) it.selectedGateMarker else null,
             )
         }
     }
@@ -464,13 +502,15 @@ class HomeViewModel @Inject constructor(
                         MapToggle.SLOPE -> uiState.value.slopeMarkers
                         MapToggle.STAIRS -> uiState.value.stairsMarkers
                         MapToggle.SPECIAL_MARK -> uiState.value.specialMarkers
+                        MapToggle.GATE -> uiState.value.gateMarkers
                     }
                 }.toPersistentList()
             it.copy(
                 homeUiMode = HomeUiMode.DEFAULT,
                 toggleUiStates = updatedToggles,
                 showingToggleMarkers = newShowingToggleMarkers,
-                selectedSpecialMarker = null
+                selectedSpecialMarker = null,
+                selectedGateMarker = null
             )
         }
     }
@@ -515,6 +555,7 @@ class HomeViewModel @Inject constructor(
                 showInquiryDialog = false,
                 selectedBuildingMarker = null,
                 selectedSpecialMarker = null,
+                selectedGateMarker = null,
                 selectedRouteResult = RouteResult(),
                 fromLocation = SearchResult(),
                 toLocation = SearchResult(),
@@ -596,6 +637,7 @@ class HomeViewModel @Inject constructor(
                             showingToggleMarkers = persistentListOf(),
                             showingBuildingMarkers = persistentListOf(selectedMarker),
                             selectedSpecialMarker = null,
+                            selectedGateMarker = null,
                             searchResults = persistentListOf(),
                         )
                     }

@@ -56,6 +56,7 @@ import com.google.maps.android.compose.MapProperties
 import com.google.maps.android.compose.MapType
 import com.google.maps.android.compose.MapUiSettings
 import com.google.maps.android.compose.MarkerComposable
+import com.google.maps.android.compose.MarkerInfoWindow
 import com.google.maps.android.compose.MarkerState
 import com.google.maps.android.compose.Polyline
 import com.google.maps.android.compose.rememberMarkerState
@@ -76,12 +77,17 @@ fun MapComponent(
     slopeMarkers: ImmutableList<ToggleMarker> = persistentListOf(),
     stairsMarkers: ImmutableList<ToggleMarker> = persistentListOf(),
     specialMarkers: ImmutableList<ToggleMarker> = persistentListOf(),
+    gateMarkers: ImmutableList<ToggleMarker> = persistentListOf(),
     selectedRouteResult: RouteResult? = null,
     onBuildingMarkerClick: (BuildingMarker) -> Unit = { },
     onSpecialMarkerClick: (ToggleMarker) -> Unit = { },
     onSpecialInfoClick: (List<String>) -> Unit = { },
+    onGateMarkerClick: (ToggleMarker) -> Unit = { },
+    onGateInfoClick: (List<String>) -> Unit = { },
     selectedSpecialMarker: ToggleMarker? = null,
     specialMarkerInfo: SpecialMarkerInfo = SpecialMarkerInfo(),
+    selectedGateMarker: ToggleMarker? = null,
+    gateMarkerInfo: SpecialMarkerInfo = SpecialMarkerInfo(),
     setDefaultMode: () -> Unit = { },
     userLocation: LatLng? = null,
 ) {
@@ -148,6 +154,21 @@ fun MapComponent(
                         specialMarkerInfo = if (isSelected) specialMarkerInfo else SpecialMarkerInfo(),
                         onSpecialMarkerClick = { onSpecialMarkerClick(mapMarker) },
                         onSpecialInfoClick = onSpecialInfoClick,
+                        scale = markerScale
+                    )
+                }
+
+                MapToggle.GATE -> gateMarkers.forEach { mapMarker ->
+                    val markerState = rememberMarkerState(
+                        position = LatLng(mapMarker.latitude, mapMarker.longitude)
+                    )
+                    val isSelected = mapMarker == selectedGateMarker
+                    GateMarker(
+                        markerState = markerState,
+                        isSelected = isSelected,
+                        gateMarkerInfo = if (isSelected) gateMarkerInfo else SpecialMarkerInfo(),
+                        onGateMarkerClick = { onGateMarkerClick(mapMarker) },
+                        onGateInfoClick = onGateInfoClick,
                         scale = markerScale
                     )
                 }
@@ -267,6 +288,50 @@ private fun SpecialMarker(
                 .size(20.dp * iconScale)
         )
     }
+}
+
+@Composable
+private fun GateMarker(
+    markerState: MarkerState,
+    isSelected: Boolean = false,
+    gateMarkerInfo: SpecialMarkerInfo,
+    onGateMarkerClick: () -> Unit = { },
+    onGateInfoClick: (List<String>) -> Unit = { },
+    scale: Float = 1f,
+) {
+    val imageUrls = gateMarkerInfo.imageUrls.take(2)
+    val isImageLoaded =
+        remember(isSelected) { mutableStateListOf(*Array(imageUrls.size) { false }) }
+    val painters = imageUrls.mapIndexed { index, imageUrl ->
+        rememberAsyncImagePainter(
+            model = ImageRequest
+                .Builder(LocalContext.current)
+                .data(imageUrl)
+                .allowHardware(false)
+                .build(),
+            placeholder = painterResource(R.drawable.img_special_info),
+            error = painterResource(R.drawable.img_special_info),
+            onSuccess = { isImageLoaded[index] = true }
+        )
+    }
+    val allImagesLoaded by derivedStateOf { isImageLoaded.all { it } }
+
+    // API 응답이 오고 이미지가 로딩되었을 때 Info Window 표시
+    LaunchedEffect(gateMarkerInfo, allImagesLoaded) {
+        if (isSelected && allImagesLoaded) {
+            markerState.showInfoWindow()
+        }
+    }
+
+    GateMarkerInfoWindow(
+        markerState = markerState,
+        isSelected = isSelected,
+        gateMarkerInfo = gateMarkerInfo,
+        onGateMarkerClick = onGateMarkerClick,
+        onGateInfoClick = onGateInfoClick,
+        painters = painters,
+        scale = scale
+    )
 }
 
 @Composable

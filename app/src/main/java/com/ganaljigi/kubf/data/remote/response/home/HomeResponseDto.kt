@@ -15,7 +15,9 @@ data class HomeResponseDto(
     @SerialName("significants")
     val significants: List<HomePin>,
     @SerialName("stairs")
-    val stairs: List<HomePin>
+    val stairs: List<HomePin>,
+    @SerialName("gates")
+    val gates: List<GatePin>
 ) {
     @Serializable
     data class HomePin(
@@ -32,6 +34,18 @@ data class HomeResponseDto(
         val id: Long,
         @SerialName("name")
         val name: String,
+        @SerialName("latitude")
+        val latitude: Double,
+        @SerialName("longitude")
+        val longitude: Double
+    )
+
+    @Serializable
+    data class GatePin(
+        @SerialName("id")
+        val id: Long,
+        @SerialName("name")
+        val name: String?,
         @SerialName("latitude")
         val latitude: Double,
         @SerialName("longitude")

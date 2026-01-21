@@ -2,6 +2,7 @@ package com.ganaljigi.kubf.data.remote.repositoryimpl
 
 import com.ganaljigi.kubf.data.remote.base.handleBaseResponse
 import com.ganaljigi.kubf.data.remote.repository.HomeRepository
+import com.ganaljigi.kubf.data.remote.response.home.HomeGateResponseDto
 import com.ganaljigi.kubf.data.remote.response.home.HomeResponseDto
 import com.ganaljigi.kubf.data.remote.response.home.HomeSearchResponseDto
 import com.ganaljigi.kubf.data.remote.response.home.HomeSignificantResponseDto
@@ -23,5 +24,10 @@ class HomeRepositoryImpl @Inject constructor(
     override suspend fun getHomeSearchResult(keyword: String): Result<HomeSearchResponseDto> =
         runCatching {
             homeService.getHomeSearchResult(keyword).handleBaseResponse().getOrThrow()
+        }
+
+    override suspend fun getGateInfo(id: Long): Result<HomeGateResponseDto> =
+        runCatching {
+            homeService.getGateInfo(id).handleBaseResponse().getOrThrow()
         }
 }

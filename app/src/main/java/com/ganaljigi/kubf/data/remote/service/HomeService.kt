@@ -1,6 +1,7 @@
 package com.ganaljigi.kubf.data.remote.service
 
 import com.ganaljigi.kubf.data.remote.base.BaseResponse
+import com.ganaljigi.kubf.data.remote.response.home.HomeGateResponseDto
 import com.ganaljigi.kubf.data.remote.response.home.HomeResponseDto
 import com.ganaljigi.kubf.data.remote.response.home.HomeSearchResponseDto
 import com.ganaljigi.kubf.data.remote.response.home.HomeSignificantResponseDto
@@ -21,4 +22,9 @@ interface HomeService {
     suspend fun getHomeSearchResult(
         @Query("keyword") keyword: String,
     ): BaseResponse<HomeSearchResponseDto>
+
+    @GET("home/gates/{gateId}")
+    suspend fun getGateInfo(
+        @Path("gateId") id: Long
+    ): BaseResponse<HomeGateResponseDto>
 }

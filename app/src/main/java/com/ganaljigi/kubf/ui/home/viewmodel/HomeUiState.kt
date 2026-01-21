@@ -31,7 +31,7 @@ data class HomeUiState(
     val inquiryField: TextFieldValue = TextFieldValue(""),
     val toggleUiStates: ImmutableList<ToggleUiState> = MapToggle.entries.map {
         ToggleUiState(
-            isSelected = it == MapToggle.SPECIAL_MARK,
+            isSelected = it == MapToggle.SPECIAL_MARK || it == MapToggle.GATE,
             toggle = it
         )
     }.toPersistentList(),
@@ -44,9 +44,12 @@ data class HomeUiState(
     val slopeMarkers: ImmutableList<ToggleMarker> = persistentListOf(),
     val stairsMarkers: ImmutableList<ToggleMarker> = persistentListOf(),
     val specialMarkers: ImmutableList<ToggleMarker> = persistentListOf(),
+    val gateMarkers: ImmutableList<ToggleMarker> = persistentListOf(),
     val showingToggleMarkers: ImmutableList<ImmutableList<ToggleMarker>> = persistentListOf(),
     val selectedSpecialMarker: ToggleMarker? = null,
     val specialMarkerInfo: SpecialMarkerInfo = SpecialMarkerInfo(),
+    val selectedGateMarker: ToggleMarker? = null,
+    val gateMarkerInfo: SpecialMarkerInfo = SpecialMarkerInfo(),
     val popularKeywords: ImmutableList<String> = persistentListOf(),
     val fromLocation: SearchResult = SearchResult(),
     val toLocation: SearchResult = SearchResult(),

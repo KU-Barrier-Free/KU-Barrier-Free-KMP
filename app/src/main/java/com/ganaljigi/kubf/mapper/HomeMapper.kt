@@ -1,6 +1,7 @@
 package com.ganaljigi.kubf.mapper
 
 import com.ganalijigi.kubf.R
+import com.ganaljigi.kubf.data.remote.response.home.HomeGateResponseDto
 import com.ganaljigi.kubf.data.remote.response.home.HomeResponseDto
 import com.ganaljigi.kubf.data.remote.response.home.HomeSearchResponseDto
 import com.ganaljigi.kubf.data.remote.response.home.HomeSignificantResponseDto
@@ -21,7 +22,11 @@ fun HomeResponseDto.toUiState() = HomeUiState(
     slopeMarkers = this.ramps.toToggleMarkers(MapToggle.SLOPE),
     stairsMarkers = this.stairs.toToggleMarkers(MapToggle.STAIRS),
     specialMarkers = this.significants.toToggleMarkers(MapToggle.SPECIAL_MARK),
-    showingToggleMarkers = persistentListOf(this.significants.toToggleMarkers(MapToggle.SPECIAL_MARK))
+    gateMarkers = this.gates.toGateMarkers(),
+    showingToggleMarkers = persistentListOf(
+        this.significants.toToggleMarkers(MapToggle.SPECIAL_MARK),
+        this.gates.toGateMarkers()
+    )
 )
 
 fun HomeSignificantResponseDto.toSpecialMarkerInfo() = SpecialMarkerInfo(
@@ -49,6 +54,21 @@ fun List<HomeResponseDto.HomePin>.toToggleMarkers(
         mapToggle = mapToggle
     )
 }.toImmutableList()
+
+fun List<HomeResponseDto.GatePin>.toGateMarkers() = this.map {
+    ToggleMarker(
+        id = it.id,
+        name = it.name,
+        latitude = it.latitude,
+        longitude = it.longitude,
+        mapToggle = MapToggle.GATE
+    )
+}.toImmutableList()
+
+fun HomeGateResponseDto.toGateMarkerInfo() = SpecialMarkerInfo(
+    description = this.description,
+    imageUrls = listOf(this.imageUrl),
+)
 
 fun HomeSearchResponseDto.toUiState(matchKeyword: String): List<SearchResult> =
     this.buildings.map {

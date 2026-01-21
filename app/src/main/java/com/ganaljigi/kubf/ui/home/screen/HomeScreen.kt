@@ -279,15 +279,21 @@ fun HomeScreen(
                 ?: persistentListOf(),
             specialMarkers = uiState.specialMarkers.takeIf { uiState.homeUiMode == HomeUiMode.DEFAULT }
                 ?: persistentListOf(),
+            gateMarkers = uiState.gateMarkers.takeIf { uiState.homeUiMode == HomeUiMode.DEFAULT }
+                ?: persistentListOf(),
             selectedRouteResult = uiState.selectedRouteResult,
             onBuildingMarkerClick = { marker ->
                 viewModel.getBuildingInfoByMarker(selectedBuildingMarker = marker)
             },
             onSpecialMarkerClick = { viewModel.getSpecialMarkerInfo(it) },
             onSpecialInfoClick = { viewModel.setShowSpecialImageDialog(true, it) },
+            onGateMarkerClick = { viewModel.getGateMarkerInfo(it) },
+            onGateInfoClick = { viewModel.setShowSpecialImageDialog(true, it) },
             setDefaultMode = { viewModel.setDefaultMode() },
             selectedSpecialMarker = uiState.selectedSpecialMarker,
             specialMarkerInfo = uiState.specialMarkerInfo,
+            selectedGateMarker = uiState.selectedGateMarker,
+            gateMarkerInfo = uiState.gateMarkerInfo,
             userLocation = uiState.userLocation,
         )
 
