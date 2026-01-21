@@ -7,6 +7,7 @@ plugins {
     alias(libs.plugins.hilt.android)
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.ksp)
+    alias(libs.plugins.google.services)
     alias(libs.plugins.firebase.crashlytics)
 }
 
@@ -41,7 +42,8 @@ android {
 
     buildTypes {
         release {
-            isMinifyEnabled = false
+            isMinifyEnabled = true
+            isShrinkResources = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
