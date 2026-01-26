@@ -1,4 +1,4 @@
-package com.ganaljigi.kubf.ui.buildinginfo.model
+package com.ganaljigi.kubf.feature.building.model
 
 data class BuildingInfo(
     val id: Long = 0L,

@@ -1,4 +1,4 @@
-package com.ganaljigi.kubf.ui.home.model
+package com.ganaljigi.kubf.feature.home.model
 
 import androidx.annotation.DrawableRes
 import com.ganalijigi.kubf.R

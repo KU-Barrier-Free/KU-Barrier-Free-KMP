@@ -1,14 +1,14 @@
-package com.ganaljigi.kubf.ui.buildinginfo.viewmodel
+package com.ganaljigi.kubf.feature.building.viewmodel
 
 import androidx.compose.ui.text.input.TextFieldValue
-import com.ganaljigi.kubf.ui.buildinginfo.model.BuildingInfo
-import com.ganaljigi.kubf.ui.buildinginfo.model.Door
-import com.ganaljigi.kubf.ui.buildinginfo.model.Facility
-import com.ganaljigi.kubf.ui.buildinginfo.model.FloorInfo
-import com.ganaljigi.kubf.ui.buildinginfo.model.Note
-import com.ganaljigi.kubf.ui.buildinginfo.model.Room
-import com.ganaljigi.kubf.ui.buildinginfo.model.RoomSearchResult
-import com.ganaljigi.kubf.ui.buildinginfo.model.TotalFloor
+import com.ganaljigi.kubf.feature.building.model.BuildingInfo
+import com.ganaljigi.kubf.feature.building.model.Door
+import com.ganaljigi.kubf.feature.building.model.Facility
+import com.ganaljigi.kubf.feature.building.model.FloorInfo
+import com.ganaljigi.kubf.feature.building.model.Note
+import com.ganaljigi.kubf.feature.building.model.Room
+import com.ganaljigi.kubf.feature.building.model.RoomSearchResult
+import com.ganaljigi.kubf.feature.building.model.TotalFloor
 import kotlinx.collections.immutable.persistentListOf
 
 data class BuildingUIState(

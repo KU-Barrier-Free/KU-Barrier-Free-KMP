@@ -1,4 +1,4 @@
-package com.ganaljigi.kubf.ui.helper.component.shortcut
+package com.ganaljigi.kubf.feature.helper.component.shortcut
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
@@ -29,12 +29,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.ganaljigi.kubf.ui.theme.MainGreen
-import com.ganaljigi.kubf.ui.theme.KUBFAndroidTheme
-import com.ganaljigi.kubf.ui.theme.KUBFTypography
+import com.ganaljigi.kubf.core.designsystem.theme.MainGreen
+import com.ganaljigi.kubf.core.designsystem.theme.KUBFAndroidTheme
+import com.ganaljigi.kubf.core.designsystem.theme.KUBFTypography
 import com.ganalijigi.kubf.R
-import com.ganaljigi.kubf.ui.theme.Gray1
-import com.ganaljigi.kubf.ui.theme.Gray2
+import com.ganaljigi.kubf.core.designsystem.theme.Gray1
+import com.ganaljigi.kubf.core.designsystem.theme.Gray2
 
 //바로가기 제목 박스
 @Composable

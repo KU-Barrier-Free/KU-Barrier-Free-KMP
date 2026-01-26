@@ -1,4 +1,4 @@
-package com.ganaljigi.kubf.ui.home.component.search
+package com.ganaljigi.kubf.feature.home.component.search
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
@@ -15,7 +15,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.ganalijigi.kubf.R
-import com.ganaljigi.kubf.ui.theme.KUBFAndroidTheme
+import com.ganaljigi.kubf.core.designsystem.theme.KUBFAndroidTheme
 
 @Composable
 fun HomeSearchTopBar(

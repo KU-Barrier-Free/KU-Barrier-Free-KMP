@@ -1,9 +1,9 @@
-package com.ganaljigi.kubf.ui.helper.mapper
+package com.ganaljigi.kubf.feature.helper.mapper
 
-import com.ganaljigi.kubf.ui.helper.response.HelperNoticeDto
-import com.ganaljigi.kubf.ui.helper.response.HelperNoticeResponseDto
-import com.ganaljigi.kubf.ui.helper.viewmodel.HelperUiState
-import com.ganaljigi.kubf.ui.helper.viewmodel.NoticeUi
+import com.ganaljigi.kubf.feature.helper.response.HelperNoticeDto
+import com.ganaljigi.kubf.feature.helper.response.HelperNoticeResponseDto
+import com.ganaljigi.kubf.feature.helper.viewmodel.HelperUiState
+import com.ganaljigi.kubf.feature.helper.viewmodel.NoticeUi
 
 
 //상태? 에 대한~것!

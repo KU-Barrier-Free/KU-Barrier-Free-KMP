@@ -1,4 +1,4 @@
-package com.ganaljigi.kubf.ui.buildinginfo.component
+package com.ganaljigi.kubf.feature.building.component
 
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.background
@@ -22,9 +22,9 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.ganalijigi.kubf.R
-import com.ganaljigi.kubf.ui.buildinginfo.model.Facility
-import com.ganaljigi.kubf.ui.theme.Gray2
-import com.ganaljigi.kubf.ui.theme.KUBFAndroidTheme
+import com.ganaljigi.kubf.feature.building.model.Facility
+import com.ganaljigi.kubf.core.designsystem.theme.Gray2
+import com.ganaljigi.kubf.core.designsystem.theme.KUBFAndroidTheme
 
 
 

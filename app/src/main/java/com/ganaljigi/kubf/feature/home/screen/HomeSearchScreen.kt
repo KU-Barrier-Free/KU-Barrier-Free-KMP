@@ -1,4 +1,4 @@
-package com.ganaljigi.kubf.ui.home.screen
+package com.ganaljigi.kubf.feature.home.screen
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
@@ -25,12 +25,14 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.ganaljigi.kubf.ui.common.model.SearchMode
-import com.ganaljigi.kubf.ui.home.component.search.HomeSearchBar
-import com.ganaljigi.kubf.ui.home.component.search.HomeSearchContent
-import com.ganaljigi.kubf.ui.home.component.search.HomeSearchTopBar
-import com.ganaljigi.kubf.ui.home.viewmodel.HomeViewModel
-import com.ganaljigi.kubf.ui.theme.KUBFAndroidTheme
+import com.ganaljigi.kubf.core.model.SearchMode
+import com.ganaljigi.kubf.feature.home.component.search.HomeSearchBar
+import com.ganaljigi.kubf.feature.home.component.search.HomeSearchContent
+import com.ganaljigi.kubf.feature.home.component.search.HomeSearchTopBar
+import com.ganaljigi.kubf.feature.home.viewmodel.HomeViewModel
+import com.ganaljigi.kubf.feature.home.viewmodel.HomeBottomSheetType
+import com.ganaljigi.kubf.feature.home.viewmodel.HomeUiMode
+import com.ganaljigi.kubf.core.designsystem.theme.KUBFAndroidTheme
 
 @Composable
 fun HomeSearchScreen(
@@ -56,9 +58,9 @@ fun HomeSearchScreen(
     LaunchedEffect(shouldNavigateUp, uiState.bottomSheetType, uiState.homeUiMode) {
         if (shouldNavigateUp &&
             searchMode == SearchMode.SEARCH &&
-            uiState.bottomSheetType != com.ganaljigi.kubf.ui.home.viewmodel.HomeBottomSheetType.NONE &&
-            uiState.homeUiMode != com.ganaljigi.kubf.ui.home.viewmodel.HomeUiMode.FIND_MODE &&
-            uiState.homeUiMode != com.ganaljigi.kubf.ui.home.viewmodel.HomeUiMode.ROUTE_MODE) {
+            uiState.bottomSheetType != HomeBottomSheetType.NONE &&
+            uiState.homeUiMode != HomeUiMode.FIND_MODE &&
+            uiState.homeUiMode != HomeUiMode.ROUTE_MODE) {
             navigateUp()
             shouldNavigateUp = false
         }

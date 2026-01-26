@@ -1,4 +1,4 @@
-package com.ganaljigi.kubf.ui.home.component.find
+package com.ganaljigi.kubf.feature.home.component.find
 
 import android.util.Log
 import androidx.compose.foundation.background
@@ -24,13 +24,13 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.ganaljigi.kubf.ui.common.model.RouteMode
-import com.ganaljigi.kubf.ui.home.model.RouteResult
-import com.ganaljigi.kubf.ui.theme.Gray3
-import com.ganaljigi.kubf.ui.theme.Gray4
-import com.ganaljigi.kubf.ui.theme.KUBFAndroidTheme
-import com.ganaljigi.kubf.ui.theme.LightGreen
-import com.ganaljigi.kubf.ui.theme.MainGreen
+import com.ganaljigi.kubf.core.model.RouteMode
+import com.ganaljigi.kubf.feature.home.model.RouteResult
+import com.ganaljigi.kubf.core.designsystem.theme.Gray3
+import com.ganaljigi.kubf.core.designsystem.theme.Gray4
+import com.ganaljigi.kubf.core.designsystem.theme.KUBFAndroidTheme
+import com.ganaljigi.kubf.core.designsystem.theme.LightGreen
+import com.ganaljigi.kubf.core.designsystem.theme.MainGreen
 import com.ganaljigi.kubf.ui.util.toDistanceString
 
 @Composable

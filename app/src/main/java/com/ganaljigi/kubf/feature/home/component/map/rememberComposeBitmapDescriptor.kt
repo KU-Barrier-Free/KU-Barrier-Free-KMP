@@ -1,4 +1,4 @@
-package com.ganaljigi.kubf.ui.home.component.map
+package com.ganaljigi.kubf.feature.home.component.map
 
 import android.graphics.Bitmap
 import android.graphics.Canvas

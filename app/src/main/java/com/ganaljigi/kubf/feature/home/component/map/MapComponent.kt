@@ -1,4 +1,4 @@
-package com.ganaljigi.kubf.ui.home.component.map
+package com.ganaljigi.kubf.feature.home.component.map
 
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.background
@@ -36,16 +36,16 @@ import coil3.request.ImageRequest
 import coil3.request.allowHardware
 import com.ganalijigi.kubf.BuildConfig
 import com.ganalijigi.kubf.R
-import com.ganaljigi.kubf.ui.home.model.BuildingMarker
-import com.ganaljigi.kubf.ui.home.model.DoorMarker
-import com.ganaljigi.kubf.ui.home.model.MapToggle
-import com.ganaljigi.kubf.ui.home.model.RouteResult
-import com.ganaljigi.kubf.ui.home.model.ToggleMarker
-import com.ganaljigi.kubf.ui.home.viewmodel.SpecialMarkerInfo
-import com.ganaljigi.kubf.ui.home.viewmodel.ToggleUiState
-import com.ganaljigi.kubf.ui.theme.Gray4
-import com.ganaljigi.kubf.ui.theme.KUBFAndroidTheme
-import com.ganaljigi.kubf.ui.theme.MainGreen
+import com.ganaljigi.kubf.feature.home.model.BuildingMarker
+import com.ganaljigi.kubf.feature.home.model.DoorMarker
+import com.ganaljigi.kubf.feature.home.model.MapToggle
+import com.ganaljigi.kubf.feature.home.model.RouteResult
+import com.ganaljigi.kubf.feature.home.model.ToggleMarker
+import com.ganaljigi.kubf.feature.home.viewmodel.SpecialMarkerInfo
+import com.ganaljigi.kubf.feature.home.viewmodel.ToggleUiState
+import com.ganaljigi.kubf.core.designsystem.theme.Gray4
+import com.ganaljigi.kubf.core.designsystem.theme.KUBFAndroidTheme
+import com.ganaljigi.kubf.core.designsystem.theme.MainGreen
 import com.ganaljigi.kubf.ui.util.noRippleClickable
 import com.google.android.gms.maps.GoogleMapOptions
 import com.google.android.gms.maps.model.LatLng

@@ -1,4 +1,4 @@
-package com.ganaljigi.kubf.ui.home.component.bottomsheet
+package com.ganaljigi.kubf.feature.home.component.bottomsheet
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -32,15 +32,15 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImagePainter.State.Empty.painter
 import com.ganalijigi.kubf.R
-import com.ganaljigi.kubf.ui.common.component.ConvenienceChip
-import com.ganaljigi.kubf.ui.common.component.DoorComponent
-import com.ganaljigi.kubf.ui.common.component.ImageViewerDialog
-import com.ganaljigi.kubf.ui.common.model.Convenience
-import com.ganaljigi.kubf.ui.common.model.DoorInfo
-import com.ganaljigi.kubf.ui.home.viewmodel.HomeBuildingInfo
-import com.ganaljigi.kubf.ui.theme.Gray2
-import com.ganaljigi.kubf.ui.theme.Gray3
-import com.ganaljigi.kubf.ui.theme.KUBFAndroidTheme
+import com.ganaljigi.kubf.core.designsystem.component.ConvenienceChip
+import com.ganaljigi.kubf.core.designsystem.component.DoorComponent
+import com.ganaljigi.kubf.core.designsystem.component.ImageViewerDialog
+import com.ganaljigi.kubf.core.model.Convenience
+import com.ganaljigi.kubf.core.model.DoorInfo
+import com.ganaljigi.kubf.feature.home.viewmodel.HomeBuildingInfo
+import com.ganaljigi.kubf.core.designsystem.theme.Gray2
+import com.ganaljigi.kubf.core.designsystem.theme.Gray3
+import com.ganaljigi.kubf.core.designsystem.theme.KUBFAndroidTheme
 import com.ganaljigi.kubf.ui.util.noRippleClickable
 import kotlinx.collections.immutable.persistentListOf
 

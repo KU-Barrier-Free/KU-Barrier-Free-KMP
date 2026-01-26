@@ -1,4 +1,4 @@
-package com.ganaljigi.kubf.ui.buildinginfo.component
+package com.ganaljigi.kubf.feature.building.component
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -35,13 +35,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import coil3.compose.AsyncImage
-import com.ganaljigi.kubf.ui.buildinginfo.model.Door
-import com.ganaljigi.kubf.ui.common.component.TransformableImage
-import com.ganaljigi.kubf.ui.theme.Gray2
-import com.ganaljigi.kubf.ui.theme.Gray3
-import com.ganaljigi.kubf.ui.theme.Gray4
-import com.ganaljigi.kubf.ui.theme.MainGreen
-import com.ganaljigi.kubf.ui.theme.KUBFAndroidTheme
+import com.ganaljigi.kubf.feature.building.model.Door
+import com.ganaljigi.kubf.core.designsystem.component.TransformableImage
+import com.ganaljigi.kubf.core.designsystem.theme.Gray2
+import com.ganaljigi.kubf.core.designsystem.theme.Gray3
+import com.ganaljigi.kubf.core.designsystem.theme.Gray4
+import com.ganaljigi.kubf.core.designsystem.theme.MainGreen
+import com.ganaljigi.kubf.core.designsystem.theme.KUBFAndroidTheme
 
 
 /**

@@ -27,7 +27,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import coil3.compose.AsyncImage
-import com.ganaljigi.kubf.ui.theme.KUBFAndroidTheme
+import com.ganaljigi.kubf.core.designsystem.theme.KUBFAndroidTheme
 import com.ganalijigi.kubf.R
 import androidx.compose.ui.window.DialogProperties
 import androidx.compose.ui.zIndex

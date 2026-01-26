@@ -1,4 +1,4 @@
-package com.ganaljigi.kubf.ui.home.component.find
+package com.ganaljigi.kubf.feature.home.component.find
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -24,10 +24,10 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.ganalijigi.kubf.R
-import com.ganaljigi.kubf.ui.home.model.SearchResult
-import com.ganaljigi.kubf.ui.theme.Gray2
-import com.ganaljigi.kubf.ui.theme.Gray4
-import com.ganaljigi.kubf.ui.theme.KUBFAndroidTheme
+import com.ganaljigi.kubf.feature.home.model.SearchResult
+import com.ganaljigi.kubf.core.designsystem.theme.Gray2
+import com.ganaljigi.kubf.core.designsystem.theme.Gray4
+import com.ganaljigi.kubf.core.designsystem.theme.KUBFAndroidTheme
 
 @Composable
 fun HomeFindTopLocationComponent(

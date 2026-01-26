@@ -1,7 +1,7 @@
-package com.ganaljigi.kubf.ui.helper.di
+package com.ganaljigi.kubf.feature.helper.di
 
-import com.ganaljigi.kubf.ui.helper.repository.HelperRepository
-import com.ganaljigi.kubf.ui.helper.repositoryimpl.HelperRepositoryImpl
+import com.ganaljigi.kubf.feature.helper.repository.HelperRepository
+import com.ganaljigi.kubf.feature.helper.repositoryimpl.HelperRepositoryImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn

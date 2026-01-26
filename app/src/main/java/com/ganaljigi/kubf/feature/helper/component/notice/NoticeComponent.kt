@@ -1,4 +1,4 @@
-package com.ganaljigi.kubf.ui.helper.component.notice
+package com.ganaljigi.kubf.feature.helper.component.notice
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -17,8 +17,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.ganaljigi.kubf.ui.theme.Gray3
-import com.ganaljigi.kubf.ui.theme.KUBFAndroidTheme
+import com.ganaljigi.kubf.core.designsystem.theme.Gray3
+import com.ganaljigi.kubf.core.designsystem.theme.KUBFAndroidTheme
 
 //공지사항도 ID
 

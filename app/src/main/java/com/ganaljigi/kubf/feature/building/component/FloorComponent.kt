@@ -1,4 +1,4 @@
-package com.ganaljigi.kubf.ui.buildinginfo.component
+package com.ganaljigi.kubf.feature.building.component
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -28,11 +28,11 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
-import com.ganaljigi.kubf.ui.buildinginfo.model.Facility
-import com.ganaljigi.kubf.ui.buildinginfo.model.FloorInfo
-import com.ganaljigi.kubf.ui.buildinginfo.model.Room
-import com.ganaljigi.kubf.ui.common.component.ImageViewerDialog
-import com.ganaljigi.kubf.ui.theme.KUBFAndroidTheme
+import com.ganaljigi.kubf.feature.building.model.Facility
+import com.ganaljigi.kubf.feature.building.model.FloorInfo
+import com.ganaljigi.kubf.feature.building.model.Room
+import com.ganaljigi.kubf.core.designsystem.component.ImageViewerDialog
+import com.ganaljigi.kubf.core.designsystem.theme.KUBFAndroidTheme
 
 @Composable
 fun FloorComponent(

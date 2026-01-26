@@ -1,4 +1,4 @@
-package com.ganaljigi.kubf.ui.helper.component.information
+package com.ganaljigi.kubf.feature.helper.component.information
 
 import android.content.ClipData
 import android.content.ClipboardManager
@@ -36,10 +36,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ganalijigi.kubf.R
-import com.ganaljigi.kubf.ui.theme.Gray1
-import com.ganaljigi.kubf.ui.theme.Gray4
-import com.ganaljigi.kubf.ui.theme.KUBFAndroidTheme
-import com.ganaljigi.kubf.ui.theme.MainGreen
+import com.ganaljigi.kubf.core.designsystem.theme.Gray1
+import com.ganaljigi.kubf.core.designsystem.theme.Gray4
+import com.ganaljigi.kubf.core.designsystem.theme.KUBFAndroidTheme
+import com.ganaljigi.kubf.core.designsystem.theme.MainGreen
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng

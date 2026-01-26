@@ -1,4 +1,4 @@
-package com.ganaljigi.kubf.ui.home.component.bottomsheet
+package com.ganaljigi.kubf.feature.home.component.bottomsheet
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -15,9 +15,9 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.ganaljigi.kubf.ui.home.model.SearchResult
-import com.ganaljigi.kubf.ui.theme.Gray2
-import com.ganaljigi.kubf.ui.theme.MainGreen
+import com.ganaljigi.kubf.feature.home.model.SearchResult
+import com.ganaljigi.kubf.core.designsystem.theme.Gray2
+import com.ganaljigi.kubf.core.designsystem.theme.MainGreen
 
 @Composable
 fun HomeSearchBottomSheet(

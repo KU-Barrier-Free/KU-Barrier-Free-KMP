@@ -1,4 +1,4 @@
-package com.ganaljigi.kubf.ui.home.component
+package com.ganaljigi.kubf.feature.home.component
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -17,9 +17,9 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.ganaljigi.kubf.ui.theme.Black
-import com.ganaljigi.kubf.ui.theme.KUBFAndroidTheme
-import com.ganaljigi.kubf.ui.theme.MainGreen
+import com.ganaljigi.kubf.core.designsystem.theme.Black
+import com.ganaljigi.kubf.core.designsystem.theme.KUBFAndroidTheme
+import com.ganaljigi.kubf.core.designsystem.theme.MainGreen
 import com.ganaljigi.kubf.ui.util.noRippleClickable
 
 @Composable

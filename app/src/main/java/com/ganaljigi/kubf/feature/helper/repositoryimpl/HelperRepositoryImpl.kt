@@ -1,8 +1,8 @@
-package com.ganaljigi.kubf.ui.helper.repositoryimpl
+package com.ganaljigi.kubf.feature.helper.repositoryimpl
 
-import com.ganaljigi.kubf.ui.helper.repository.HelperRepository
-import com.ganaljigi.kubf.ui.helper.response.HelperNoticeResponseDto
-import com.ganaljigi.kubf.data.remote.service.HelperService
+import com.ganaljigi.kubf.feature.helper.repository.HelperRepository
+import com.ganaljigi.kubf.feature.helper.response.HelperNoticeResponseDto
+import com.ganaljigi.kubf.core.network.service.HelperService
 import javax.inject.Inject
 
 class HelperRepositoryImpl @Inject constructor(

@@ -1,4 +1,4 @@
-package com.ganaljigi.kubf.ui.helper.component
+package com.ganaljigi.kubf.feature.helper.component
 
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -20,7 +20,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.ganaljigi.kubf.ui.theme.KUBFAndroidTheme
+import com.ganaljigi.kubf.core.designsystem.theme.KUBFAndroidTheme
 
 //Notice화면의 공지사항 TopAppBar
 @OptIn(ExperimentalMaterial3Api::class)

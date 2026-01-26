@@ -1,4 +1,4 @@
-package com.ganaljigi.kubf.ui.buildinginfo.screen
+package com.ganaljigi.kubf.feature.building.screen
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
@@ -48,18 +48,18 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.AsyncImage
 import com.ganalijigi.kubf.R
-import com.ganaljigi.kubf.ui.buildinginfo.component.DoorComponent
-import com.ganaljigi.kubf.ui.buildinginfo.component.FacilityComponent
-import com.ganaljigi.kubf.ui.buildinginfo.component.FloorComponent
-import com.ganaljigi.kubf.ui.buildinginfo.component.NoteComponent
-import com.ganaljigi.kubf.ui.buildinginfo.component.SearchPopup
-import com.ganaljigi.kubf.ui.buildinginfo.model.Room
-import com.ganaljigi.kubf.ui.common.component.TransformableImage
-import com.ganaljigi.kubf.ui.buildinginfo.viewmodel.BuildingViewModel
-import com.ganaljigi.kubf.ui.theme.Gray3
-import com.ganaljigi.kubf.ui.theme.Gray4
-import com.ganaljigi.kubf.ui.theme.KUBFAndroidTheme
-import com.ganaljigi.kubf.ui.theme.MainGreen
+import com.ganaljigi.kubf.feature.building.component.DoorComponent
+import com.ganaljigi.kubf.feature.building.component.FacilityComponent
+import com.ganaljigi.kubf.feature.building.component.FloorComponent
+import com.ganaljigi.kubf.feature.building.component.NoteComponent
+import com.ganaljigi.kubf.feature.building.component.SearchPopup
+import com.ganaljigi.kubf.feature.building.model.Room
+import com.ganaljigi.kubf.core.designsystem.component.TransformableImage
+import com.ganaljigi.kubf.feature.building.viewmodel.BuildingViewModel
+import com.ganaljigi.kubf.core.designsystem.theme.Gray3
+import com.ganaljigi.kubf.core.designsystem.theme.Gray4
+import com.ganaljigi.kubf.core.designsystem.theme.KUBFAndroidTheme
+import com.ganaljigi.kubf.core.designsystem.theme.MainGreen
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)

@@ -1,4 +1,4 @@
-package com.ganaljigi.kubf.ui.home.model
+package com.ganaljigi.kubf.feature.home.model
 
 data class ToggleMarker(
     val id: Long,

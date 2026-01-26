@@ -1,4 +1,4 @@
-package com.ganaljigi.kubf.ui.home.component.map
+package com.ganaljigi.kubf.feature.home.component.map
 
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
@@ -10,7 +10,7 @@ import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.ganalijigi.kubf.R
-import com.ganaljigi.kubf.ui.home.viewmodel.SpecialMarkerInfo
+import com.ganaljigi.kubf.feature.home.viewmodel.SpecialMarkerInfo
 import com.ganaljigi.kubf.ui.util.noRippleClickable
 import com.google.maps.android.compose.MarkerInfoWindow
 import com.google.maps.android.compose.MarkerState

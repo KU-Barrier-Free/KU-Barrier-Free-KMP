@@ -1,4 +1,4 @@
-package com.ganaljigi.kubf.ui.helper.component.topappbar
+package com.ganaljigi.kubf.feature.helper.component.topappbar
 
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
@@ -26,7 +26,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.ganaljigi.kubf.ui.theme.KUBFAndroidTheme
+import com.ganaljigi.kubf.core.designsystem.theme.KUBFAndroidTheme
 import com.ganalijigi.kubf.R
 
 //장애학생지원센터 TopAppBar

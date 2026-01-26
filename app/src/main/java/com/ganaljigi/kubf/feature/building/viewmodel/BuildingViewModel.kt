@@ -1,21 +1,11 @@
-package com.ganaljigi.kubf.ui.buildinginfo.viewmodel
+package com.ganaljigi.kubf.feature.building.viewmodel
 
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.ganaljigi.kubf.data.mock.DummySpacesJson
-import com.ganaljigi.kubf.data.remote.base.BaseResponse
 import com.ganaljigi.kubf.data.repository.BuildingInfoRepository
-import com.ganaljigi.kubf.ui.buildinginfo.mapper.toUiPair
-import com.ganaljigi.kubf.ui.buildinginfo.model.BuildingInfo
-import com.ganaljigi.kubf.ui.buildinginfo.model.Door
-import com.ganaljigi.kubf.ui.buildinginfo.model.Facility
-import com.ganaljigi.kubf.ui.buildinginfo.model.FloorInfo
-import com.ganaljigi.kubf.ui.buildinginfo.model.Note
-import com.ganaljigi.kubf.ui.buildinginfo.model.Room
-import com.ganaljigi.kubf.ui.buildinginfo.model.RoomSearchResult
-import com.ganaljigi.kubf.ui.buildinginfo.model.TotalFloor
-import com.ganaljigi.kubf.ui.buildinginfo.response.SpacesDto
+import com.ganaljigi.kubf.feature.building.model.Room
+import com.ganaljigi.kubf.feature.building.model.RoomSearchResult
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentList
@@ -23,7 +13,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlinx.serialization.json.Json
 import javax.inject.Inject
 
 @HiltViewModel

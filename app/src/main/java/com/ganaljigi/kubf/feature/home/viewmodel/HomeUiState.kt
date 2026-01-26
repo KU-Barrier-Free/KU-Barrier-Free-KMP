@@ -1,14 +1,14 @@
-package com.ganaljigi.kubf.ui.home.viewmodel
+package com.ganaljigi.kubf.feature.home.viewmodel
 
 import androidx.compose.ui.text.input.TextFieldValue
-import com.ganaljigi.kubf.ui.common.model.Convenience
-import com.ganaljigi.kubf.ui.common.model.DoorInfo
-import com.ganaljigi.kubf.ui.home.model.BuildingMarker
-import com.ganaljigi.kubf.ui.home.model.DoorMarker
-import com.ganaljigi.kubf.ui.home.model.MapToggle
-import com.ganaljigi.kubf.ui.home.model.RouteResult
-import com.ganaljigi.kubf.ui.home.model.SearchResult
-import com.ganaljigi.kubf.ui.home.model.ToggleMarker
+import com.ganaljigi.kubf.core.model.Convenience
+import com.ganaljigi.kubf.core.model.DoorInfo
+import com.ganaljigi.kubf.feature.home.model.BuildingMarker
+import com.ganaljigi.kubf.feature.home.model.DoorMarker
+import com.ganaljigi.kubf.feature.home.model.MapToggle
+import com.ganaljigi.kubf.feature.home.model.RouteResult
+import com.ganaljigi.kubf.feature.home.model.SearchResult
+import com.ganaljigi.kubf.feature.home.model.ToggleMarker
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.CameraPositionState

@@ -1,4 +1,4 @@
-package com.ganaljigi.kubf.ui.helper.screen
+package com.ganaljigi.kubf.feature.helper.screen
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -24,14 +24,14 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ganalijigi.kubf.R
-import com.ganaljigi.kubf.ui.helper.component.information.InfoBox
-import com.ganaljigi.kubf.ui.helper.component.information.InformationTitle
-import com.ganaljigi.kubf.ui.helper.component.notice.NoticeItem
-import com.ganaljigi.kubf.ui.helper.component.notice.NoticeTitle
-import com.ganaljigi.kubf.ui.helper.component.shortcut.ShortCutItem
-import com.ganaljigi.kubf.ui.helper.component.shortcut.ShortCutTitle
-import com.ganaljigi.kubf.ui.helper.component.topappbar.HelperTopAppBar
-import com.ganaljigi.kubf.ui.helper.viewmodel.HelperViewModel
+import com.ganaljigi.kubf.feature.helper.component.information.InfoBox
+import com.ganaljigi.kubf.feature.helper.component.information.InformationTitle
+import com.ganaljigi.kubf.feature.helper.component.notice.NoticeItem
+import com.ganaljigi.kubf.feature.helper.component.notice.NoticeTitle
+import com.ganaljigi.kubf.feature.helper.component.shortcut.ShortCutItem
+import com.ganaljigi.kubf.feature.helper.component.shortcut.ShortCutTitle
+import com.ganaljigi.kubf.feature.helper.component.topappbar.HelperTopAppBar
+import com.ganaljigi.kubf.feature.helper.viewmodel.HelperViewModel
 
 @Composable
 fun HelperScreen(

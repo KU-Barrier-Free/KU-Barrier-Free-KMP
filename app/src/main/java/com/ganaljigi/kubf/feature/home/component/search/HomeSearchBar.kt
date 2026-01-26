@@ -1,4 +1,4 @@
-package com.ganaljigi.kubf.ui.home.component.search
+package com.ganaljigi.kubf.feature.home.component.search
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -22,10 +22,10 @@ import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.ganaljigi.kubf.ui.common.component.KUBFSearchBar
-import com.ganaljigi.kubf.ui.theme.Gray1
-import com.ganaljigi.kubf.ui.theme.KUBFAndroidTheme
-import com.ganaljigi.kubf.ui.theme.MainGreen
+import com.ganaljigi.kubf.core.designsystem.component.KUBFSearchBar
+import com.ganaljigi.kubf.core.designsystem.theme.Gray1
+import com.ganaljigi.kubf.core.designsystem.theme.KUBFAndroidTheme
+import com.ganaljigi.kubf.core.designsystem.theme.MainGreen
 import com.ganaljigi.kubf.ui.util.noRippleClickable
 
 @Composable

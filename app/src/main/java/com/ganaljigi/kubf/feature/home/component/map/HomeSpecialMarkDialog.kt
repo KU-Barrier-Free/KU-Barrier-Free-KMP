@@ -1,4 +1,4 @@
-package com.ganaljigi.kubf.ui.home.component.map
+package com.ganaljigi.kubf.feature.home.component.map
 
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement

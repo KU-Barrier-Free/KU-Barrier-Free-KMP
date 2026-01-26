@@ -1,4 +1,4 @@
-package com.ganaljigi.kubf.ui.home.component
+package com.ganaljigi.kubf.feature.home.component
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -12,7 +12,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.ganalijigi.kubf.R
-import com.ganaljigi.kubf.ui.theme.MainGreen
+import com.ganaljigi.kubf.core.designsystem.theme.MainGreen
 import com.ganaljigi.kubf.ui.util.noRippleClickable
 
 @Composable

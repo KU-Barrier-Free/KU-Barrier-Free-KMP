@@ -1,10 +1,10 @@
-package com.ganaljigi.kubf.ui.helper.viewmodel
+package com.ganaljigi.kubf.feature.helper.viewmodel
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.ganaljigi.kubf.ui.helper.mapper.toUiState
-import com.ganaljigi.kubf.ui.helper.repository.HelperRepository
+import com.ganaljigi.kubf.feature.helper.mapper.toUiState
+import com.ganaljigi.kubf.feature.helper.repository.HelperRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted

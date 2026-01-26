@@ -1,4 +1,4 @@
-package com.ganaljigi.kubf.ui.helper.viewmodel
+package com.ganaljigi.kubf.feature.helper.viewmodel
 
 data class HelperUiState(
     val isLoading: Boolean = false,

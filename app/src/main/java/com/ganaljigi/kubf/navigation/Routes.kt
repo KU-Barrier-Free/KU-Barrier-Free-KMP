@@ -1,7 +1,7 @@
 package com.ganaljigi.kubf.navigation
 
 import androidx.navigation.NavType
-import com.ganaljigi.kubf.ui.common.model.SearchMode
+import com.ganaljigi.kubf.core.model.SearchMode
 import kotlinx.serialization.Serializable
 
 sealed interface Routes {

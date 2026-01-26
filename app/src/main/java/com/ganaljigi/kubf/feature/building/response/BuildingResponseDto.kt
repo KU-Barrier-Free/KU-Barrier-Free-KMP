@@ -1,4 +1,4 @@
-package com.ganaljigi.kubf.ui.buildinginfo.response
+package com.ganaljigi.kubf.feature.building.response
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable

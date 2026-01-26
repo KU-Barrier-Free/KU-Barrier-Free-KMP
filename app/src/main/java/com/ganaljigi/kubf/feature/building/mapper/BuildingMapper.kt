@@ -1,17 +1,17 @@
-package com.ganaljigi.kubf.ui.buildinginfo.mapper
+package com.ganaljigi.kubf.feature.building.mapper
 
-import com.ganaljigi.kubf.ui.buildinginfo.model.BuildingInfo
-import com.ganaljigi.kubf.ui.buildinginfo.model.Door
-import com.ganaljigi.kubf.ui.buildinginfo.model.Facility
-import com.ganaljigi.kubf.ui.buildinginfo.model.FloorInfo
-import com.ganaljigi.kubf.ui.buildinginfo.model.Note
-import com.ganaljigi.kubf.ui.buildinginfo.model.Room
-import com.ganaljigi.kubf.ui.buildinginfo.model.TotalFloor
-import com.ganaljigi.kubf.ui.buildinginfo.response.DoorInfoDto
-import com.ganaljigi.kubf.ui.buildinginfo.response.FloorDto
-import com.ganaljigi.kubf.ui.buildinginfo.response.SignificantInfosDto
-import com.ganaljigi.kubf.ui.buildinginfo.response.SpaceSummaryDto
-import com.ganaljigi.kubf.ui.buildinginfo.response.SpacesDto
+import com.ganaljigi.kubf.feature.building.model.BuildingInfo
+import com.ganaljigi.kubf.feature.building.model.Door
+import com.ganaljigi.kubf.feature.building.model.Facility
+import com.ganaljigi.kubf.feature.building.model.FloorInfo
+import com.ganaljigi.kubf.feature.building.model.Note
+import com.ganaljigi.kubf.feature.building.model.Room
+import com.ganaljigi.kubf.feature.building.model.TotalFloor
+import com.ganaljigi.kubf.feature.building.response.DoorInfoDto
+import com.ganaljigi.kubf.feature.building.response.FloorDto
+import com.ganaljigi.kubf.feature.building.response.SignificantInfosDto
+import com.ganaljigi.kubf.feature.building.response.SpaceSummaryDto
+import com.ganaljigi.kubf.feature.building.response.SpacesDto
 
 private val facilityMap: Map<String, Facility> = mapOf(
     "카페" to Facility.CAFE,

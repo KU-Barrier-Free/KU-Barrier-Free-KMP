@@ -1,4 +1,4 @@
-package com.ganaljigi.kubf.ui.buildinginfo.component
+package com.ganaljigi.kubf.feature.building.component
 
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.background
@@ -31,14 +31,14 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.ganaljigi.kubf.ui.buildinginfo.model.Room
-import com.ganaljigi.kubf.ui.buildinginfo.model.RoomSearchResult
-import com.ganaljigi.kubf.ui.buildinginfo.viewmodel.BuildingUIState
-import com.ganaljigi.kubf.ui.buildinginfo.viewmodel.BuildingViewModel
-import com.ganaljigi.kubf.ui.common.component.KUBFSearchBar
-import com.ganaljigi.kubf.ui.theme.Gray3
-import com.ganaljigi.kubf.ui.theme.KUBFAndroidTheme
-import com.ganaljigi.kubf.ui.theme.MainGreen
+import com.ganaljigi.kubf.feature.building.model.Room
+import com.ganaljigi.kubf.feature.building.model.RoomSearchResult
+import com.ganaljigi.kubf.feature.building.viewmodel.BuildingUIState
+import com.ganaljigi.kubf.feature.building.viewmodel.BuildingViewModel
+import com.ganaljigi.kubf.core.designsystem.component.KUBFSearchBar
+import com.ganaljigi.kubf.core.designsystem.theme.Gray3
+import com.ganaljigi.kubf.core.designsystem.theme.KUBFAndroidTheme
+import com.ganaljigi.kubf.core.designsystem.theme.MainGreen
 import kotlinx.collections.immutable.toPersistentList
 
 @Composable

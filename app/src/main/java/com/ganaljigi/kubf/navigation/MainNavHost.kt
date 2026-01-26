@@ -7,14 +7,14 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
-import com.ganaljigi.kubf.ui.buildinginfo.screen.BuildingInfoScreen
-import com.ganaljigi.kubf.ui.helper.screen.DisableStudentHelperScreen
-import com.ganaljigi.kubf.ui.helper.screen.HelperScreen
-import com.ganaljigi.kubf.ui.helper.screen.JobInformationScreen
-import com.ganaljigi.kubf.ui.helper.screen.SupportScreen
-import com.ganaljigi.kubf.ui.home.screen.HomeScreen
-import com.ganaljigi.kubf.ui.home.screen.HomeSearchScreen
-import com.ganaljigi.kubf.ui.home.viewmodel.HomeViewModel
+import com.ganaljigi.kubf.feature.building.screen.BuildingInfoScreen
+import com.ganaljigi.kubf.feature.helper.screen.DisableStudentHelperScreen
+import com.ganaljigi.kubf.feature.helper.screen.HelperScreen
+import com.ganaljigi.kubf.feature.helper.screen.JobInformationScreen
+import com.ganaljigi.kubf.feature.helper.screen.SupportScreen
+import com.ganaljigi.kubf.feature.home.screen.HomeScreen
+import com.ganaljigi.kubf.feature.home.screen.HomeSearchScreen
+import com.ganaljigi.kubf.feature.home.viewmodel.HomeViewModel
 import com.ganaljigi.kubf.ui.roominfo.RoomInfoScreen
 
 @Composable

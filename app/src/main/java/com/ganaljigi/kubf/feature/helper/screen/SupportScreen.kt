@@ -1,4 +1,4 @@
-package com.ganaljigi.kubf.ui.helper.screen
+package com.ganaljigi.kubf.feature.helper.screen
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -13,14 +13,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import com.ganaljigi.kubf.ui.helper.component.WebViewTopAppBar
-import com.ganaljigi.kubf.ui.helper.component.NoticeWebView
+import com.ganaljigi.kubf.feature.helper.component.WebViewTopAppBar
+import com.ganaljigi.kubf.feature.helper.component.NoticeWebView
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.ganaljigi.kubf.ui.theme.KUBFAndroidTheme
-import com.ganaljigi.kubf.ui.theme.MainGreen
+import com.ganaljigi.kubf.core.designsystem.theme.KUBFAndroidTheme
+import com.ganaljigi.kubf.core.designsystem.theme.MainGreen
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*

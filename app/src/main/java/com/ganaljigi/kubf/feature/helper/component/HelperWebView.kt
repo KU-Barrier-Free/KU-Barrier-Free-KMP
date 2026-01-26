@@ -1,4 +1,4 @@
-package com.ganaljigi.kubf.ui.helper.component
+package com.ganaljigi.kubf.feature.helper.component
 
 import android.webkit.WebView
 import android.webkit.WebViewClient
