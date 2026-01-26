@@ -10,21 +10,21 @@ import com.ganaljigi.kubf.feature.helper.component.NoticeWebView
 
 @Composable
 fun DisableStudentHelperScreen(
-    onBackClick: () -> Unit
+    onBackClick: () -> Unit,
 ) {
     Scaffold(
         topBar = {
             WebViewTopAppBar(
                 textTitle = "장애학생 도우미",
-                onBackClick = onBackClick
+                onBackClick = onBackClick,
             )
-        }
+        },
     ) { innerPadding ->
         NoticeWebView(
             url = "https://www.konkuk.ac.kr/csd/15235/subview.do",
             modifier = Modifier
                 .fillMaxSize()
-                .padding(innerPadding)
+                .padding(innerPadding),
         )
     }
 }

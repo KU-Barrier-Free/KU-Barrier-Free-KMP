@@ -20,7 +20,7 @@ data class BuildingDto(
     @SerialName("latitude")
     val latitude: Double?,
     @SerialName("longitude")
-    val longitude: Double?
+    val longitude: Double?,
 )
 
 @Serializable
@@ -36,7 +36,7 @@ data class DoorInfoDto(
     @SerialName("longitude")
     val longitude: Double?,
     @SerialName("label")
-    val label: String
+    val label: String,
 )
 
 @Serializable
@@ -64,7 +64,7 @@ data class SpacesDto(
     @SerialName("latitude")
     val latitude: Double?,
     @SerialName("longitude")
-    val longitude: Double?
+    val longitude: Double?,
 )
 
 @Serializable
@@ -74,7 +74,7 @@ data class SignificantInfosDto(
     @SerialName("description")
     val description: String,
     @SerialName("imageUrl")
-    val imageUrl: List<String>
+    val imageUrl: List<String>,
 )
 
 @Serializable
@@ -86,7 +86,7 @@ data class FloorDto(
     @SerialName("spaceSummaries")
     val spaceSummaries: List<SpaceSummaryDto>,
     @SerialName("floor")
-    val floor: String
+    val floor: String,
 )
 
 @Serializable
@@ -102,7 +102,7 @@ data class SpaceSummaryDto(
     @SerialName("roomImages")
     val roomImages: List<RoomImageDto>,
     @SerialName("isLecture")
-    val isLecture: Boolean
+    val isLecture: Boolean,
 )
 
 @Serializable
@@ -110,7 +110,7 @@ data class RoomImageDto(
     @SerialName("imageUrl")
     val imageUrl: String,
     @SerialName("imageType")
-    val imageType: String // "ROOM" | "DOOR"
+    val imageType: String, // "ROOM" | "DOOR"
 )
 
 @Serializable
@@ -118,5 +118,5 @@ data class SearchResponseDto(
     @SerialName("count")
     val count: Int,
     @SerialName("spaces")
-    val spaces: List<SpaceSummaryDto>
+    val spaces: List<SpaceSummaryDto>,
 )

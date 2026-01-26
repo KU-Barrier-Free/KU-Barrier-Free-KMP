@@ -46,13 +46,13 @@ fun HomeSearchBottomSheetWithItemList(
             .padding(horizontal = 16.dp)
             .heightIn(max = 300.dp)
             .verticalScroll(scrollState),
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Row {
             Text(
                 text = "\"$searchKeyword\"",
                 style = KUBFAndroidTheme.typography.semiBold16.copy(
-                    color = MainGreen
+                    color = MainGreen,
                 ),
             )
             Text(
@@ -67,11 +67,11 @@ fun HomeSearchBottomSheetWithItemList(
                 searchResult = searchResult,
                 onItemClick = onItemClick,
                 onFromClick = onFromClick,
-                onToClick = onToClick
+                onToClick = onToClick,
             )
             HorizontalDivider(
                 modifier = Modifier.fillMaxWidth(),
-                color = Gray1
+                color = Gray1,
             )
         }
     }
@@ -108,7 +108,7 @@ private fun HomeSearchBottomSheetItem(
             Text(
                 text = searchResult.building,
                 style = KUBFAndroidTheme.typography.regular14.copy(
-                    color = Gray3
+                    color = Gray3,
                 ),
             )
         }
@@ -121,15 +121,15 @@ private fun HomeSearchBottomSheetItem(
                 modifier = Modifier
                     .background(
                         color = MainGreen.copy(alpha = 0.08f),
-                        shape = RoundedCornerShape(20.dp)
+                        shape = RoundedCornerShape(20.dp),
                     )
-                    .noRippleClickable { onFromClick(searchResult) }
+                    .noRippleClickable { onFromClick(searchResult) },
             ) {
                 Text(
                     modifier = Modifier.padding(horizontal = 16.dp, vertical = 13.5.dp),
                     text = "출발",
                     style = KUBFAndroidTheme.typography.regular14.copy(
-                        color = MainGreen
+                        color = MainGreen,
                     ),
                 )
             }
@@ -137,15 +137,15 @@ private fun HomeSearchBottomSheetItem(
                 modifier = Modifier
                     .background(
                         color = MainGreen,
-                        shape = RoundedCornerShape(20.dp)
+                        shape = RoundedCornerShape(20.dp),
                     )
-                    .noRippleClickable { onToClick(searchResult) }
+                    .noRippleClickable { onToClick(searchResult) },
             ) {
                 Text(
                     modifier = Modifier.padding(horizontal = 16.dp, vertical = 13.5.dp),
                     text = "도착",
                     style = KUBFAndroidTheme.typography.regular14.copy(
-                        color = Color.White
+                        color = Color.White,
                     ),
                 )
             }
@@ -163,14 +163,14 @@ private fun HomeSearchBottomSheetPreview() {
                 id = 1,
                 name = "카페 레스티오",
                 building = "경영관",
-                searchKeyword = "레스티"
+                searchKeyword = "레스티",
             ),
             SearchResult(
                 id = 2,
                 name = "카페 레스티오",
                 building = "공학관",
-                searchKeyword = "레스티"
-            )
-        )
+                searchKeyword = "레스티",
+            ),
+        ),
     )
 }

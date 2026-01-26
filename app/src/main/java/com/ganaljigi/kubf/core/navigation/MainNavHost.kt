@@ -22,7 +22,6 @@ fun MainNavHost(
     padding: PaddingValues,
     navController: NavHostController,
 ) {
-
     val homeViewModel = hiltViewModel<HomeViewModel>()
 
     NavHost(
@@ -68,10 +67,9 @@ fun MainNavHost(
 //                padding = padding,
 //                navigateToNotice = { navController.navigate(Routes.Notice) },
                 onBackClick = { navController.popBackStack() },
-                navigateToNotice = { navController.navigate(Routes.Notice) },
                 navigateToDisableStudentHelper = { navController.navigate(Routes.DisableStudentHelper) },
                 navigateToSupport = { navController.navigate(Routes.Support) },
-                navigateToJobInformation = { navController.navigate(Routes.JobInformation) }
+                navigateToJobInformation = { navController.navigate(Routes.JobInformation) },
             )
         }
 
@@ -85,25 +83,24 @@ fun MainNavHost(
         composable<Routes.BuildingInfo> { navBackStackEntry ->
             val buildingId = navBackStackEntry.toRoute<Routes.BuildingInfo>().number
 
-             BuildingInfoScreen(
+            BuildingInfoScreen(
                 buildingId = buildingId,
                 onRoomClick = { room, buildingName ->
                     navController.navigate(Routes.RoomInfo(
                         buildingId = buildingId,
                         spaceId = room.id,
                         type = if (room.isLecture) 1 else 0,
-                        buildingName = buildingName
+                        buildingName = buildingName,
                     ))
-
                 },
-                onBack = { navController.popBackStack() }
-             )
+                onBack = { navController.popBackStack() },
+            )
         }
 
         composable<Routes.RoomInfo> { navBackStackEntry ->
-             RoomInfoScreen(
-                onBackClick = {navController.popBackStack()},
-             )
+            RoomInfoScreen(
+                onBackClick = { navController.popBackStack() },
+            )
         }
 
         composable<Routes.DisableStudentHelper> {
@@ -117,6 +114,5 @@ fun MainNavHost(
         composable<Routes.JobInformation> {
             JobInformationScreen(onBackClick = { navController.popBackStack() })
         }
-
     }
 }

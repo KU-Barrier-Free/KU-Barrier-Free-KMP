@@ -22,18 +22,18 @@ import com.ganaljigi.kubf.core.designsystem.theme.MainGreen
 fun DoorComponent(
     frontDoor: Boolean,
     backDoor: Boolean,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Column(modifier = modifier.padding(start = 20.dp)) {
         HorizontalDivider(
             modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp),
             color = Gray1,
-            thickness = 1.dp
+            thickness = 1.dp,
         )
 
         Text(
             text = "출입문",
-            style = KUBFAndroidTheme.typography.semiBold16
+            style = KUBFAndroidTheme.typography.semiBold16,
         )
 
         Spacer(modifier = Modifier.height(12.dp))
@@ -48,17 +48,17 @@ fun DoorComponent(
 @Composable
 fun DoorItem(
     label: String,
-    exists: Boolean
+    exists: Boolean,
 ) {
     Row(
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         Text(
             text = label,
             style = if (exists)
                 KUBFAndroidTheme.typography.semiBold16.copy(color = MainGreen)
             else
-                KUBFAndroidTheme.typography.regular14.copy(color = Gray3)
+                KUBFAndroidTheme.typography.regular14.copy(color = Gray3),
         )
         Spacer(modifier = Modifier.width(4.dp))
         Text(
@@ -66,7 +66,7 @@ fun DoorItem(
             style = if (exists)
                 KUBFAndroidTheme.typography.semiBold16.copy(color = MainGreen)
             else
-                KUBFAndroidTheme.typography.regular14.copy(color = Gray3)
+                KUBFAndroidTheme.typography.regular14.copy(color = Gray3),
         )
     }
 }

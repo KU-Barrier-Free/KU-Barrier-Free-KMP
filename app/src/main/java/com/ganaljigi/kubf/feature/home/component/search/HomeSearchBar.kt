@@ -44,8 +44,8 @@ fun HomeSearchBar(
             .fillMaxWidth()
             .background(
                 color = Color.White,
-                shape = RoundedCornerShape(10.dp)
-            )
+                shape = RoundedCornerShape(10.dp),
+            ),
     ) {
         KUBFSearchBar(
             modifier = Modifier
@@ -56,7 +56,7 @@ fun HomeSearchBar(
             onSearchKeyboardClick = onSearchKeyboardEntered,
             placeHolderText = "건물, 편의시설 검색",
             interactionSource = interactionSource,
-            isFocused = isFocused
+            isFocused = isFocused,
         )
     }
 }
@@ -72,20 +72,19 @@ fun ToggleChip(
             .border(
                 width = 1.dp,
                 color = Gray1,
-                shape = RoundedCornerShape(20.dp)
+                shape = RoundedCornerShape(20.dp),
             )
             .noRippleClickable { onChipClick(searchKeyword) }
-            .padding(horizontal = 8.dp, vertical = 7.dp)
+            .padding(horizontal = 8.dp, vertical = 7.dp),
     ) {
         Text(
             modifier = Modifier.align(Alignment.Center),
             text = searchKeyword,
             style = KUBFAndroidTheme.typography.regular12.copy(
-                color = MainGreen
+                color = MainGreen,
             ),
         )
     }
-
 }
 
 @Preview(showBackground = false, widthDp = 360, heightDp = 400)
@@ -96,12 +95,12 @@ private fun HomeSearchBarPreview() {
             TextFieldValue(
                 text = "",
                 selection = TextRange.Zero,
-            )
+            ),
         )
     }
     HomeSearchBar(
         onValueChange = {},
-        onValueCleared = {value = TextFieldValue("")},
+        onValueCleared = { value = TextFieldValue("") },
         value = value,
     )
 }

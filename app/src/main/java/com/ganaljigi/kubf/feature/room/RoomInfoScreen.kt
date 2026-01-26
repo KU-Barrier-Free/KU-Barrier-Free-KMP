@@ -44,16 +44,16 @@ fun RoomInfoScreen(
         topBar = {
             RoomInfoTopAppBar(
                 buildingName = uiState.buildingName,
-                onBackClick = onBackClick
+                onBackClick = onBackClick,
             )
         },
-        containerColor = Color.White
+        containerColor = Color.White,
     ) { innerPadding ->
         Column(
             modifier = Modifier
                 .padding(innerPadding)
                 .fillMaxSize()
-                .verticalScroll(scrollState)
+                .verticalScroll(scrollState),
         ) {
             if (uiState.roomPicUrls.isNotEmpty()) {
                 RoomPic(roomPicUrls = uiState.roomPicUrls)
@@ -62,11 +62,11 @@ fun RoomInfoScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(200.dp)
-                        .background(Color.LightGray)
+                        .background(Color.LightGray),
                 ) {
                     Text(
                         text = "사진 없음",
-                        modifier = Modifier.align(Alignment.Center)
+                        modifier = Modifier.align(Alignment.Center),
                     )
                 }
             }
@@ -81,7 +81,7 @@ fun RoomInfoScreen(
                 floorSpace = uiState.floorSpace,
                 roomType = uiState.roomType,
                 department = uiState.department,
-                departmentNumber = uiState.departmentNumber
+                departmentNumber = uiState.departmentNumber,
             )
 
             if (showDeskAndChair) {
@@ -96,7 +96,7 @@ fun RoomInfoScreen(
                     wheelChair = uiState.wheelChair,
                     wheelchairTable = uiState.wheelchairTable,
                     computerTable = uiState.computerTable,
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth(),
                 )
             }
 
@@ -104,7 +104,7 @@ fun RoomInfoScreen(
                 DoorComponent(
                     frontDoor = uiState.frontDoor,
                     backDoor = uiState.backDoor,
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth(),
                 )
             }
 
@@ -123,7 +123,6 @@ fun RoomInfoScreen(
     RoomInfoScreen(uiState = uiState, onBackClick = onBackClick)
 }
 
-
 @Composable
 fun RoomInfoScreenDummy(
     uiState: RoomInfoUiState,
@@ -140,7 +139,7 @@ fun RoomInfoScreenPreview() {
             buildingName = "경영관",
             roomPicUrls = listOf(
                 "https://i.pinimg.com/1200x/10/dc/2e/10dc2ece8b542854d0e276a1114d6190.jpg",
-                "https://i.pinimg.com/1200x/d9/5e/3f/d95e3f592893bd3df9e62df37c831638.jpg"
+                "https://i.pinimg.com/1200x/d9/5e/3f/d95e3f592893bd3df9e62df37c831638.jpg",
             ),
             frontDoor = true,
             backDoor = false,
@@ -162,8 +161,8 @@ fun RoomInfoScreenPreview() {
             backOfChair = true,
             wheelChair = true,
             wheelchairTable = false,
-            computerTable = false
+            computerTable = false,
         ),
-        onBackClick = {}
+        onBackClick = {},
     )
 }

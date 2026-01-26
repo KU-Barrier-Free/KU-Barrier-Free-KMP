@@ -1,6 +1,5 @@
 package com.ganaljigi.kubf.feature.home.component.find
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -54,7 +53,7 @@ fun HomeRouteInfo(
                         .fillMaxHeight(),
                     routeResult = route,
                     isSelected = selectedRoute.routeMode == routeMode,
-                    onClick = onRouteSelected
+                    onClick = onRouteSelected,
                 )
             }
         }
@@ -73,12 +72,12 @@ fun HomeRouteInfoItem(
             .clip(RoundedCornerShape(20.dp))
             .background(
                 if (isSelected) LightGreen else Color.White,
-                shape = RoundedCornerShape(20.dp)
+                shape = RoundedCornerShape(20.dp),
             )
             .border(
                 width = 1.dp,
                 color = if (isSelected) MainGreen else Color.LightGray,
-                shape = RoundedCornerShape(20.dp)
+                shape = RoundedCornerShape(20.dp),
             )
             .clickable { onClick(routeResult) }
             .padding(vertical = 16.dp),
@@ -90,7 +89,7 @@ fun HomeRouteInfoItem(
                 .padding(horizontal = 12.dp),
             text = routeResult.routeMode.label,
             style = KUBFAndroidTheme.typography.semiBold13,
-            color = if (isSelected) MainGreen else Gray4
+            color = if (isSelected) MainGreen else Gray4,
         )
         Spacer(modifier = Modifier.height(10.dp))
         Row(
@@ -104,12 +103,12 @@ fun HomeRouteInfoItem(
                 text = buildAnnotatedString {
                     append(routeResult.time.toString())
                     withStyle(
-                        style = KUBFAndroidTheme.typography.regular13.toSpanStyle()
+                        style = KUBFAndroidTheme.typography.regular13.toSpanStyle(),
                     ) {
                         append("분")
                     }
                 },
-                style = KUBFAndroidTheme.typography.semiBold18
+                style = KUBFAndroidTheme.typography.semiBold18,
             )
             Text(
                 text = routeResult.distanceText.toDistanceString(),
@@ -121,7 +120,6 @@ fun HomeRouteInfoItem(
     }
 }
 
-
 @Preview
 @Composable
 private fun HomeFindRouteComponentPreview() {
@@ -129,12 +127,12 @@ private fun HomeFindRouteComponentPreview() {
         selectedRoute = RouteResult(
             routeMode = RouteMode.BARRIER_FREE,
             time = 30,
-            distanceText = "5000m"
+            distanceText = "5000m",
         ),
         routeResults = listOf(
             RouteResult(routeMode = RouteMode.SHORTEST, time = 7, distanceText = "428m"),
             RouteResult(routeMode = RouteMode.NO_STAIRS, time = 10, distanceText = "600m"),
             RouteResult(routeMode = RouteMode.BARRIER_FREE, time = 14, distanceText = "1136m"),
-        )
+        ),
     )
 }

@@ -43,7 +43,6 @@ import com.ganaljigi.kubf.core.designsystem.theme.Gray4
 import com.ganaljigi.kubf.core.designsystem.theme.MainGreen
 import com.ganaljigi.kubf.core.designsystem.theme.KUBFAndroidTheme
 
-
 /**
  * - 출입문 컴포넌트 - 문 사진과 휠체어 가능 여부,
  * - 가로로 스크롤 가능
@@ -53,19 +52,18 @@ fun DoorComponent(doors: List<Door>) {
     var previewDoor by remember { mutableStateOf<Door?>(null) }
     LazyRow(
         horizontalArrangement = Arrangement.spacedBy(8.dp),
-        modifier = Modifier.padding(horizontal = 16.dp)
+        modifier = Modifier.padding(horizontal = 16.dp),
     ) {
         items(doors, key = { it.label }) { door ->
             DoorCard(door) {
                 previewDoor = door
             }
         }
-
     }
     previewDoor?.let { door ->
         DoorImageDialog(
             door = door,
-            onDismiss = { previewDoor = null }
+            onDismiss = { previewDoor = null },
         )
     }
 }
@@ -75,18 +73,20 @@ fun DoorImageDialog(door: Door, onDismiss: () -> Unit) {
     val images = door.imageUrl.ifEmpty { listOf<String>() }
     Dialog(
         onDismissRequest =
-            onDismiss, properties = DialogProperties(usePlatformDefaultWidth = false)
+        onDismiss,
+        properties = DialogProperties(usePlatformDefaultWidth = false),
     ) {
         Box(Modifier.fillMaxWidth()) {
             val pagerState =
                 rememberPagerState(pageCount = { images.size })
             HorizontalPager(
                 state =
-                    pagerState, modifier = Modifier.fillMaxWidth()
+                pagerState,
+                modifier = Modifier.fillMaxWidth(),
             ) { page ->
                 TransformableImage(
                     modifier = Modifier.fillMaxWidth(),
-                    images.getOrNull(page)
+                    images.getOrNull(page),
                 )
             }
             if (images.size > 1) {
@@ -97,7 +97,7 @@ fun DoorImageDialog(door: Door, onDismiss: () -> Unit) {
                         .align(Alignment.BottomCenter)
                         .padding(bottom = 16.dp),
                     textAlign = TextAlign.Center,
-                    style = KUBFAndroidTheme.typography.medium13
+                    style = KUBFAndroidTheme.typography.medium13,
                 )
             }
         }
@@ -115,17 +115,17 @@ fun DoorCard(door: Door, onClick: () -> Unit) {
         modifier = Modifier
             .width(80.dp)
             .background(Color.White)
-            .clickable { onClick() }
+            .clickable { onClick() },
     ) {
         Column(
             modifier = Modifier
                 .fillMaxWidth(),
-            horizontalAlignment = Alignment.Start
+            horizontalAlignment = Alignment.Start,
         ) {
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .size(80.dp)
+                    .size(80.dp),
             ) {
                 AsyncImage(
                     model = door.imageUrl.first(),
@@ -134,7 +134,7 @@ fun DoorCard(door: Door, onClick: () -> Unit) {
                         .matchParentSize()
                         .clip(RoundedCornerShape(10.dp))
                         .background(Gray2),
-                    contentScale = ContentScale.Crop
+                    contentScale = ContentScale.Crop,
                 )
                 Box(
                     modifier = Modifier
@@ -151,21 +151,21 @@ fun DoorCard(door: Door, onClick: () -> Unit) {
                         text = door.label,
                         style = KUBFAndroidTheme.typography.medium14,
                         color = Color.White,
-                        modifier = Modifier.padding(horizontal = 3.dp)
+                        modifier = Modifier.padding(horizontal = 3.dp),
                     )
                 }
             }
             Spacer(modifier = Modifier.height(4.dp))
             Text(
                 text = "휠체어 진입",
-                style = KUBFAndroidTheme.typography.regular13
+                style = KUBFAndroidTheme.typography.regular13,
             )
             Spacer(modifier = Modifier.height(4.dp))
             Text(
                 text = if (door.wheelchair) "가능 O" else "불가능 X",
                 style = KUBFAndroidTheme.typography.semiBold14.copy(
-                    color = if (door.wheelchair) MainGreen else Gray3
-                )
+                    color = if (door.wheelchair) MainGreen else Gray3,
+                ),
             )
         }
     }

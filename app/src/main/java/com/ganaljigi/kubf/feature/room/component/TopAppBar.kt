@@ -27,34 +27,34 @@ import com.ganaljigi.kubf.core.designsystem.theme.KUBFAndroidTheme
 @Composable
 fun RoomInfoTopAppBar(
     buildingName: String,
-    onBackClick: () -> Unit
+    onBackClick: () -> Unit,
 ) {
     Surface(
-        color = Color.White
+        color = Color.White,
     ) {
         Box(
             modifier = Modifier
                 .windowInsetsPadding(WindowInsets.statusBars)
                 .fillMaxWidth()
-                .height(48.dp)
+                .height(48.dp),
         ) {
             IconButton(
                 onClick = onBackClick,
                 modifier = Modifier
-                    .align(Alignment.CenterStart)
+                    .align(Alignment.CenterStart),
             ) {
                 Icon(
                     painter = painterResource(id = R.drawable.ic_backarrow),
                     contentDescription = "뒤로가기",
-                    modifier = Modifier.size(24.dp)
+                    modifier = Modifier.size(24.dp),
                 )
             }
             Text(
                 text = "$buildingName 공간",
                 style = KUBFAndroidTheme.typography.medium14.copy(
-                    fontSize = 16.sp
+                    fontSize = 16.sp,
                 ),
-                modifier = Modifier.align(Alignment.Center)
+                modifier = Modifier.align(Alignment.Center),
             )
         }
     }
@@ -66,7 +66,7 @@ fun RoomInfoTopAppBarPreview() {
     KUBFAndroidTheme {
         RoomInfoTopAppBar(
             buildingName = "경영관",
-            onBackClick = {}
+            onBackClick = {},
         )
     }
 }

@@ -15,7 +15,7 @@ interface HomeService {
 
     @GET("home/outside-significants/{outsideSignificantId}")
     suspend fun getSignificantInfo(
-        @Path("outsideSignificantId") id: Long
+        @Path("outsideSignificantId") id: Long,
     ): BaseResponse<HomeSignificantResponseDto>
 
     @GET("places/search")
@@ -25,6 +25,6 @@ interface HomeService {
 
     @GET("home/gates/{gateId}")
     suspend fun getGateInfo(
-        @Path("gateId") id: Long
+        @Path("gateId") id: Long,
     ): BaseResponse<HomeGateResponseDto>
 }

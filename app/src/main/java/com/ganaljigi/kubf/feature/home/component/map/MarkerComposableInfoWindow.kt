@@ -31,14 +31,14 @@ fun MarkerComposableInfoWindow(
             onSpecialInfoClick(specialMarkerInfo.imageUrls)
         },
         icon = icon,
-        infoWindowAnchor = Offset(0.5f, -0.2f)
+        infoWindowAnchor = Offset(0.5f, -0.2f),
     ) {
         MapSpecialInfo(
             painters = painters,
             description = specialMarkerInfo.description,
             modifier = Modifier.noRippleClickable {
                 onSpecialInfoClick(specialMarkerInfo.imageUrls)
-            }
+            },
         )
     }
 }

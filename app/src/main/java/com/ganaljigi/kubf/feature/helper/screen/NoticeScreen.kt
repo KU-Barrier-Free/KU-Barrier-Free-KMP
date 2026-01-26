@@ -10,21 +10,21 @@ import com.ganaljigi.kubf.feature.helper.component.NoticeWebView
 
 @Composable
 fun HelperNoticeScreen(
-    onBackClick: () -> Unit
+    onBackClick: () -> Unit,
 ) {
     Scaffold(
         topBar = {
             WebViewTopAppBar(
                 textTitle = "공지사항",
-                onBackClick = onBackClick
+                onBackClick = onBackClick,
             )
-        }
+        },
     ) { innerPadding ->
         NoticeWebView(
             url = "https://www.konkuk.ac.kr/csd/15238/subview.do?enc=Zm5jdDF8QEB8JTJGYmJzJTJGY3NkJTJGNTM1JTJGYXJ0Y2xMaXN0LmRvJTNG",
             modifier = Modifier
                 .fillMaxSize()
-                .padding(innerPadding)
+                .padding(innerPadding),
         )
     }
 }

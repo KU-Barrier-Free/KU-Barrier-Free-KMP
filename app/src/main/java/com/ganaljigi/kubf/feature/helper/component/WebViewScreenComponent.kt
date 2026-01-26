@@ -22,12 +22,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ganaljigi.kubf.core.designsystem.theme.KUBFAndroidTheme
 
-//Notice화면의 공지사항 TopAppBar
+// Notice화면의 공지사항 TopAppBar
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun WebViewTopAppBar(
     textTitle: String,
-    onBackClick: () -> Unit
+    onBackClick: () -> Unit,
 ) {
     CenterAlignedTopAppBar(
         title = {
@@ -36,13 +36,13 @@ fun WebViewTopAppBar(
                     .fillMaxHeight()
                     .height(48.dp)
                     .statusBarsPadding(),
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
             ) {
                 Text(
                     text = textTitle,
                     style = KUBFAndroidTheme.typography.medium13.copy(
-                        fontSize = 16.sp
-                    )
+                        fontSize = 16.sp,
+                    ),
                 )
             }
         },
@@ -51,13 +51,13 @@ fun WebViewTopAppBar(
                 Icon(
                     imageVector = Icons.Default.KeyboardArrowLeft,
                     contentDescription = "뒤로가기",
-                    modifier = Modifier.size(24.dp)
+                    modifier = Modifier.size(24.dp),
                 )
             }
         },
         colors = TopAppBarDefaults.topAppBarColors(
-            containerColor = Color.White
-        )
+            containerColor = Color.White,
+        ),
     )
 }
 
@@ -66,6 +66,6 @@ fun WebViewTopAppBar(
 fun WebViewTopAppBarPreview() {
     WebViewTopAppBar(
         textTitle = "공지사항",
-        onBackClick = {}
+        onBackClick = {},
     )
 }

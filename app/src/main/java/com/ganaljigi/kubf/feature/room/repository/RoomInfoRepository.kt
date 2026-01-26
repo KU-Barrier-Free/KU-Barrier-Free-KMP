@@ -6,6 +6,6 @@ interface RoomInfoRepository {
     suspend fun getRoomInfo(
         buildingId: Long,
         spaceId: Long,
-        type: Int
+        type: Int,
     ): Result<RoomInfoResponseDto>
 }

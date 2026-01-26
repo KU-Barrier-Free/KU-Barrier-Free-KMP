@@ -9,65 +9,64 @@ enum class Convenience(
 ) {
     CONVENIENCE(
         iconRes = R.drawable.ic_convenience_store,
-        label = "편의점"
+        label = "편의점",
     ),
     COPY(
         iconRes = R.drawable.ic_feature_copy,
-        label = "복사실"
+        label = "복사실",
     ),
     K_CUBE(
         iconRes = R.drawable.ic_feature_kcube,
-        label = "K-CUBE"
+        label = "K-CUBE",
     ),
     IT_SERVICE_CENTER(
         iconRes = R.drawable.ic_feature_it_service,
-        label = "IT-서비스센터"
+        label = "IT-서비스센터",
     ),
     PARKING_LOT(
         iconRes = R.drawable.ic_feature_parking,
-        label = "주차장"
+        label = "주차장",
     ),
     CAFE(
         iconRes = R.drawable.ic_feature_cafe,
-        label = "카페"
+        label = "카페",
     ),
     ELEVATOR(
         iconRes = R.drawable.ic_feature_elevator,
-        label = "엘리베이터"
+        label = "엘리베이터",
     ),
     DISABLED_TOILET(
         iconRes = R.drawable.ic_feature_disable_toilet,
-        label = "장애인화장실"
+        label = "장애인화장실",
     ),
     BANK(
         iconRes = R.drawable.ic_feature_bank,
-        label = "은행"
+        label = "은행",
     ),
     POST_OFFICE(
         iconRes = R.drawable.ic_feature_post,
-        label = "우체국"
+        label = "우체국",
     ),
     CULTURE(
         iconRes = R.drawable.ic_feature_culture,
-        label = "문화시설"
+        label = "문화시설",
     ),
     WELFARE_STORE(
         iconRes = R.drawable.ic_feature_welfare,
-        label = "복지매장"
+        label = "복지매장",
     ),
     RESTAURANT(
         iconRes = R.drawable.ic_feature_restaurant,
-        label = "식당"
+        label = "식당",
     ),
     K_HUB(
         iconRes = R.drawable.ic_feature_kcube,
-        label = "K-Hub"
+        label = "K-Hub",
     ),
     REST(
         iconRes = R.drawable.ic_feature_rest,
-        label = "휴게실"
+        label = "휴게실",
     ),
-    ;
 }
 
 fun fromLabel(label: String): Convenience? {

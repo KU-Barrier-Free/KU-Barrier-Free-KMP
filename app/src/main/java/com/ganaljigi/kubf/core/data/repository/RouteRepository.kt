@@ -7,6 +7,6 @@ interface RouteRepository {
         srcId: Long,
         srcType: String,
         destId: Long,
-        destType: String
+        destType: String,
     ): Result<PathResponseDto>
 }

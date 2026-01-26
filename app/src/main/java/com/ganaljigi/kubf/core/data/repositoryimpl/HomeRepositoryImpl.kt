@@ -10,7 +10,7 @@ import com.ganaljigi.kubf.core.network.service.HomeService
 import javax.inject.Inject
 
 class HomeRepositoryImpl @Inject constructor(
-    private val homeService: HomeService
+    private val homeService: HomeService,
 ) : HomeRepository {
     override suspend fun getHomeData(): Result<HomeResponseDto> = runCatching {
         homeService.getHomeData().handleBaseResponse().getOrThrow()

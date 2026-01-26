@@ -16,8 +16,6 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
-    private const val STUB_BASE_URL = "https://example.invalid/"
-
     @Provides
     @Singleton
     fun providesJson(): Json = Json {
@@ -50,7 +48,7 @@ object NetworkModule {
         .baseUrl(BuildConfig.BASE_URL)
         .client(client)
         .addConverterFactory(
-            json.asConverterFactory("application/json".toMediaType())
+            json.asConverterFactory("application/json".toMediaType()),
         )
         .build()
 }

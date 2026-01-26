@@ -20,7 +20,7 @@ import javax.inject.Inject
 @HiltViewModel
 class RoomInfoViewModel @Inject constructor(
     private val repository: RoomInfoRepository,
-    private val savedStateHandle: SavedStateHandle
+    private val savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(RoomInfoUiState())
@@ -29,14 +29,14 @@ class RoomInfoViewModel @Inject constructor(
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5_000),
-            initialValue = RoomInfoUiState()
+            initialValue = RoomInfoUiState(),
         )
 
     fun loadRoomInfo(
         buildingId: Long = savedStateHandle.get<Long>("buildingId") ?: -1L,
         spaceId: Long = savedStateHandle.get<Long>("spaceId") ?: -1L,
         type: Int? = savedStateHandle.get<Int>("type") /*?: 1*/,
-        buildingNameArg: String? = savedStateHandle.get<String>("buildingName")
+        buildingNameArg: String? = savedStateHandle.get<String>("buildingName"),
     ) {
         if (buildingId <= 0 || spaceId <= 0) return
 
@@ -49,12 +49,12 @@ class RoomInfoViewModel @Inject constructor(
                         val mapped = dto.toUiState()
                         _uiState.value = mapped.copy(
                             isLoading = false,
-                            buildingName = buildingNameArg ?: mapped.buildingName
+                            buildingName = buildingNameArg ?: mapped.buildingName,
                         )
                     },
                     onFailure = { e ->
                         _uiState.update { it.copy(isLoading = false, error = e.message ?: "오류") }
-                    }
+                    },
                 )
             } else {
                 runCatching {
@@ -81,17 +81,17 @@ class RoomInfoViewModel @Inject constructor(
                             roomName = base.roomName ?: other?.roomName,
                             department = base.department.ifBlank { other?.department ?: "" },
                             departmentNumber = base.departmentNumber.ifBlank { other?.departmentNumber ?: "" },
-                            roomType = base.roomType.ifBlank { other?.roomType ?: "" }
+                            roomType = base.roomType.ifBlank { other?.roomType ?: "" },
                         )
 
                         _uiState.value = merged.copy(
                             isLoading = false,
-                            buildingName = buildingNameArg ?: merged.buildingName
+                            buildingName = buildingNameArg ?: merged.buildingName,
                         )
                     },
                     onFailure = { e ->
                         _uiState.update { it.copy(isLoading = false, error = e.message ?: "오류") }
-                    }
+                    },
                 )
             }
         }

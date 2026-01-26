@@ -1,6 +1,5 @@
 package com.ganaljigi.kubf.core.network.response.home
 
-
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -9,7 +8,7 @@ data class HomeSearchResponseDto(
     @SerialName("buildings")
     val buildings: List<Building>,
     @SerialName("facilities")
-    val facilities: List<Facility>
+    val facilities: List<Facility>,
 ) {
     @Serializable
     data class Building(
@@ -20,7 +19,7 @@ data class HomeSearchResponseDto(
         @SerialName("longitude")
         val longitude: Double,
         @SerialName("name")
-        val name: String
+        val name: String,
     )
 
     @Serializable
@@ -38,6 +37,6 @@ data class HomeSearchResponseDto(
         @SerialName("name")
         val name: String,
         @SerialName("purpose")
-        val purpose: String
+        val purpose: String,
     )
 }

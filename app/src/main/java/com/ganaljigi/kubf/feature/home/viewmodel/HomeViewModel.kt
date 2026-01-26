@@ -51,7 +51,7 @@ class HomeViewModel @Inject constructor(
         _uiState.update {
             it.copy(
                 searchWord = newSearchWord,
-                searchResults = if (newSearchWord.text.isEmpty()) persistentListOf() else it.searchResults
+                searchResults = if (newSearchWord.text.isEmpty()) persistentListOf() else it.searchResults,
             )
         }
         getSearchResults(newSearchWord.text)
@@ -92,10 +92,9 @@ class HomeViewModel @Inject constructor(
                 },
                 onFailure = { error ->
                     Log.e("HomeViewModel", "getSearchResults: Error fetching search results", error)
-                }
+                },
             )
         }
-
     }
 
     /**
@@ -114,7 +113,7 @@ class HomeViewModel @Inject constructor(
                             selectedGateMarker = null,
                             bottomSheetType = HomeBottomSheetType.NONE,
                             searchResults = persistentListOf(),
-                            showingBuildingMarkers = it.buildingMarkers
+                            showingBuildingMarkers = it.buildingMarkers,
                         )
                     }
                 },
@@ -122,12 +121,11 @@ class HomeViewModel @Inject constructor(
                     Log.e(
                         "HomeViewModel",
                         "updateSpecialMarkerInfo: Error fetching special info",
-                        error
+                        error,
                     )
-                }
+                },
             )
         }
-
     }
 
     /**
@@ -146,7 +144,7 @@ class HomeViewModel @Inject constructor(
                             selectedGateMarker = selectedGateMarker,
                             bottomSheetType = HomeBottomSheetType.NONE,
                             searchResults = persistentListOf(),
-                            showingBuildingMarkers = it.buildingMarkers
+                            showingBuildingMarkers = it.buildingMarkers,
                         )
                     }
                 },
@@ -154,9 +152,9 @@ class HomeViewModel @Inject constructor(
                     Log.e(
                         "HomeViewModel",
                         "updateGateMarkerInfo: Error fetching gate info",
-                        error
+                        error,
                     )
-                }
+                },
             )
         }
     }
@@ -197,7 +195,7 @@ class HomeViewModel @Inject constructor(
                 it.copy(
                     selectedBuildingMarker = null,
                     searchResults = persistentListOf(searchResult),
-                    homeUiMode = HomeUiMode.DEFAULT
+                    homeUiMode = HomeUiMode.DEFAULT,
                 )
             }
             setBottomSheetType(HomeBottomSheetType.SEARCH)
@@ -250,7 +248,7 @@ class HomeViewModel @Inject constructor(
             it.copy(
                 searchWord = TextFieldValue(""),
                 searchResults = persistentListOf(),
-                toLocation = toLocation
+                toLocation = toLocation,
             )
         }
         if (toLocation.name.isNotEmpty() && uiState.value.fromLocation.name.isNotEmpty()) {
@@ -289,7 +287,7 @@ class HomeViewModel @Inject constructor(
                 srcId = fromLocation.id,
                 srcType = if (fromLocation.isBuilding) "BUILDING" else "FACILITY",
                 destId = toLocation.id,
-                destType = if (toLocation.isBuilding) "BUILDING" else "FACILITY"
+                destType = if (toLocation.isBuilding) "BUILDING" else "FACILITY",
             ).fold(
                 onSuccess = { response ->
                     val routeResults = response.toRouteResults()
@@ -299,23 +297,22 @@ class HomeViewModel @Inject constructor(
                                 homeUiMode = HomeUiMode.ROUTE_MODE,
                                 bottomSheetType = HomeBottomSheetType.NONE,
                                 routeResults = routeResults.toImmutableList(),
-                                selectedRouteResult = routeResults.first()
+                                selectedRouteResult = routeResults.first(),
                             )
                         }
                     } else {
                         Log.w(
                             "HomeViewModel",
-                            "getRouteBetweenLocations: No routes returned from API"
+                            "getRouteBetweenLocations: No routes returned from API",
                         )
                     }
                 },
                 onFailure = { error ->
                     Log.e("HomeViewModel", "getRouteBetweenLocations: Error fetching route", error)
-                }
+                },
             )
         }
     }
-
 
     /**
      * 검색 결과로부터 건물 정보를 가져옵니다.
@@ -329,7 +326,7 @@ class HomeViewModel @Inject constructor(
                         it.copy(
                             buildingInfo = response.toHomeBuildingInfo(),
                             showingDoorMarkers = response.toDoorMarkers().toImmutableList(),
-                            homeUiMode = HomeUiMode.DEFAULT
+                            homeUiMode = HomeUiMode.DEFAULT,
                         )
                     }
                     setBottomSheetType(HomeBottomSheetType.BUILDING_INFO)
@@ -338,7 +335,7 @@ class HomeViewModel @Inject constructor(
                     Log.e(
                         "HomeViewModel",
                         "updateBuildingInfo: Error fetching building info",
-                        error
+                        error,
                     )
                 }
         }
@@ -366,7 +363,7 @@ class HomeViewModel @Inject constructor(
                     Log.e(
                         "HomeViewModel",
                         "updateBuildingInfo: Error fetching building info",
-                        error
+                        error,
                     )
                 }
         }
@@ -432,7 +429,7 @@ class HomeViewModel @Inject constructor(
                         MapToggle.SPECIAL_MARK -> uiState.value.specialMarkers
                         MapToggle.GATE -> uiState.value.gateMarkers
                     }
-                }.toPersistentList()
+                }.toPersistentList(),
             )
         }
     }
@@ -474,9 +471,9 @@ class HomeViewModel @Inject constructor(
                 specialImageUrl = imageUrl.toImmutableList(),
                 showSpecialImageDialog = showSpecialImageDialog,
                 selectedSpecialMarker =
-                    if (showSpecialImageDialog) it.selectedSpecialMarker else null,
+                if (showSpecialImageDialog) it.selectedSpecialMarker else null,
                 selectedGateMarker =
-                    if (showSpecialImageDialog) it.selectedGateMarker else null,
+                if (showSpecialImageDialog) it.selectedGateMarker else null,
             )
         }
     }
@@ -510,7 +507,7 @@ class HomeViewModel @Inject constructor(
                 toggleUiStates = updatedToggles,
                 showingToggleMarkers = newShowingToggleMarkers,
                 selectedSpecialMarker = null,
-                selectedGateMarker = null
+                selectedGateMarker = null,
             )
         }
     }
@@ -526,10 +523,9 @@ class HomeViewModel @Inject constructor(
                 },
                 onFailure = { error ->
                     Log.e("HomeViewModel", "fetchInitData: Error fetching home data", error)
-                }
+                },
             )
         }
-
     }
 
     /**
@@ -582,7 +578,7 @@ class HomeViewModel @Inject constructor(
     fun moveToUserLocation() {
         val userLocation = _uiState.value.userLocation ?: return
         _uiState.value.cameraPositionState.move(
-            com.google.android.gms.maps.CameraUpdateFactory.newLatLng(userLocation)
+            com.google.android.gms.maps.CameraUpdateFactory.newLatLng(userLocation),
         )
     }
 
@@ -595,8 +591,8 @@ class HomeViewModel @Inject constructor(
         if (latitude == 0.0 && longitude == 0.0) return
         _uiState.value.cameraPositionState.move(
             com.google.android.gms.maps.CameraUpdateFactory.newLatLng(
-                LatLng(latitude, longitude)
-            )
+                LatLng(latitude, longitude),
+            ),
         )
     }
 
@@ -626,7 +622,7 @@ class HomeViewModel @Inject constructor(
                         id = searchResult.id,
                         name = searchResult.name,
                         latitude = searchResult.latitude,
-                        longitude = searchResult.longitude
+                        longitude = searchResult.longitude,
                     )
                     _uiState.update {
                         it.copy(
@@ -647,7 +643,7 @@ class HomeViewModel @Inject constructor(
                     Log.e(
                         "HomeViewModel",
                         "getBuildingInfoBySearchResult: Error fetching building info",
-                        error
+                        error,
                     )
                 }
         }

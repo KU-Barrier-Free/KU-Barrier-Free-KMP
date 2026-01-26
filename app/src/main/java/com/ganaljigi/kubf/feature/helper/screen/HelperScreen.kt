@@ -8,19 +8,14 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.getValue
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalUriHandler
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ganalijigi.kubf.R
@@ -36,27 +31,26 @@ import com.ganaljigi.kubf.feature.helper.viewmodel.HelperViewModel
 @Composable
 fun HelperScreen(
     onBackClick: () -> Unit,
-    navigateToNotice: () -> Unit = {},
     navigateToDisableStudentHelper: () -> Unit = {},
     navigateToSupport: () -> Unit = {},
     navigateToJobInformation: () -> Unit = {},
-    vm: HelperViewModel = hiltViewModel()
+    vm: HelperViewModel = hiltViewModel(),
 ) {
     val state by vm.uiState.collectAsStateWithLifecycle()
     val uriHandler = LocalUriHandler.current
 
     Scaffold(
         topBar = { HelperTopAppBar(onBackClick = onBackClick) },
-        containerColor = Color.White
+        containerColor = Color.White,
     ) { paddingValues ->
         Column(
             modifier = Modifier
                 .padding(paddingValues)
                 .verticalScroll(rememberScrollState()),
         ) {
-            //공지사항
+            // 공지사항
 
-            NoticeTitle(onNavigateClick = navigateToNotice)
+            NoticeTitle()
 //            NoticeItem(
 //                title = "[KIRD] 포용성장사업_이공계 장애 대학(원)생 경력개발 멘토링 모집 홍보 새글",
 //                date = "2025.05.13",
@@ -76,7 +70,6 @@ fun HelperScreen(
 //                index = 2
 //            )
 
-
             when {
                 state.isLoading -> {
                     CircularProgressIndicator(Modifier.padding(16.dp))
@@ -93,7 +86,7 @@ fun HelperScreen(
                             date = n.date,
                             number = n.displayNumber,
                             index = index,
-                            onClick = { uriHandler.openUri(n.url) }
+                            onClick = { uriHandler.openUri(n.url) },
                         )
                     }
                 }
@@ -101,44 +94,42 @@ fun HelperScreen(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            //바로가기
+            // 바로가기
             ShortCutTitle()
             Column(
                 verticalArrangement = Arrangement.spacedBy(12.dp),
-                modifier = Modifier
+                modifier = Modifier,
             ) {
                 ShortCutItem(
                     text = "장애학생 도우미",
                     iconResId = R.drawable.ic_helper_disablestudenthelper,
-                    onClick = navigateToDisableStudentHelper
+                    onClick = navigateToDisableStudentHelper,
                 )
                 ShortCutItem(
                     text = "지원 업무",
                     iconResId = R.drawable.ic_helper_support,
-                    onClick = navigateToSupport
+                    onClick = navigateToSupport,
                 )
                 ShortCutItem(
                     text = "채용 정보",
                     iconResId = R.drawable.ic_helper_jobinformation,
-                    onClick = navigateToJobInformation
+                    onClick = navigateToJobInformation,
                 )
             }
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            //정보
+            // 정보
             InformationTitle()
-            InfoBox(
-            )
+            InfoBox()
 
             Spacer(modifier = Modifier.height(16.dp))
         }
     }
 }
 
-
-//@Preview (showBackground = true)
-//@Composable
-//fun HelperScreenPreview() {
+// @Preview (showBackground = true)
+// @Composable
+// fun HelperScreenPreview() {
 //    HelperScreen {  }
-//}
+// }

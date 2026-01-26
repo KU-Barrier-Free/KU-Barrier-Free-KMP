@@ -35,7 +35,7 @@ fun HomeSearchBottomSheetSingleItem(
 ) {
     Column(
         modifier = modifier.padding(horizontal = 16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Column(
             modifier = modifier
@@ -60,7 +60,7 @@ fun HomeSearchBottomSheetSingleItem(
                 Text(
                     text = searchResult.building,
                     style = KUBFAndroidTheme.typography.regular14.copy(
-                        color = Gray3
+                        color = Gray3,
                     ),
                 )
             }
@@ -77,15 +77,15 @@ fun HomeSearchBottomSheetSingleItem(
                         modifier = Modifier
                             .background(
                                 color = MainGreen.copy(alpha = 0.08f),
-                                shape = RoundedCornerShape(20.dp)
+                                shape = RoundedCornerShape(20.dp),
                             )
-                            .noRippleClickable { onFromClick(searchResult) }
+                            .noRippleClickable { onFromClick(searchResult) },
                     ) {
                         Text(
                             modifier = Modifier.padding(horizontal = 16.dp, vertical = 13.5.dp),
                             text = "출발",
                             style = KUBFAndroidTheme.typography.regular14.copy(
-                                color = MainGreen
+                                color = MainGreen,
                             ),
                         )
                     }
@@ -93,15 +93,15 @@ fun HomeSearchBottomSheetSingleItem(
                         modifier = Modifier
                             .background(
                                 color = MainGreen,
-                                shape = RoundedCornerShape(20.dp)
+                                shape = RoundedCornerShape(20.dp),
                             )
-                            .noRippleClickable { onToClick(searchResult) }
+                            .noRippleClickable { onToClick(searchResult) },
                     ) {
                         Text(
                             modifier = Modifier.padding(horizontal = 16.dp, vertical = 13.5.dp),
                             text = "도착",
                             style = KUBFAndroidTheme.typography.regular14.copy(
-                                color = Color.White
+                                color = Color.White,
                             ),
                         )
                     }
@@ -111,17 +111,17 @@ fun HomeSearchBottomSheetSingleItem(
                     modifier = Modifier
                         .background(
                             color = MainGreen,
-                            shape = RoundedCornerShape(20.dp)
+                            shape = RoundedCornerShape(20.dp),
                         )
                         .noRippleClickable {
                             onShowBuildingClick(searchResult)
-                        }
+                        },
                 ) {
                     Text(
                         modifier = Modifier.padding(horizontal = 16.dp, vertical = 13.5.dp),
                         text = "건물 보기",
                         style = KUBFAndroidTheme.typography.regular14.copy(
-                            color = Color.White
+                            color = Color.White,
                         ),
                     )
                 }
@@ -138,10 +138,10 @@ private fun HomeSearchBottomSheetWithSingleItemPreview() {
             id = 1L,
             name = "카페 레스티오",
             building = "경영관",
-            searchKeyword = "레스티"
+            searchKeyword = "레스티",
         ),
         onFromClick = {},
         onToClick = {},
-        onShowBuildingClick = {}
+        onShowBuildingClick = {},
     )
 }

@@ -12,7 +12,7 @@ data class RoomInfoResponseDto(
     @SerialName("message")
     val message: String,
     @SerialName("result")
-    val result: RoomInfoResultDto? = null
+    val result: RoomInfoResultDto? = null,
 )
 
 @Serializable
@@ -40,7 +40,7 @@ data class RoomInfoResultDto(
     @SerialName("roomInfo")
     val roomInfo: RoomInfoDetailDto? = null, // lecture=false면 null(강의실 아니면 기본 정보만 있음)
     @SerialName("images")
-    val images: List<ImageDto> = emptyList()
+    val images: List<ImageDto> = emptyList(),
 )
 
 @Serializable
@@ -68,7 +68,7 @@ data class RoomInfoDetailDto(
     @SerialName("frontDoor")
     val frontDoor: Boolean,
     @SerialName("backDoor")
-    val backDoor: Boolean
+    val backDoor: Boolean,
 )
 
 @Serializable
@@ -76,5 +76,5 @@ data class ImageDto(
     @SerialName("imageUrl")
     val imageUrl: String,
     @SerialName("imageType")
-    val imageType: String // "ROOM" | "DOOR"
+    val imageType: String, // "ROOM" | "DOOR"
 )

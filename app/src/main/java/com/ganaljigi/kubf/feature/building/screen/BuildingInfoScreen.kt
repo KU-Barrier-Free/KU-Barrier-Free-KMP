@@ -86,15 +86,6 @@ fun BuildingInfoScreen(
     var showSearchPopup by remember { mutableStateOf(false) }
     var selectedImageUrl by remember { mutableStateOf<String?>(null) }
 
-    LaunchedEffect(buildingId) {
-        if (floors.isNotEmpty()) {
-            val oneFloorIndex = floors.indexOfFirst { f ->
-                f.floorLabel.trim().equals("1")
-            }
-//            selectedIndex = if (oneFloorIndex >= 0) oneFloorIndex else 0
-        }
-    }
-
     if (floors.isEmpty()) {
         Scaffold(
             containerColor = Color.White,
@@ -104,7 +95,7 @@ fun BuildingInfoScreen(
                         IconButton(onClick = onBack) {
                             Icon(
                                 painter = painterResource(R.drawable.ic_backarrow),
-                                contentDescription = "뒤로가기"
+                                contentDescription = "뒤로가기",
                             )
                         }
                     },
@@ -114,8 +105,8 @@ fun BuildingInfoScreen(
                             modifier = Modifier.fillMaxWidth(),
                             textAlign = TextAlign.Center,
                             style = KUBFAndroidTheme.typography.medium15.copy(
-                                fontSize = 16.sp
-                            )
+                                fontSize = 16.sp,
+                            ),
                         )
                     },
                     actions = {
@@ -124,21 +115,22 @@ fun BuildingInfoScreen(
                         }) {
                             Icon(
                                 painter = painterResource(R.drawable.ic_search_bar_leading),
-                                contentDescription = "검색"
+                                contentDescription = "검색",
                             )
                         }
                     },
                     colors = TopAppBarDefaults.topAppBarColors(
                         containerColor = Color.White,
-                        titleContentColor = Color.Black
-                    )
+                        titleContentColor = Color.Black,
+                    ),
                 )
-            }
+            },
         ) { inner ->
             Box(
                 Modifier
                     .fillMaxSize()
-                    .padding(inner), contentAlignment = Alignment.Center
+                    .padding(inner),
+                contentAlignment = Alignment.Center,
             ) {
                 CircularProgressIndicator()
             }
@@ -148,14 +140,10 @@ fun BuildingInfoScreen(
                     onDismissRequest = {
                         showSearchPopup = false
                         viewModel.clearQuery()
-                    }
+                    },
                 ) {
                     SearchPopup(
-                        onClose = {
-                            showSearchPopup = false
-                            viewModel.clearQuery()
-                        },
-                        onRoomClick = {}
+                        onRoomClick = {},
                     )
                 }
             }
@@ -172,12 +160,12 @@ fun BuildingInfoScreen(
                         IconButton(onClick = onBack) {
                             Icon(
                                 painter = painterResource(R.drawable.ic_backarrow),
-                                contentDescription = "뒤로가기"
+                                contentDescription = "뒤로가기",
                             )
                         }
                     },
                     colors = TopAppBarDefaults.topAppBarColors(
-                        containerColor = Color.White
+                        containerColor = Color.White,
                     ),
                     title = {
                         Text(
@@ -185,8 +173,8 @@ fun BuildingInfoScreen(
                             modifier = Modifier.fillMaxWidth(),
                             textAlign = TextAlign.Center,
                             style = KUBFAndroidTheme.typography.medium15.copy(
-                                fontSize = 16.sp
-                            )
+                                fontSize = 16.sp,
+                            ),
                         )
                     },
                     actions = {
@@ -195,27 +183,27 @@ fun BuildingInfoScreen(
                         }) {
                             Icon(
                                 painter = painterResource(R.drawable.ic_search_bar_leading),
-                                contentDescription = "검색"
+                                contentDescription = "검색",
                             )
                         }
-                    }
+                    },
                 )
             }
-        }
+        },
     ) { inner ->
         LazyColumn(
             state = listState,
             modifier = Modifier
                 .padding(inner)
                 .fillMaxSize()
-                .background(Color.White)
+                .background(Color.White),
         ) {
             item {
                 // 건물 이미지
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(200.dp)
+                        .height(200.dp),
                 ) {
                     AsyncImage(
                         model = uiState.buildingInfo.imageUrl,
@@ -223,7 +211,7 @@ fun BuildingInfoScreen(
                         contentScale = ContentScale.Crop,
                         modifier = Modifier
                             .background(color = Color.LightGray)
-                            .fillMaxWidth()
+                            .fillMaxWidth(),
                     )
                 }
                 Spacer(Modifier.height(16.dp))
@@ -231,11 +219,11 @@ fun BuildingInfoScreen(
                 // 건물 이름, 번호
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp)
+                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp),
                 ) {
                     Text(
                         text = uiState.buildingInfo.name,
-                        style = KUBFAndroidTheme.typography.bold18
+                        style = KUBFAndroidTheme.typography.bold18,
                     )
                     Spacer(Modifier.width(8.dp))
                     Text(
@@ -243,37 +231,37 @@ fun BuildingInfoScreen(
                             if (uiState.buildingInfo.number == 0) "없음" else uiState.buildingInfo.number.toString()
                         }",
                         style = KUBFAndroidTheme.typography.regular14,
-                        color = Gray3
+                        color = Gray3,
                     )
                 }
                 Spacer(Modifier.height(24.dp))
                 Text(
                     text = "소속 부서",
                     style = KUBFAndroidTheme.typography.semiBold16,
-                    modifier = Modifier.padding(horizontal = 16.dp)
+                    modifier = Modifier.padding(horizontal = 16.dp),
                 )
                 Spacer(Modifier.height(12.dp))
                 Text(
                     text = uiState.buildingInfo.department,
                     style = KUBFAndroidTheme.typography.regular14,
                     color = Gray4,
-                    modifier = Modifier.padding(horizontal = 16.dp)
+                    modifier = Modifier.padding(horizontal = 16.dp),
                 )
                 Spacer(Modifier.height(20.dp))
                 Text(
                     text = "주요시설",
                     style = KUBFAndroidTheme.typography.semiBold16,
-                    modifier = Modifier.padding(horizontal = 16.dp)
+                    modifier = Modifier.padding(horizontal = 16.dp),
                 )
                 Spacer(modifier = Modifier.height(12.dp))
                 FacilityComponent(
-                    facilities = uiState.buildingInfo.facilities
+                    facilities = uiState.buildingInfo.facilities,
                 )
                 Spacer(Modifier.height(20.dp))
                 Text(
                     text = "출입문",
                     style = KUBFAndroidTheme.typography.semiBold16,
-                    modifier = Modifier.padding(horizontal = 16.dp)
+                    modifier = Modifier.padding(horizontal = 16.dp),
                 )
                 Spacer(modifier = Modifier.height(12.dp))
                 DoorComponent(doors = uiState.buildingInfo.doors)
@@ -282,7 +270,7 @@ fun BuildingInfoScreen(
                     Text(
                         text = "특이사항",
                         style = KUBFAndroidTheme.typography.semiBold16,
-                        modifier = Modifier.padding(horizontal = 16.dp)
+                        modifier = Modifier.padding(horizontal = 16.dp),
                     )
                     Spacer(modifier = Modifier.height(12.dp))
                     uiState.buildingInfo.notes.forEachIndexed { idx, note ->
@@ -290,7 +278,7 @@ fun BuildingInfoScreen(
                             note = note,
                             onImageClick = { imageUrl ->
                                 selectedImageUrl = imageUrl
-                            }
+                            },
                         )
                         if (idx < uiState.buildingInfo.notes.lastIndex)
                             Spacer(Modifier.height(8.dp))
@@ -301,7 +289,7 @@ fun BuildingInfoScreen(
                 Text(
                     text = "층별 정보",
                     style = KUBFAndroidTheme.typography.semiBold16,
-                    modifier = Modifier.padding(horizontal = 16.dp)
+                    modifier = Modifier.padding(horizontal = 16.dp),
                 )
                 Spacer(Modifier.height(12.dp))
             }
@@ -314,10 +302,10 @@ fun BuildingInfoScreen(
                                 Modifier
                                     .tabIndicatorOffset(position[selectedIndex])
                                     .height(2.dp),
-                                color = MainGreen
+                                color = MainGreen,
                             )
                         },
-                        containerColor = Color.White
+                        containerColor = Color.White,
                     ) {
                         floors.forEachIndexed { idx, floorInfo ->
                             Tab(
@@ -333,9 +321,9 @@ fun BuildingInfoScreen(
                                         text = "${floorInfo.floorLabel}층",
                                         textAlign = TextAlign.Center,
                                         style = if (idx == selectedIndex) KUBFAndroidTheme.typography.regular14 else KUBFAndroidTheme.typography.medium14,
-                                        color = if (idx == selectedIndex) MainGreen else Gray4
+                                        color = if (idx == selectedIndex) MainGreen else Gray4,
                                     )
-                                }
+                                },
                             )
                         }
                     }
@@ -347,12 +335,12 @@ fun BuildingInfoScreen(
                                 Modifier
                                     .tabIndicatorOffset(position[selectedIndex])
                                     .height(2.dp),
-                                color = MainGreen
+                                color = MainGreen,
                             )
                         },
                         modifier = Modifier.fillMaxWidth(),
                         edgePadding = 0.dp,
-                        containerColor = Color.White
+                        containerColor = Color.White,
                     ) {
                         floors.forEachIndexed { idx, floorInfo ->
                             Tab(
@@ -368,9 +356,9 @@ fun BuildingInfoScreen(
                                         text = "${floorInfo.floorLabel}층",
                                         textAlign = TextAlign.Center,
                                         style = if (idx == selectedIndex) KUBFAndroidTheme.typography.regular14 else KUBFAndroidTheme.typography.medium14,
-                                        color = if (idx == selectedIndex) MainGreen else Gray4
+                                        color = if (idx == selectedIndex) MainGreen else Gray4,
                                     )
-                                }
+                                },
                             )
                         }
                     }
@@ -384,7 +372,7 @@ fun BuildingInfoScreen(
                         onRoomClick = { room ->
                             onRoomClick(room, uiState.buildingInfo.name)
                         },
-                        buildingName = uiState.buildingInfo.name
+                        buildingName = uiState.buildingInfo.name,
                     )
                 }
             }
@@ -394,18 +382,14 @@ fun BuildingInfoScreen(
                 onDismissRequest = {
                     showSearchPopup = false
                     viewModel.clearQuery()
-                }
+                },
             ) {
                 SearchPopup(
-                    onClose = {
-                        showSearchPopup = false
-                        viewModel.clearQuery()
-                    },
                     onRoomClick = { result ->
                         result.room?.let { room ->
                             onRoomClick(room, uiState.buildingInfo.name)
                         }
-                    }
+                    },
                 )
             }
         }
@@ -414,22 +398,22 @@ fun BuildingInfoScreen(
             Box(
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(Color.Black)
+                    .background(Color.Black),
             ) {
                 TransformableImage(
                     modifier = Modifier.fillMaxSize(),
-                    imageUrl = imageUrl
+                    imageUrl = imageUrl,
                 )
                 IconButton(
                     onClick = { selectedImageUrl = null },
                     modifier = Modifier
                         .align(Alignment.TopEnd)
-                        .padding(16.dp)
+                        .padding(16.dp),
                 ) {
                     Icon(
                         painter = painterResource(R.drawable.ic_searchbar_close),
                         contentDescription = "닫기",
-                        tint = Color.White
+                        tint = Color.White,
                     )
                 }
             }
@@ -440,5 +424,11 @@ fun BuildingInfoScreen(
 @Preview
 @Composable
 private fun PreviewBuilding() {
-
+    KUBFAndroidTheme {
+        BuildingInfoScreen(
+            buildingId = 1,
+            onBack = {},
+            onRoomClick = { _, _ -> },
+        )
+    }
 }

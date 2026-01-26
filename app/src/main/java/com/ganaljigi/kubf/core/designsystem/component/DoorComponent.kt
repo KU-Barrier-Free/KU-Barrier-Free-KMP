@@ -42,7 +42,7 @@ fun DoorComponent(
         verticalArrangement = Arrangement.spacedBy(4.dp),
     ) {
         Box(
-            modifier = Modifier.size(80.dp)
+            modifier = Modifier.size(80.dp),
         ) {
             AsyncImage(
                 contentScale = ContentScale.Crop,
@@ -59,8 +59,8 @@ fun DoorComponent(
                     .align(Alignment.TopStart)
                     .background(
                         color = Gray4,
-                        shape = CircleShape
-                    )
+                        shape = CircleShape,
+                    ),
             ) {
                 Text(
                     text = doorInfo.label,
@@ -75,20 +75,20 @@ fun DoorComponent(
         Text(
             text = "휠체어 진입",
             style = KUBFAndroidTheme.typography.regular13.copy(
-                color = Gray4
+                color = Gray4,
             ),
-            modifier = Modifier.padding(horizontal = 7.dp)
+            modifier = Modifier.padding(horizontal = 7.dp),
         )
         if (doorInfo.isWheelchairAccessible) {
             Row(
                 modifier = Modifier
                     .padding(horizontal = 7.dp),
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
             ) {
                 Text(
                     text = "가능",
                     style = KUBFAndroidTheme.typography.semiBold14.copy(
-                        color = MainGreen
+                        color = MainGreen,
                     ),
                 )
                 Icon(
@@ -101,12 +101,12 @@ fun DoorComponent(
             Row(
                 modifier = Modifier
                     .padding(horizontal = 7.dp),
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
             ) {
                 Text(
                     text = "불가능",
                     style = KUBFAndroidTheme.typography.semiBold14.copy(
-                        color = Gray3
+                        color = Gray3,
                     ),
                 )
                 Icon(
@@ -128,7 +128,7 @@ private fun DoorComponentPreview() {
             id = 1L,
             imageUrl = "https://cdn.pixabay.com/photo/2016/11/21/14/24/door-1845682_1280.png",
             description = "Sample Door",
-            label = "A"
-        )
+            label = "A",
+        ),
     )
 }

@@ -28,7 +28,7 @@ fun ConvenienceChip(
         modifier = modifier
             .background(
                 color = Gray2.copy(alpha = 0.16f),
-                shape = RoundedCornerShape(10.dp)
+                shape = RoundedCornerShape(10.dp),
             )
             .padding(horizontal = 8.dp, vertical = 4.dp),
         horizontalArrangement = Arrangement.spacedBy(4.dp),
@@ -42,8 +42,8 @@ fun ConvenienceChip(
         Text(
             text = convenience.label,
             style = KUBFAndroidTheme.typography.regular13.copy(
-                color = Gray4
-            )
+                color = Gray4,
+            ),
         )
     }
 }

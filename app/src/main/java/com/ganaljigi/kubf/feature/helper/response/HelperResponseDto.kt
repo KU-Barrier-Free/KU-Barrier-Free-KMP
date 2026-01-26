@@ -3,7 +3,7 @@ package com.ganaljigi.kubf.feature.helper.response
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
-//상태
+// 상태
 @Serializable
 data class HelperNoticeResponseDto(
     @SerialName("success")
@@ -13,10 +13,10 @@ data class HelperNoticeResponseDto(
     @SerialName("message")
     val message: String,
     @SerialName("result")
-    val result: List<HelperNoticeDto>? = null
+    val result: List<HelperNoticeDto>? = null,
 )
 
-//개별 공지
+// 개별 공지
 @Serializable
 data class HelperNoticeDto(
     @SerialName("title")
@@ -26,5 +26,5 @@ data class HelperNoticeDto(
     @SerialName("url")
     val url: String,
     @SerialName("number")
-    val number: Int
+    val number: Int,
 )

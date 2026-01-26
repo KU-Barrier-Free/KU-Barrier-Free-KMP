@@ -25,7 +25,7 @@ import kotlin.math.absoluteValue
 @Composable
 fun TransformableImage(
     modifier: Modifier = Modifier,
-    imageUrl: String?
+    imageUrl: String?,
 ) {
     var containerSize by remember { mutableStateOf(IntSize.Zero) }
     var imageSize by remember { mutableStateOf(IntSize.Zero) }
@@ -37,7 +37,7 @@ fun TransformableImage(
         scaledHeight,
         scaledWidth,
         offset,
-        containerSize
+        containerSize,
     ) {
         derivedStateOf {
             val cx = containerSize.width / 2f
@@ -45,8 +45,9 @@ fun TransformableImage(
             Rect(
                 offset = Offset(
                     x = cx - scaledWidth / 2f + offset.x,
-                    y = cy - scaledHeight / 2f + offset.y
-                ), size = Size(scaledWidth, scaledHeight)
+                    y = cy - scaledHeight / 2f + offset.y,
+                ),
+                size = Size(scaledWidth, scaledHeight),
             )
         }
     }
@@ -60,7 +61,7 @@ fun TransformableImage(
                         val newScale = (scale * zoomChange).coerceAtLeast(1f)
                         val currentCenter = Offset(
                             x = containerSize.width / 2f + offset.x,
-                            y = containerSize.height / 2f + offset.y
+                            y = containerSize.height / 2f + offset.y,
                         )
                         val relative = centroid - currentCenter
                         val scaleChange = newScale / scale
@@ -71,18 +72,18 @@ fun TransformableImage(
                         scale = newScale
                         val maxOffsetX =
                             ((imageSize.width * newScale - containerSize.width) / 2f).coerceAtLeast(
-                                0f
+                                0f,
                             )
                         val maxOffsetY =
                             ((imageSize.height * newScale - containerSize.height) / 2f).coerceAtLeast(
-                                0f
+                                0f,
                             )
                         offset = if (newScale == 1f) {
                             Offset.Zero
                         } else {
                             Offset(
                                 x = newOffsetX.coerceIn(-maxOffsetX, maxOffsetX),
-                                y = newOffsetY.coerceIn(-maxOffsetY, maxOffsetY)
+                                y = newOffsetY.coerceIn(-maxOffsetY, maxOffsetY),
                             )
                         }
                         return@detectTransformGestures
@@ -95,11 +96,11 @@ fun TransformableImage(
                     } else {
                         Offset(
                             x = (offset.x + panChange.x).coerceIn(-maxOffsetX, maxOffsetX),
-                            y = (offset.y + panChange.y).coerceIn(-maxOffsetY, maxOffsetY)
+                            y = (offset.y + panChange.y).coerceIn(-maxOffsetY, maxOffsetY),
                         )
                     }
                 }
-            }
+            },
     ) {
         AsyncImage(
             modifier = Modifier
@@ -108,12 +109,12 @@ fun TransformableImage(
                     scaleX = scale,
                     scaleY = scale,
                     translationX = offset.x,
-                    translationY = offset.y
+                    translationY = offset.y,
                 )
                 .onGloballyPositioned { coord -> imageSize = coord.size },
             model = imageUrl,
             contentDescription = null,
-            contentScale = ContentScale.Fit
+            contentScale = ContentScale.Fit,
         )
     }
 }

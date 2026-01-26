@@ -18,7 +18,7 @@ import kotlinx.collections.immutable.toPersistentList
 
 data class HomeUiState(
     val cameraPositionState: CameraPositionState = CameraPositionState(
-        position = CameraPosition.fromLatLngZoom(LatLng(37.5407, 127.0785), 17f)
+        position = CameraPosition.fromLatLngZoom(LatLng(37.5407, 127.0785), 17f),
     ),
     val searchWord: TextFieldValue = TextFieldValue(""),
     val buildingInfo: HomeBuildingInfo = HomeBuildingInfo(),
@@ -32,7 +32,7 @@ data class HomeUiState(
     val toggleUiStates: ImmutableList<ToggleUiState> = MapToggle.entries.map {
         ToggleUiState(
             isSelected = it == MapToggle.SPECIAL_MARK || it == MapToggle.GATE,
-            toggle = it
+            toggle = it,
         )
     }.toPersistentList(),
     val buildingMarkers: ImmutableList<BuildingMarker> = persistentListOf(),
@@ -58,7 +58,6 @@ data class HomeUiState(
     val isBottomSheetExpanded: Boolean = false,
     val userLocation: LatLng? = null,
 )
-
 
 enum class HomeUiMode {
     DEFAULT,

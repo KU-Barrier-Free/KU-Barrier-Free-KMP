@@ -9,7 +9,7 @@ data class BuildingInfo(
     val lecture: Boolean = false,
     val notes: List<Note> = emptyList(),
     val facilities: List<Facility> = emptyList(),
-    val doors:List<Door> = emptyList(),
+    val doors: List<Door> = emptyList(),
     val latitude: Double? = null,
-    val longitude: Double? = null
+    val longitude: Double? = null,
 )

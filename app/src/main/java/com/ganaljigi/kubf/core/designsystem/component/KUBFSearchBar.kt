@@ -1,6 +1,5 @@
 package com.ganaljigi.kubf.core.designsystem.component
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -8,7 +7,6 @@ import androidx.compose.foundation.interaction.collectIsFocusedAsState
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -52,7 +50,7 @@ fun KUBFSearchBar(
     onSearchKeyboardClick: () -> Unit = {},
     placeHolderText: String = "",
     interactionSource: MutableInteractionSource,
-    isFocused: Boolean = false
+    isFocused: Boolean = false,
 ) {
     Row(
         modifier = modifier
@@ -62,16 +60,16 @@ fun KUBFSearchBar(
                     .border(
                         width = 1.dp,
                         shape = RoundedCornerShape(10.dp),
-                        color = MainGreen
+                        color = MainGreen,
                     )
                     .background(color = Color.White, shape = RoundedCornerShape(10.dp)),
                 modifierIfFalse = Modifier
-                    .shadow(1.dp, shape = RoundedCornerShape(10.dp), clip = true)
+                    .shadow(1.dp, shape = RoundedCornerShape(10.dp), clip = true),
             )
             .background(color = Color.White, shape = RoundedCornerShape(10.dp))
             .padding(horizontal = 12.dp)
             .height(44.dp),
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         Icon(
             painter = painterResource(R.drawable.ic_search_bar_leading),
@@ -88,12 +86,12 @@ fun KUBFSearchBar(
             cursorBrush = SolidColor(Gray4), // Cursor color
             keyboardOptions = KeyboardOptions.Default.copy(
                 imeAction = ImeAction.Search,
-                keyboardType = KeyboardType.Text
+                keyboardType = KeyboardType.Text,
             ),
             keyboardActions = KeyboardActions(
                 onSearch = {
                     onSearchKeyboardClick()
-                }
+                },
             ),
             textStyle = KUBFAndroidTheme.typography.medium15.copy(),
             decorationBox = { innerTextField ->
@@ -107,12 +105,12 @@ fun KUBFSearchBar(
                             text = placeHolderText,
                             style = KUBFAndroidTheme.typography.medium15.copy(
                                 color = Gray2,
-                            )
+                            ),
                         )
                     }
                     innerTextField()
                 }
-            }
+            },
         )
         if (value.text.isNotEmpty()) {
             Icon(
@@ -137,7 +135,7 @@ private fun KUBFSearchBarPreview() {
             onValueChange = { value = it },
             placeHolderText = "건물, 편의시설 검색",
             interactionSource = interactionSource,
-            isFocused = interactionSource.collectIsFocusedAsState().value
+            isFocused = interactionSource.collectIsFocusedAsState().value,
         )
     }
 }

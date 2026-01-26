@@ -14,6 +14,6 @@ abstract class HelperRepositoryModule {
     @Binds
     @Singleton
     abstract fun bindHelperRepository(
-        impl: HelperRepositoryImpl
+        impl: HelperRepositoryImpl,
     ): HelperRepository
 }

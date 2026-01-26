@@ -3,7 +3,7 @@ package com.ganaljigi.kubf.feature.helper.viewmodel
 data class HelperUiState(
     val isLoading: Boolean = false,
     val error: String? = null,
-    val notices: List<NoticeUi> = emptyList()
+    val notices: List<NoticeUi> = emptyList(),
 )
 
 data class NoticeUi(
@@ -11,5 +11,5 @@ data class NoticeUi(
     val date: String,
     val url: String,
     val rawNumber: Int? = null,
-    val displayNumber: Int = 0
+    val displayNumber: Int = 0,
 )

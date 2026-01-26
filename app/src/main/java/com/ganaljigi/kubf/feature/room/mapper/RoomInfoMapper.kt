@@ -7,7 +7,7 @@ fun RoomInfoResponseDto.toUiState(): RoomInfoUiState {
     if (!success || result == null) {
         return RoomInfoUiState(
             isLoading = false,
-            error = message
+            error = message,
         )
     }
 
@@ -19,7 +19,7 @@ fun RoomInfoResponseDto.toUiState(): RoomInfoUiState {
         isLoading = false,
         error = null,
 
-        //DefalutInformation 기본 정보
+        // DefalutInformation 기본 정보
         roomNumber = r.roomNumber,
         roomName = r.roomName,
         lecture = r.lecture,
@@ -31,7 +31,7 @@ fun RoomInfoResponseDto.toUiState(): RoomInfoUiState {
         department = r.department,
         departmentNumber = r.departmentNumber,
 
-        //이미지(ROOM만 쓸거임)
+        // 이미지(ROOM만 쓸거임)
         roomPicUrls = r.images
             .sortedBy { it.imageType != "ROOM" }
             .map { it.imageUrl }
@@ -51,7 +51,7 @@ fun RoomInfoResponseDto.toUiState(): RoomInfoUiState {
         frontDoor = info?.frontDoor ?: false,
         backDoor = info?.backDoor ?: false,
 
-        //roomInfo null 여부
-        hasRoomInfo = (info != null)
+        // roomInfo null 여부
+        hasRoomInfo = (info != null),
     )
 }

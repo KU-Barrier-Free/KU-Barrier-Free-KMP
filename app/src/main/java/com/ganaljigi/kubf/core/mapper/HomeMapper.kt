@@ -25,15 +25,14 @@ fun HomeResponseDto.toUiState() = HomeUiState(
     gateMarkers = this.gates.toGateMarkers(),
     showingToggleMarkers = persistentListOf(
         this.significants.toToggleMarkers(MapToggle.SPECIAL_MARK),
-        this.gates.toGateMarkers()
-    )
+        this.gates.toGateMarkers(),
+    ),
 )
 
 fun HomeSignificantResponseDto.toSpecialMarkerInfo() = SpecialMarkerInfo(
     description = this.description,
     imageUrls = this.imageUrls,
 )
-
 
 fun List<HomeResponseDto.BuildingPin>.toBuildingMarkers() = this.map {
     BuildingMarker(
@@ -51,7 +50,7 @@ fun List<HomeResponseDto.HomePin>.toToggleMarkers(
         id = it.id,
         latitude = it.latitude,
         longitude = it.longitude,
-        mapToggle = mapToggle
+        mapToggle = mapToggle,
     )
 }.toImmutableList()
 
@@ -61,7 +60,7 @@ fun List<HomeResponseDto.GatePin>.toGateMarkers() = this.map {
         name = it.name,
         latitude = it.latitude,
         longitude = it.longitude,
-        mapToggle = MapToggle.GATE
+        mapToggle = MapToggle.GATE,
     )
 }.toImmutableList()
 
@@ -92,6 +91,6 @@ fun HomeSearchResponseDto.toUiState(matchKeyword: String): List<SearchResult> =
             latitude = it.latitude,
             longitude = it.longitude,
             isBuilding = false,
-            icon = getIconResByName(it.purpose)
+            icon = getIconResByName(it.purpose),
         )
     }

@@ -21,38 +21,35 @@ import com.ganaljigi.kubf.feature.building.model.Note
 import com.ganaljigi.kubf.core.designsystem.theme.Gray4
 import com.ganaljigi.kubf.core.designsystem.theme.KUBFAndroidTheme
 
-
-
 @Composable
 fun NoteComponent(
     note: Note,
-    onImageClick: (String) -> Unit = {}
+    onImageClick: (String) -> Unit = {},
 ) {
     Box(
-        modifier = Modifier.padding(horizontal = 16.dp)
-    ){
+        modifier = Modifier.padding(horizontal = 16.dp),
+    ) {
         Column {
             Text(
                 text = note.note,
                 style = KUBFAndroidTheme.typography.regular14,
-                color = Gray4
+                color = Gray4,
             )
             Spacer(Modifier.height(12.dp))
             LazyRow(
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
             ) {
-                items(note.imageUrl){ url ->
+                items(note.imageUrl) { url ->
                     AsyncImage(
                         model = url,
                         contentDescription = "특이사항 이미지",
                         modifier = Modifier
                             .clip(RoundedCornerShape(10.dp))
                             .height(84.dp)
-                            .clickable { onImageClick(url) }
+                            .clickable { onImageClick(url) },
                     )
                 }
             }
-
         }
     }
 }
@@ -60,6 +57,6 @@ fun NoteComponent(
 @Preview
 @Composable
 private fun NotePreview() {
-    //val note = Note("2층에서 구름다리로 나가면 건물 내부로 다시 들어올 수 없음", mutableListOf("https","https"))
-   // NoteComponent(note)
+    // val note = Note("2층에서 구름다리로 나가면 건물 내부로 다시 들어올 수 없음", mutableListOf("https","https"))
+    // NoteComponent(note)
 }

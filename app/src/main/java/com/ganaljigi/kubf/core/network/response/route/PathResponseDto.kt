@@ -8,31 +8,31 @@ import kotlinx.serialization.json.JsonElement
 data class PathResponseDto(
     @SerialName("shortestPath") val shortestPath: RoutePathDto? = null,
     @SerialName("noStairsPath") val noStairsPath: RoutePathDto? = null,
-    @SerialName("barrierFreePath") val barrierFreePath: RoutePathDto? = null
+    @SerialName("barrierFreePath") val barrierFreePath: RoutePathDto? = null,
 )
 
 @Serializable
 data class RoutePathDto(
     @SerialName("type") val type: String = "",
     @SerialName("features") val features: List<RouteFeatureDto> = emptyList(),
-    @SerialName("totalDistance") val totalDistance: String = "0m"
+    @SerialName("totalDistance") val totalDistance: String = "0m",
 )
 
 @Serializable
 data class RouteFeatureDto(
     @SerialName("type") val type: String = "",
     @SerialName("geometry") val geometry: RouteGeometryDto? = null,
-    @SerialName("properties") val properties: RoutePropertiesDto? = null
+    @SerialName("properties") val properties: RoutePropertiesDto? = null,
 )
 
 @Serializable
 data class RouteGeometryDto(
     @SerialName("type") val type: String = "",
-    @SerialName("coordinates") val coordinates: JsonElement
+    @SerialName("coordinates") val coordinates: JsonElement,
 )
 
 @Serializable
 data class RoutePropertiesDto(
     @SerialName("type") val type: String = "",
-    @SerialName("index") val index: Int = 0
+    @SerialName("index") val index: Int = 0,
 )

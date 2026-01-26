@@ -20,34 +20,32 @@ import androidx.compose.ui.unit.sp
 import com.ganaljigi.kubf.core.designsystem.theme.Gray3
 import com.ganaljigi.kubf.core.designsystem.theme.KUBFAndroidTheme
 
-//공지사항도 ID
+// 공지사항도 ID
 
-//Helper화면의 NoticeBox의 Title
+// Helper화면의 NoticeBox의 Title
 @Composable
-fun NoticeTitle(
-    onNavigateClick: () -> Unit,
-) {
+fun NoticeTitle() {
     Column(
-        modifier = Modifier
+        modifier = Modifier,
     ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp)
                 .height(52.dp),
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             Text(
                 text = "공지사항",
                 style = KUBFAndroidTheme.typography.semiBold18.copy(
-                    fontSize = 18.sp
-                )
+                    fontSize = 18.sp,
+                ),
             )
         }
     }
 }
 
-//공지사항 박스
+// 공지사항 박스
 @Composable
 fun NoticeItem(
     title: String,
@@ -64,34 +62,34 @@ fun NoticeItem(
             .fillMaxWidth()
             .background(backgroundColor)
             .clickable { onClick() }
-            .padding(horizontal = 20.dp, vertical = 12.dp)
+            .padding(horizontal = 20.dp, vertical = 12.dp),
     ) {
         Text(
             text = title,
             style = KUBFAndroidTheme.typography.medium14.copy(
                 fontSize = 14.sp,
-                lineHeight = 22.sp
-            )
+                lineHeight = 22.sp,
+            ),
         )
         Spacer(modifier = Modifier.height(8.dp))
         Row(
             modifier = Modifier
                 .fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween
+            horizontalArrangement = Arrangement.SpaceBetween,
         ) {
             Text(
                 text = date,
                 style = KUBFAndroidTheme.typography.regular13.copy(
                     color = Gray3,
-                    fontSize = 13.sp
-                )
+                    fontSize = 13.sp,
+                ),
             )
             Text(
                 text = "번호: $number",
                 style = KUBFAndroidTheme.typography.regular13.copy(
                     color = Gray3,
-                    fontSize = 13.sp
-                )
+                    fontSize = 13.sp,
+                ),
             )
         }
     }
@@ -100,5 +98,5 @@ fun NoticeItem(
 @Preview(showBackground = true)
 @Composable
 fun NoticeBoxPreview() {
-    NoticeTitle() {}
+    NoticeTitle()
 }

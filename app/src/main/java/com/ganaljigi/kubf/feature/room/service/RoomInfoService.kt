@@ -13,6 +13,6 @@ interface RoomInfoService {
         @Path("spaceId")
         spaceId: Long,
         @Query("type")
-        type: Int // 1=강의실, 0=not강의실
+        type: Int, // 1=강의실, 0=not강의실
     ): RoomInfoResponseDto
 }

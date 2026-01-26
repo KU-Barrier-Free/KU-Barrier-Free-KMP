@@ -32,14 +32,14 @@ fun HomeToggle(
     Row(
         modifier = modifier,
         horizontalArrangement = Arrangement.spacedBy(8.dp),
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         toggleUiStates.forEach {
             HomeToggleChip(
                 modifier = Modifier,
                 isSelected = it.isSelected,
                 toggle = it.toggle,
-                onToggleClick = { onToggleClick(it.toggle) }
+                onToggleClick = { onToggleClick(it.toggle) },
             )
         }
     }
@@ -58,20 +58,20 @@ fun HomeToggleChip(
         shadowElevation = 2.dp,
         shape = RoundedCornerShape(20.dp),
         color =
-            if (isSelected) LightGreen else Color.White,
+        if (isSelected) LightGreen else Color.White,
         border = if (isSelected) {
             BorderStroke(
                 width = 1.dp,
-                color = MainGreen
+                color = MainGreen,
             )
-        } else null
+        } else null,
     ) {
         Row(
             modifier = Modifier
                 .heightIn(min = 32.dp)
                 .padding(horizontal = 8.dp, vertical = 6.dp),
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(4.dp)
+            horizontalArrangement = Arrangement.spacedBy(4.dp),
         ) {
             Icon(
                 painter = painterResource(toggle.toggleIconRes),
@@ -82,8 +82,8 @@ fun HomeToggleChip(
             Text(
                 text = toggle.label,
                 style = KUBFAndroidTheme.typography.medium13.copy(
-                    color = if (isSelected) MainGreen else Color.Black
-                )
+                    color = if (isSelected) MainGreen else Color.Black,
+                ),
             )
         }
     }
@@ -96,8 +96,8 @@ private fun HomeTogglePreview() {
         toggleUiStates = MapToggle.entries.map {
             ToggleUiState(
                 toggle = it,
-                isSelected = it == MapToggle.CURB
+                isSelected = it == MapToggle.CURB,
             )
-        }
+        },
     )
 }

@@ -10,14 +10,10 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.buildAnnotatedString
-import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.ganaljigi.kubf.feature.home.model.SearchResult
 import com.ganaljigi.kubf.core.designsystem.theme.Gray2
-import com.ganaljigi.kubf.core.designsystem.theme.MainGreen
 
 @Composable
 fun HomeSearchBottomSheet(
@@ -38,8 +34,8 @@ fun HomeSearchBottomSheet(
                 .padding(top = 8.dp, bottom = 16.dp)
                 .background(
                     color = Gray2,
-                    shape = RoundedCornerShape(4.dp)
-                )
+                    shape = RoundedCornerShape(4.dp),
+                ),
         )
         when (searchResults.size) {
             0 -> {
@@ -74,13 +70,12 @@ fun HomeSearchBottomSheet(
     }
 }
 
-
 @Preview
 @Composable
 private fun HomeSearchBottomSheetEmptyListPreview() {
     HomeSearchBottomSheet(
         searchKeyword = "레스티",
-        searchResults = emptyList()
+        searchResults = emptyList(),
     )
 }
 
@@ -94,9 +89,9 @@ private fun HomeSearchBottomSheetWithItemPreview() {
                 id = 2,
                 name = "카페 레스티오",
                 building = "공학관",
-                searchKeyword = "레스티"
-            )
-        )
+                searchKeyword = "레스티",
+            ),
+        ),
     )
 }
 
@@ -110,14 +105,14 @@ private fun HomeSearchBottomSheetWithItemListPreview() {
                 id = 1,
                 name = "카페 레스티오",
                 building = "경영관",
-                searchKeyword = "레스티"
+                searchKeyword = "레스티",
             ),
             SearchResult(
                 id = 2,
                 name = "카페 레스티오",
                 building = "공학관",
-                searchKeyword = "레스티"
-            )
-        )
+                searchKeyword = "레스티",
+            ),
+        ),
     )
 }

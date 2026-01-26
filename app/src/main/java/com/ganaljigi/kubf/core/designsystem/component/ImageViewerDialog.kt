@@ -64,16 +64,16 @@ fun ImageViewerDialog(
         visible = visible,
         enter = slideInVertically(initialOffsetY = { it }) + fadeIn(),
         exit = slideOutVertically(targetOffsetY = { it }) + fadeOut(),
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier.fillMaxSize(),
     ) {
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .background(Color.Black)
+                .background(Color.Black),
         ) {
             val pagerState = rememberPagerState(
                 initialPage = selectedIndex.coerceIn(0, images.lastIndex),
-                pageCount = { images.size }
+                pageCount = { images.size },
             )
             val scope = rememberCoroutineScope()
             LaunchedEffect(visible, selectedIndex, images.size) {
@@ -86,11 +86,11 @@ fun ImageViewerDialog(
                 userScrollEnabled = false,
                 modifier = Modifier
                     .align(Alignment.Center)
-                    .fillMaxWidth()
+                    .fillMaxWidth(),
             ) { page ->
                 TransformableImage(
                     modifier = Modifier.fillMaxWidth(),
-                    imageUrl = images.getOrNull(page)
+                    imageUrl = images.getOrNull(page),
                 )
             }
             IconButton(
@@ -99,12 +99,12 @@ fun ImageViewerDialog(
                     .align(Alignment.TopEnd)
                     .padding(20.dp)
                     .clip(CircleShape)
-                    .background(Color.Black.copy(alpha = 0.5f))
+                    .background(Color.Black.copy(alpha = 0.5f)),
             ) {
                 Icon(
                     imageVector = Icons.Rounded.Close,
                     contentDescription = "닫기",
-                    tint = Color.White
+                    tint = Color.White,
                 )
             }
             if (images.isNotEmpty()) {
@@ -113,17 +113,17 @@ fun ImageViewerDialog(
                         .align(Alignment.BottomCenter)
                         .padding(bottom = 32.dp),
                     horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.spacedBy(12.dp)
+                    verticalArrangement = Arrangement.spacedBy(12.dp),
                 ) {
                     Text(
                         text = "${pagerState.currentPage + 1}/${images.size}",
                         color = Color.White,
                         textAlign = TextAlign.Center,
-                        style = KUBFAndroidTheme.typography.medium13
+                        style = KUBFAndroidTheme.typography.medium13,
                     )
                     Row(
                         modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.Center
+                        horizontalArrangement = Arrangement.Center,
                     ) {
                         IconButton(
                             onClick = {
@@ -136,12 +136,12 @@ fun ImageViewerDialog(
                             modifier = Modifier
                                 .size(56.dp)
                                 .clip(CircleShape)
-                                .background(Color.White.copy(alpha = 0.25f))
+                                .background(Color.White.copy(alpha = 0.25f)),
                         ) {
                             Icon(
                                 imageVector = Icons.Rounded.KeyboardArrowLeft,
                                 contentDescription = "이전 이미지",
-                                tint = Color.White
+                                tint = Color.White,
                             )
                         }
                         Spacer(modifier = Modifier.width(40.dp))
@@ -156,12 +156,12 @@ fun ImageViewerDialog(
                             modifier = Modifier
                                 .size(56.dp)
                                 .clip(CircleShape)
-                                .background(Color.White.copy(alpha = 0.25f))
+                                .background(Color.White.copy(alpha = 0.25f)),
                         ) {
                             Icon(
                                 imageVector = Icons.Rounded.KeyboardArrowRight,
                                 contentDescription = "다음 이미지",
-                                tint = Color.White
+                                tint = Color.White,
                             )
                         }
                     }

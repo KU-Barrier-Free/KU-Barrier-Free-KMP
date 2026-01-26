@@ -46,15 +46,15 @@ fun MapGateInfo(
             .border(
                 width = 1.dp,
                 color = Gray2.copy(alpha = 0.5f),
-                shape = RoundedCornerShape(cornerRadius)
+                shape = RoundedCornerShape(cornerRadius),
             )
             .padding(12.dp * scale)
             .widthIn(max = 320.dp * scale),
         verticalArrangement = Arrangement.spacedBy(16.dp * scale),
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Row(
-            horizontalArrangement = Arrangement.spacedBy(8.dp * scale)
+            horizontalArrangement = Arrangement.spacedBy(8.dp * scale),
         ) {
             painters.forEach {
                 Image(
@@ -73,7 +73,7 @@ fun MapGateInfo(
                 fontSize = fontSize.sp,
                 lineHeight = lineHeight.sp,
             ),
-            textAlign = TextAlign.Center
+            textAlign = TextAlign.Center,
         )
     }
 }

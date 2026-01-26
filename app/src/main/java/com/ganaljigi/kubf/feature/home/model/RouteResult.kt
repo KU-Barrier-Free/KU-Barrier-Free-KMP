@@ -17,11 +17,11 @@ data class RoutePoint(
     val latitude: Double,
     val longitude: Double,
     val type: String,
-    val index: Int
+    val index: Int,
 )
 
 data class RouteLine(
     val points: List<LatLng>,
     val type: String,
-    val index: Int
+    val index: Int,
 )

@@ -14,7 +14,7 @@ fun BuildingSummaryResponseDto.toHomeBuildingInfo() = HomeBuildingInfo(
     latitude = latitude,
     longitude = longitude,
     convenienceList = facilityPurposes.mapNotNull { fromLabel(it) }.toPersistentList(),
-    doorInfoList = doorInfos.map { it.toDoorInfo() }.toPersistentList()
+    doorInfoList = doorInfos.map { it.toDoorInfo() }.toPersistentList(),
 )
 
 fun BuildingSummaryResponseDto.DoorInfoDto.toDoorInfo() = DoorInfo(
@@ -33,7 +33,7 @@ fun BuildingSummaryResponseDto.DoorInfoDto.toDoorMarker() = DoorMarker(
     label = this.label,
     latitude = this.latitude,
     longitude = this.longitude,
-    isWheelChairAccessible = this.wheelchair
+    isWheelChairAccessible = this.wheelchair,
 )
 
 fun BuildingSummaryResponseDto.toDoorMarkers() = doorInfos.map { it.toDoorMarker() }
