@@ -14,8 +14,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.ganaljigi.kubf.navigation.MainNavHost
-import com.ganaljigi.kubf.navigation.Routes
+import com.ganaljigi.kubf.core.navigation.MainNavHost
+import com.ganaljigi.kubf.core.navigation.Routes
 import com.ganaljigi.kubf.core.designsystem.theme.KUBFAndroidTheme
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.serialization.Serializable

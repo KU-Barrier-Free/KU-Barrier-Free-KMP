@@ -1,5 +1,6 @@
-package com.ganaljigi.kubf.data.repository
+package com.ganaljigi.kubf.core.data.repositoryimpl
 
+import com.ganaljigi.kubf.core.data.repository.BuildingInfoRepository
 import com.ganaljigi.kubf.core.network.service.BuildingService
 import com.ganaljigi.kubf.feature.building.mapper.toFacilityOrNull
 import com.ganaljigi.kubf.feature.building.mapper.toRoomUi

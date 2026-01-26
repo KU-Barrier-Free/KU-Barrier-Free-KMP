@@ -1,4 +1,4 @@
-package com.ganaljigi.kubf.navigation
+package com.ganaljigi.kubf.core.navigation
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable

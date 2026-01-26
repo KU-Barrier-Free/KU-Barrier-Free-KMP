@@ -1,4 +1,4 @@
-package com.ganaljigi.kubf.mapper
+package com.ganaljigi.kubf.core.mapper
 
 import com.ganaljigi.kubf.core.network.response.building.BuildingSummaryResponseDto
 import com.ganaljigi.kubf.core.model.DoorInfo

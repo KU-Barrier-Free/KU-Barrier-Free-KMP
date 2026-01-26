@@ -1,4 +1,4 @@
-package com.ganaljigi.kubf.navigation
+package com.ganaljigi.kubf.core.navigation
 
 import androidx.navigation.NavType
 import com.ganaljigi.kubf.core.model.SearchMode

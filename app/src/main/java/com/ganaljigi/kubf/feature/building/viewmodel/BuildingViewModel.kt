@@ -3,7 +3,7 @@ package com.ganaljigi.kubf.feature.building.viewmodel
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.ganaljigi.kubf.data.repository.BuildingInfoRepository
+import com.ganaljigi.kubf.core.data.repository.BuildingInfoRepository
 import com.ganaljigi.kubf.feature.building.model.Room
 import com.ganaljigi.kubf.feature.building.model.RoomSearchResult
 import dagger.hilt.android.lifecycle.HiltViewModel

@@ -1,7 +1,7 @@
-package com.ganaljigi.kubf.data.di
+package com.ganaljigi.kubf.core.data.di
 
-import com.ganaljigi.kubf.data.repository.BuildingInfoRepository
-import com.ganaljigi.kubf.data.repository.BuildingInfoRepositoryImpl
+import com.ganaljigi.kubf.core.data.repository.BuildingInfoRepository
+import com.ganaljigi.kubf.core.data.repositoryimpl.BuildingInfoRepositoryImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn

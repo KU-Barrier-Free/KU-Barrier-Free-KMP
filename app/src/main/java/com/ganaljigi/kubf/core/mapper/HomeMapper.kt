@@ -1,4 +1,4 @@
-package com.ganaljigi.kubf.mapper
+package com.ganaljigi.kubf.core.mapper
 
 import com.ganalijigi.kubf.R
 import com.ganaljigi.kubf.core.network.response.home.HomeGateResponseDto

@@ -1,4 +1,4 @@
-package com.ganaljigi.kubf.data.repository
+package com.ganaljigi.kubf.core.data.repository
 
 import com.ganaljigi.kubf.feature.building.model.BuildingInfo
 import com.ganaljigi.kubf.feature.building.model.RoomSearchResult

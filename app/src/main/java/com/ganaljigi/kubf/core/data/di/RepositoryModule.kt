@@ -1,4 +1,4 @@
-package com.ganaljigi.kubf.data.di
+package com.ganaljigi.kubf.core.data.di
 
 import com.ganaljigi.kubf.core.data.repository.BuildingRepository
 import com.ganaljigi.kubf.core.data.repository.HomeRepository
