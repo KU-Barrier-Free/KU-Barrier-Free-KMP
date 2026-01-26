@@ -1,4 +1,4 @@
-package com.ganaljigi.kubf.ui.roominfo.component
+package com.ganaljigi.kubf.feature.room.component
 
 import android.content.Intent
 import android.net.Uri

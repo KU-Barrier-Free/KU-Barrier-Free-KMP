@@ -1,4 +1,4 @@
-package com.ganaljigi.kubf.ui.util
+package com.ganaljigi.kubf.core.ui.util
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource

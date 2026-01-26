@@ -11,7 +11,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.ganalijigi.kubf.R
 import com.ganaljigi.kubf.feature.home.viewmodel.SpecialMarkerInfo
-import com.ganaljigi.kubf.ui.util.noRippleClickable
+import com.ganaljigi.kubf.core.ui.util.noRippleClickable
 import com.google.maps.android.compose.MarkerInfoWindow
 import com.google.maps.android.compose.MarkerState
 

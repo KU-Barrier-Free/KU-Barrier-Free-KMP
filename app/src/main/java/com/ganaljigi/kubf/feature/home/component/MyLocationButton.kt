@@ -13,7 +13,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.ganalijigi.kubf.R
 import com.ganaljigi.kubf.core.designsystem.theme.MainGreen
-import com.ganaljigi.kubf.ui.util.noRippleClickable
+import com.ganaljigi.kubf.core.ui.util.noRippleClickable
 
 @Composable
 fun MyLocationButton(

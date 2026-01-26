@@ -20,7 +20,7 @@ import androidx.compose.ui.unit.sp
 import com.ganaljigi.kubf.core.designsystem.theme.Black
 import com.ganaljigi.kubf.core.designsystem.theme.KUBFAndroidTheme
 import com.ganaljigi.kubf.core.designsystem.theme.MainGreen
-import com.ganaljigi.kubf.ui.util.noRippleClickable
+import com.ganaljigi.kubf.core.ui.util.noRippleClickable
 
 @Composable
 fun BarrierFreeInfoItem(

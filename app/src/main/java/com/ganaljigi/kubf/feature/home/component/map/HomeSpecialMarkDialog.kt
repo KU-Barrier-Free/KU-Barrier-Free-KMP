@@ -19,7 +19,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import coil3.compose.AsyncImage
-import com.ganaljigi.kubf.ui.util.conditionalModifier
+import com.ganaljigi.kubf.core.ui.util.conditionalModifier
 
 @Composable
 fun HomeSpecialMarkDialog(

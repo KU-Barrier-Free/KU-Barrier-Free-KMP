@@ -1,6 +1,6 @@
-package com.ganaljigi.kubf.ui.roominfo.repository
+package com.ganaljigi.kubf.feature.room.repository
 
-import com.ganaljigi.kubf.ui.roominfo.response.RoomInfoResponseDto
+import com.ganaljigi.kubf.feature.room.response.RoomInfoResponseDto
 
 interface RoomInfoRepository {
     suspend fun getRoomInfo(

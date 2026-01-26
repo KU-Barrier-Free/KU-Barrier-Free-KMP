@@ -1,4 +1,4 @@
-package com.ganaljigi.kubf.ui.util
+package com.ganaljigi.kubf.core.ui.util
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember

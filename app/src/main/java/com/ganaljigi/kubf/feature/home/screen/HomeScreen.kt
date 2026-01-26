@@ -72,7 +72,7 @@ import com.ganaljigi.kubf.feature.home.viewmodel.HomeViewModel
 import com.ganaljigi.kubf.core.designsystem.theme.Black
 import com.ganaljigi.kubf.core.designsystem.theme.Gray2
 import com.ganaljigi.kubf.core.designsystem.theme.KUBFAndroidTheme
-import com.ganaljigi.kubf.ui.util.noRippleClickable
+import com.ganaljigi.kubf.core.ui.util.noRippleClickable
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.Priority
 import com.google.android.gms.maps.model.LatLng

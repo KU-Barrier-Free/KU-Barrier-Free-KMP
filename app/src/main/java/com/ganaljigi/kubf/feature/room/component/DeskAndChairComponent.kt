@@ -1,4 +1,4 @@
-package com.ganaljigi.kubf.ui.roominfo.component
+package com.ganaljigi.kubf.feature.room.component
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.HorizontalDivider

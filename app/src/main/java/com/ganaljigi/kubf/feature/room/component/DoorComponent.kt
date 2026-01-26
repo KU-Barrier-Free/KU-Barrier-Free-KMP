@@ -1,4 +1,4 @@
-package com.ganaljigi.kubf.ui.roominfo.component
+package com.ganaljigi.kubf.feature.room.component
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row

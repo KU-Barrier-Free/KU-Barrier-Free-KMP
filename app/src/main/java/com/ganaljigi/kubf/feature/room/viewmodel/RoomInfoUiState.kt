@@ -1,4 +1,4 @@
-package com.ganaljigi.kubf.ui.roominfo.viewmodel
+package com.ganaljigi.kubf.feature.room.viewmodel
 
 import org.w3c.dom.Comment
 

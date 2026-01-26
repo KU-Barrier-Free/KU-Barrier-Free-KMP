@@ -15,7 +15,7 @@ import com.ganaljigi.kubf.feature.helper.screen.SupportScreen
 import com.ganaljigi.kubf.feature.home.screen.HomeScreen
 import com.ganaljigi.kubf.feature.home.screen.HomeSearchScreen
 import com.ganaljigi.kubf.feature.home.viewmodel.HomeViewModel
-import com.ganaljigi.kubf.ui.roominfo.RoomInfoScreen
+import com.ganaljigi.kubf.feature.room.RoomInfoScreen
 
 @Composable
 fun MainNavHost(

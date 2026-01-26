@@ -41,7 +41,7 @@ import com.ganaljigi.kubf.feature.home.viewmodel.HomeBuildingInfo
 import com.ganaljigi.kubf.core.designsystem.theme.Gray2
 import com.ganaljigi.kubf.core.designsystem.theme.Gray3
 import com.ganaljigi.kubf.core.designsystem.theme.KUBFAndroidTheme
-import com.ganaljigi.kubf.ui.util.noRippleClickable
+import com.ganaljigi.kubf.core.ui.util.noRippleClickable
 import kotlinx.collections.immutable.persistentListOf
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)

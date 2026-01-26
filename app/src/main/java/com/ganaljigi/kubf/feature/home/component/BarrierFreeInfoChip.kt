@@ -25,7 +25,7 @@ import com.ganaljigi.kubf.core.designsystem.theme.Gray1
 import com.ganaljigi.kubf.core.designsystem.theme.Gray4
 import com.ganaljigi.kubf.core.designsystem.theme.KUBFAndroidTheme
 import com.ganaljigi.kubf.core.designsystem.theme.MainGreen
-import com.ganaljigi.kubf.ui.util.noRippleClickable
+import com.ganaljigi.kubf.core.ui.util.noRippleClickable
 
 @Composable
 fun BarrierFreeInfoChip(

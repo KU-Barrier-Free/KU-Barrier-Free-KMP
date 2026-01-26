@@ -1,4 +1,4 @@
-package com.ganaljigi.kubf.ui.roominfo
+package com.ganaljigi.kubf.feature.room
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -21,13 +21,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.ganaljigi.kubf.ui.roominfo.component.DeskAndChairComponent
-import com.ganaljigi.kubf.ui.roominfo.component.DoorComponent
-import com.ganaljigi.kubf.ui.roominfo.component.RoomInfoDefaultComponent
-import com.ganaljigi.kubf.ui.roominfo.component.RoomInfoTopAppBar
-import com.ganaljigi.kubf.ui.roominfo.component.RoomPic
-import com.ganaljigi.kubf.ui.roominfo.viewmodel.RoomInfoUiState
-import com.ganaljigi.kubf.ui.roominfo.viewmodel.RoomInfoViewModel
+import com.ganaljigi.kubf.feature.room.component.DeskAndChairComponent
+import com.ganaljigi.kubf.feature.room.component.DoorComponent
+import com.ganaljigi.kubf.feature.room.component.RoomInfoDefaultComponent
+import com.ganaljigi.kubf.feature.room.component.RoomInfoTopAppBar
+import com.ganaljigi.kubf.feature.room.component.RoomPic
+import com.ganaljigi.kubf.feature.room.viewmodel.RoomInfoUiState
+import com.ganaljigi.kubf.feature.room.viewmodel.RoomInfoViewModel
 
 // 2-1) uiState를 직접 받는 버전 (프리뷰/에뮬에 더미 주입용)
 @Composable

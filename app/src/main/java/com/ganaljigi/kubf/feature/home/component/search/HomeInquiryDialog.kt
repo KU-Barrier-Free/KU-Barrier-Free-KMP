@@ -36,7 +36,7 @@ import com.ganaljigi.kubf.core.designsystem.theme.Gray3
 import com.ganaljigi.kubf.core.designsystem.theme.Gray4
 import com.ganaljigi.kubf.core.designsystem.theme.KUBFAndroidTheme
 import com.ganaljigi.kubf.core.designsystem.theme.MainGreen
-import com.ganaljigi.kubf.ui.util.conditionalModifier
+import com.ganaljigi.kubf.core.ui.util.conditionalModifier
 
 @Composable
 fun HomeInquiryDialog(

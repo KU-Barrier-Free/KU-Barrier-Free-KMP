@@ -31,7 +31,7 @@ import com.ganaljigi.kubf.core.designsystem.theme.Gray4
 import com.ganaljigi.kubf.core.designsystem.theme.KUBFAndroidTheme
 import com.ganaljigi.kubf.core.designsystem.theme.LightGreen
 import com.ganaljigi.kubf.core.designsystem.theme.MainGreen
-import com.ganaljigi.kubf.ui.util.toDistanceString
+import com.ganaljigi.kubf.core.ui.util.toDistanceString
 
 @Composable
 fun HomeRouteInfo(

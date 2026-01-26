@@ -1,10 +1,10 @@
-package com.ganaljigi.kubf.ui.roominfo.viewmodel
+package com.ganaljigi.kubf.feature.room.viewmodel
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.ganaljigi.kubf.ui.roominfo.repository.RoomInfoRepository
-import com.ganaljigi.kubf.ui.roominfo.mapper.toUiState
+import com.ganaljigi.kubf.feature.room.repository.RoomInfoRepository
+import com.ganaljigi.kubf.feature.room.mapper.toUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope

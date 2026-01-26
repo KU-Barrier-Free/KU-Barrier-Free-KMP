@@ -1,7 +1,7 @@
-package com.ganaljigi.kubf.ui.roominfo.mapper
+package com.ganaljigi.kubf.feature.room.mapper
 
-import com.ganaljigi.kubf.ui.roominfo.response.RoomInfoResponseDto
-import com.ganaljigi.kubf.ui.roominfo.viewmodel.RoomInfoUiState
+import com.ganaljigi.kubf.feature.room.response.RoomInfoResponseDto
+import com.ganaljigi.kubf.feature.room.viewmodel.RoomInfoUiState
 
 fun RoomInfoResponseDto.toUiState(): RoomInfoUiState {
     if (!success || result == null) {

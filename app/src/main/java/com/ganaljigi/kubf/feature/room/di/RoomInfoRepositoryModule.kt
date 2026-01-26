@@ -1,7 +1,7 @@
-package com.ganaljigi.kubf.ui.roominfo.di
+package com.ganaljigi.kubf.feature.room.di
 
-import com.ganaljigi.kubf.ui.roominfo.repository.RoomInfoRepository
-import com.ganaljigi.kubf.ui.roominfo.repositoryimpl.RoomInfoRepositoryImpl
+import com.ganaljigi.kubf.feature.room.repository.RoomInfoRepository
+import com.ganaljigi.kubf.feature.room.repositoryimpl.RoomInfoRepositoryImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn

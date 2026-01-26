@@ -1,4 +1,4 @@
-package com.ganaljigi.kubf.ui.util
+package com.ganaljigi.kubf.core.ui.util
 
 interface MultipleEventsCutter {
     fun processEvent(event: () -> Unit)

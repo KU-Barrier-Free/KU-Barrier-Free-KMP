@@ -4,7 +4,7 @@ import com.ganaljigi.kubf.core.network.service.BuildingService
 import com.ganaljigi.kubf.core.network.service.HomeService
 import com.ganaljigi.kubf.core.network.service.RouteService
 import com.ganaljigi.kubf.core.network.service.HelperService
-import com.ganaljigi.kubf.ui.roominfo.service.RoomInfoService
+import com.ganaljigi.kubf.feature.room.service.RoomInfoService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
