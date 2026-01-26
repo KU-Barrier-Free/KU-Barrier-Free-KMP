@@ -1,0 +1,542 @@
+package com.ganaljigi.kubf.feature.home.component.map
+
+import androidx.annotation.DrawableRes
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.sizeIn
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.Icon
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import coil3.compose.rememberAsyncImagePainter
+import coil3.request.ImageRequest
+import coil3.request.allowHardware
+import com.ganalijigi.kubf.BuildConfig
+import com.ganalijigi.kubf.R
+import com.ganaljigi.kubf.feature.home.model.BuildingMarker
+import com.ganaljigi.kubf.feature.home.model.DoorMarker
+import com.ganaljigi.kubf.feature.home.model.MapToggle
+import com.ganaljigi.kubf.feature.home.model.RouteResult
+import com.ganaljigi.kubf.feature.home.model.ToggleMarker
+import com.ganaljigi.kubf.feature.home.viewmodel.SpecialMarkerInfo
+import com.ganaljigi.kubf.feature.home.viewmodel.ToggleUiState
+import com.ganaljigi.kubf.core.designsystem.theme.Gray4
+import com.ganaljigi.kubf.core.designsystem.theme.KUBFAndroidTheme
+import com.ganaljigi.kubf.core.designsystem.theme.MainGreen
+import com.ganaljigi.kubf.core.ui.util.noRippleClickable
+import com.google.android.gms.maps.GoogleMapOptions
+import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.LatLngBounds
+import com.google.maps.android.compose.CameraPositionState
+import com.google.maps.android.compose.GoogleMap
+import com.google.maps.android.compose.MapProperties
+import com.google.maps.android.compose.MapType
+import com.google.maps.android.compose.MapUiSettings
+import com.google.maps.android.compose.MarkerComposable
+import com.google.maps.android.compose.MarkerInfoWindow
+import com.google.maps.android.compose.MarkerState
+import com.google.maps.android.compose.Polyline
+import com.google.maps.android.compose.rememberMarkerState
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.persistentListOf
+
+// TODO: 현재 위치 설정, 줌인/줌아웃 버튼 추가
+@Composable
+fun MapComponent(
+    modifier: Modifier = Modifier,
+    cameraPosition: CameraPositionState,
+    isLocationPermissionGranted: Boolean = false,
+    selectedBuildingMarker: BuildingMarker? = null,
+    selectedToggles: ImmutableList<ToggleUiState> = persistentListOf(),
+    buildingMarkers: List<BuildingMarker> = emptyList(),
+    doorMarkers: List<DoorMarker> = emptyList(),
+    curbMarkers: ImmutableList<ToggleMarker> = persistentListOf(),
+    slopeMarkers: ImmutableList<ToggleMarker> = persistentListOf(),
+    stairsMarkers: ImmutableList<ToggleMarker> = persistentListOf(),
+    specialMarkers: ImmutableList<ToggleMarker> = persistentListOf(),
+    gateMarkers: ImmutableList<ToggleMarker> = persistentListOf(),
+    selectedRouteResult: RouteResult? = null,
+    onBuildingMarkerClick: (BuildingMarker) -> Unit = { },
+    onSpecialMarkerClick: (ToggleMarker) -> Unit = { },
+    onSpecialInfoClick: (List<String>) -> Unit = { },
+    onGateMarkerClick: (ToggleMarker) -> Unit = { },
+    onGateInfoClick: (List<String>) -> Unit = { },
+    selectedSpecialMarker: ToggleMarker? = null,
+    specialMarkerInfo: SpecialMarkerInfo = SpecialMarkerInfo(),
+    selectedGateMarker: ToggleMarker? = null,
+    gateMarkerInfo: SpecialMarkerInfo = SpecialMarkerInfo(),
+    setDefaultMode: () -> Unit = { },
+    userLocation: LatLng? = null,
+) {
+    val currentZoom = cameraPosition.position.zoom
+    val markerScale = calculateMarkerScale(
+        currentZoom = currentZoom,
+        minZoom = MapParam.MIN_ZOOM,
+        maxZoom = MapParam.MAX_ZOOM
+    )
+
+    GoogleMap(
+        modifier = modifier,
+        onMapClick = { setDefaultMode() },
+        cameraPositionState = cameraPosition,
+        properties = MapParam.mapProperties.copy(isMyLocationEnabled = false),
+        uiSettings = MapParam.mapUiSettings,
+        googleMapOptionsFactory = { MapParam.mapOptions }
+    ) {
+        // 선택된 경로만 렌더링
+        selectedRouteResult?.let { selectedRoute ->
+            if (selectedRoute.pathPoints.isNotEmpty()) {
+                Polyline(
+                    points = selectedRoute.pathPoints,
+                    color = MainGreen,
+                    width = 10f,
+                    zIndex = 2f
+                )
+            }
+        }
+        selectedToggles.forEach { toggleUiState ->
+            when (toggleUiState.toggle) {
+                MapToggle.CURB -> curbMarkers.forEach { mapMarker ->
+                    ToggleMarker(
+                        toggleMarker = mapMarker,
+                        toggleIconRes = R.drawable.ic_curb_marker,
+                        scale = markerScale
+                    )
+                }
+
+                MapToggle.SLOPE -> slopeMarkers.forEach { mapMarker ->
+                    ToggleMarker(
+                        toggleMarker = mapMarker,
+                        toggleIconRes = R.drawable.ic_slope_marker,
+                        scale = markerScale
+                    )
+                }
+
+                MapToggle.STAIRS -> stairsMarkers.forEach { mapMarker ->
+                    ToggleMarker(
+                        toggleMarker = mapMarker,
+                        toggleIconRes = R.drawable.ic_stairs_marker,
+                        scale = markerScale
+                    )
+                }
+
+                MapToggle.SPECIAL_MARK -> specialMarkers.forEach { mapMarker ->
+                    val markerState = rememberMarkerState(
+                        position = LatLng(mapMarker.latitude, mapMarker.longitude)
+                    )
+                    val isSelected = mapMarker == selectedSpecialMarker
+                    SpecialMarker(
+                        markerState = markerState,
+                        isSelected = isSelected,
+                        specialMarkerInfo = if (isSelected) specialMarkerInfo else SpecialMarkerInfo(),
+                        onSpecialMarkerClick = { onSpecialMarkerClick(mapMarker) },
+                        onSpecialInfoClick = onSpecialInfoClick,
+                        scale = markerScale
+                    )
+                }
+
+                MapToggle.GATE -> gateMarkers.forEach { mapMarker ->
+                    val markerState = rememberMarkerState(
+                        position = LatLng(mapMarker.latitude, mapMarker.longitude)
+                    )
+                    val isSelected = mapMarker == selectedGateMarker
+                    GateMarker(
+                        markerState = markerState,
+                        isSelected = isSelected,
+                        gateMarkerInfo = if (isSelected) gateMarkerInfo else SpecialMarkerInfo(),
+                        onGateMarkerClick = { onGateMarkerClick(mapMarker) },
+                        onGateInfoClick = onGateInfoClick,
+                        scale = markerScale
+                    )
+                }
+            }
+        }
+
+        selectedBuildingMarker?.let { marker ->
+            BuildingMarker(
+                buildingMarker = marker,
+                isSelected = true,
+                scale = markerScale
+            )
+        }
+
+        buildingMarkers.forEach { mapMarker ->
+            BuildingMarker(
+                buildingMarker = mapMarker,
+                isSelected = false,
+                scale = markerScale
+            ) {
+                onBuildingMarkerClick(it)
+            }
+        }
+        doorMarkers.forEach { mapMarker ->
+            DoorMarker(doorMarker = mapMarker, scale = markerScale)
+        }
+
+        // 사용자 위치 마커 렌더링
+        if (isLocationPermissionGranted && userLocation != null) {
+            UserMarker(latLng = userLocation)
+        }
+    }
+}
+
+
+@Composable
+private fun ToggleMarker(
+    toggleMarker: ToggleMarker,
+    @DrawableRes toggleIconRes: Int,
+    scale: Float = 1f,
+) {
+    val markerState =
+        rememberMarkerState(
+            key = toggleMarker.toString(),
+            position = LatLng(toggleMarker.latitude, toggleMarker.longitude)
+        )
+    key(toggleMarker) {
+        MarkerComposable(
+            state = markerState
+        ) {
+            Icon(
+                painter = painterResource(toggleIconRes),
+                contentDescription = null,
+                tint = Color.Unspecified,
+                modifier = Modifier
+                    .size(16.dp * scale)
+                    .shadow(1.dp)
+            )
+        }
+    }
+    DisposableEffect(toggleMarker) {
+        onDispose { markerState.position }
+    }
+}
+
+// https://velog.io/@gudrmsglgl/Compose-Google-Map
+@Composable
+private fun SpecialMarker(
+    markerState: MarkerState,
+    isSelected: Boolean = false,
+    specialMarkerInfo: SpecialMarkerInfo,
+    onSpecialMarkerClick: () -> Unit = { },
+    onSpecialInfoClick: (List<String>) -> Unit = { },
+    scale: Float = 1f,
+) {
+    val iconScale = if (isSelected) scale * 2.0f else scale
+    val imageUrls = specialMarkerInfo.imageUrls.take(2)
+    val isImageLoaded =
+        remember(isSelected) { mutableStateListOf(*Array(imageUrls.size) { false }) }
+    val painters = imageUrls.mapIndexed { index, imageUrl ->
+        rememberAsyncImagePainter(
+            model = ImageRequest
+                .Builder(LocalContext.current)
+                .data(imageUrl)
+                .allowHardware(false)
+                .build(),
+            placeholder = painterResource(R.drawable.img_special_info),
+            error = painterResource(R.drawable.img_special_info),
+            onSuccess = { isImageLoaded[index] = true }
+        )
+    }
+    val allImagesLoaded by derivedStateOf { isImageLoaded.all { it } }
+
+    // API 응답이 오고 이미지가 로딩되었을 때 Info Window 표시
+    LaunchedEffect(specialMarkerInfo, allImagesLoaded) {
+        if (isSelected && allImagesLoaded) {
+            markerState.showInfoWindow()
+        }
+    }
+
+    MarkerComposableInfoWindow(
+        markerState = markerState,
+        isSelected = isSelected,
+        specialMarkerInfo = specialMarkerInfo,
+        onSpecialMarkerClick = onSpecialMarkerClick,
+        onSpecialInfoClick = onSpecialInfoClick,
+        painters = painters
+    ) {
+        Icon(
+            painter = painterResource(
+                if (isSelected) R.drawable.ic_special_marker_selected
+                else R.drawable.ic_special_marker
+            ),
+            contentDescription = null,
+            tint = Color.Unspecified,
+            modifier = Modifier
+                .size(20.dp * iconScale)
+        )
+    }
+}
+
+@Composable
+private fun GateMarker(
+    markerState: MarkerState,
+    isSelected: Boolean = false,
+    gateMarkerInfo: SpecialMarkerInfo,
+    onGateMarkerClick: () -> Unit = { },
+    onGateInfoClick: (List<String>) -> Unit = { },
+    scale: Float = 1f,
+) {
+    val imageUrls = gateMarkerInfo.imageUrls.take(2)
+    val isImageLoaded =
+        remember(isSelected) { mutableStateListOf(*Array(imageUrls.size) { false }) }
+    val painters = imageUrls.mapIndexed { index, imageUrl ->
+        rememberAsyncImagePainter(
+            model = ImageRequest
+                .Builder(LocalContext.current)
+                .data(imageUrl)
+                .allowHardware(false)
+                .build(),
+            placeholder = painterResource(R.drawable.img_special_info),
+            error = painterResource(R.drawable.img_special_info),
+            onSuccess = { isImageLoaded[index] = true }
+        )
+    }
+    val allImagesLoaded by derivedStateOf { isImageLoaded.all { it } }
+
+    // API 응답이 오고 이미지가 로딩되었을 때 Info Window 표시
+    LaunchedEffect(gateMarkerInfo, allImagesLoaded) {
+        if (isSelected && allImagesLoaded) {
+            markerState.showInfoWindow()
+        }
+    }
+
+    GateMarkerInfoWindow(
+        markerState = markerState,
+        isSelected = isSelected,
+        gateMarkerInfo = gateMarkerInfo,
+        onGateMarkerClick = onGateMarkerClick,
+        onGateInfoClick = onGateInfoClick,
+        painters = painters,
+        scale = scale
+    )
+}
+
+@Composable
+private fun BuildingMarker(
+    buildingMarker: BuildingMarker,
+    isSelected: Boolean = false,
+    scale: Float = 1f,
+    onClick: (BuildingMarker) -> Unit = { },
+) {
+    val iconScale = if (isSelected) scale * 2.0f else scale
+    val iconSize = if (isSelected) (32.dp * iconScale) else (20.dp * iconScale)
+    val fontSize = (14 * scale).coerceAtLeast(10f)
+
+    MarkerComposable(
+        onClick = { onClick(buildingMarker); false },
+        state = MarkerState(
+            position = LatLng(
+                buildingMarker.latitude,
+                buildingMarker.longitude
+            )
+        ),
+        zIndex = if (isSelected) Float.MAX_VALUE else 0f,
+        keys = arrayOf({ buildingMarker.id }, { isSelected }, scale)
+    ) {
+        Column(
+            modifier = Modifier.noRippleClickable { onClick(buildingMarker) },
+            verticalArrangement = Arrangement.spacedBy(1.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Icon(
+                painter = painterResource(
+                    if (isSelected) R.drawable.ic_building_selected
+                    else R.drawable.ic_building
+                ),
+                contentDescription = null,
+                tint = Color.Unspecified,
+                modifier = Modifier
+                    .shadow(10.dp)
+                    .size(iconSize)
+            )
+
+            Box {
+                Text(
+                    text = buildingMarker.name,
+                    style = KUBFAndroidTheme.typography.semiBold14.copy(
+                        fontSize = fontSize.sp,
+                        drawStyle = Stroke(
+                            width = 4f * scale,
+                        ),
+                    ),
+                    color = Color.White,
+                )
+                Text(
+                    text = buildingMarker.name,
+                    style = KUBFAndroidTheme.typography.semiBold14.copy(
+                        fontSize = fontSize.sp
+                    ),
+                    color = if (isSelected) MainGreen else Color(0xFF5A6860),
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun DoorMarker(
+    doorMarker: DoorMarker,
+    scale: Float = 1f,
+) {
+    val fontSize = (14 * scale).coerceAtLeast(10f)
+
+    MarkerComposable(
+        state = MarkerState(
+            position = LatLng(
+                doorMarker.latitude,
+                doorMarker.longitude
+            )
+        ),
+        keys = arrayOf({ doorMarker.id }, scale),
+    ) {
+        Box(
+            modifier = Modifier
+                .background(
+                    color = if (doorMarker.isWheelChairAccessible) MainGreen else Gray4,
+                    shape = CircleShape
+                )
+                .padding(horizontal = 4.dp * scale, vertical = 2.dp * scale)
+                .sizeIn(minWidth = 16.dp * scale, minHeight = 16.dp * scale),
+            contentAlignment = Alignment.Center,
+        ) {
+            Text(
+                text = doorMarker.label,
+                style = KUBFAndroidTheme.typography.medium14.copy(
+                    fontSize = fontSize.sp,
+                    color = Color.White
+                ),
+            )
+        }
+    }
+}
+
+@Composable
+fun UserMarker(
+    modifier: Modifier = Modifier,
+    latLng: LatLng,
+) {
+    MarkerComposable(
+        state = MarkerState(
+            position = LatLng(
+                latLng.latitude,
+                latLng.longitude
+            )
+        ),
+        anchor = Offset(0.5f, 0.5f),
+    ) {
+        Box(
+            modifier = modifier
+                .size(40.dp)
+                .background(
+                    color = MainGreen.copy(alpha = 0.12f),
+                    shape = CircleShape
+                ),
+            contentAlignment = Alignment.Center
+        ) {
+            Box(
+                modifier = Modifier
+                    .size(20.dp)
+                    .border(
+                        width = 2.dp,
+                        color = Color.White,
+                        shape = CircleShape
+                    )
+                    .background(
+                        color = MainGreen,
+                        shape = CircleShape
+                    )
+            )
+        }
+    }
+}
+
+
+@Preview(showBackground = true)
+@Composable
+private fun MapComponentPreview() {
+//    MapComponent()
+}
+
+
+object MapParam {
+    const val MIN_ZOOM = 16.0f
+    const val MAX_ZOOM = 18.0f
+
+    val mapProperties = MapProperties(
+        isBuildingEnabled = true,
+        isIndoorEnabled = false,
+        isMyLocationEnabled = false,
+        isTrafficEnabled = false,
+        // 카메라가 이동할 수 있는 범위
+        latLngBoundsForCameraTarget = LatLngBounds(
+            LatLng(
+                37.5373,
+                127.0656,
+            ),
+            LatLng(
+                37.5450,
+                127.0952
+            )
+        ),
+        mapStyleOptions = null,
+        mapType = MapType.NORMAL,
+        maxZoomPreference = MAX_ZOOM,
+        minZoomPreference = MIN_ZOOM,
+    )
+    val mapUiSettings = MapUiSettings(
+        compassEnabled = false,
+        indoorLevelPickerEnabled = false,
+        mapToolbarEnabled = false,
+        myLocationButtonEnabled = false,
+        rotationGesturesEnabled = true,
+        scrollGesturesEnabled = true,
+        scrollGesturesEnabledDuringRotateOrZoom = true,
+        tiltGesturesEnabled = true,
+        zoomControlsEnabled = true,
+        zoomGesturesEnabled = true
+    )
+    val mapOptions = GoogleMapOptions().apply {
+        mapId(BuildConfig.GOOGLE_MAPS_ID)
+    }
+}
+
+/**
+ * 줌 레벨에 따라 마커의 스케일을 계산합니다.
+ * @param currentZoom 현재 줌 레벨
+ * @param minZoom 최소 줌 레벨
+ * @param maxZoom 최대 줌 레벨
+ * @return 0.6 ~ 1.0 사이의 스케일 값
+ */
+private fun calculateMarkerScale(
+    currentZoom: Float,
+    minZoom: Float,
+    maxZoom: Float,
+): Float {
+    val minScale = 0.8f
+    val maxScale = 1.0f
+    val normalizedZoom = ((currentZoom - minZoom) / (maxZoom - minZoom)).coerceIn(0f, 1f)
+    return minScale + (normalizedZoom * (maxScale - minScale))
+}

@@ -1,0 +1,15 @@
+package com.ganaljigi.kubf.feature.helper.viewmodel
+
+data class HelperUiState(
+    val isLoading: Boolean = false,
+    val error: String? = null,
+    val notices: List<NoticeUi> = emptyList()
+)
+
+data class NoticeUi(
+    val title: String,
+    val date: String,
+    val url: String,
+    val rawNumber: Int? = null,
+    val displayNumber: Int = 0
+)
