@@ -1,17 +1,17 @@
 package com.ganaljigi.kubf.mapper
 
 import com.ganalijigi.kubf.R
-import com.ganaljigi.kubf.data.remote.response.home.HomeGateResponseDto
-import com.ganaljigi.kubf.data.remote.response.home.HomeResponseDto
-import com.ganaljigi.kubf.data.remote.response.home.HomeSearchResponseDto
-import com.ganaljigi.kubf.data.remote.response.home.HomeSignificantResponseDto
-import com.ganaljigi.kubf.ui.common.model.getIconResByName
-import com.ganaljigi.kubf.ui.home.model.BuildingMarker
-import com.ganaljigi.kubf.ui.home.model.MapToggle
-import com.ganaljigi.kubf.ui.home.model.SearchResult
-import com.ganaljigi.kubf.ui.home.model.ToggleMarker
-import com.ganaljigi.kubf.ui.home.viewmodel.HomeUiState
-import com.ganaljigi.kubf.ui.home.viewmodel.SpecialMarkerInfo
+import com.ganaljigi.kubf.core.network.response.home.HomeGateResponseDto
+import com.ganaljigi.kubf.core.network.response.home.HomeResponseDto
+import com.ganaljigi.kubf.core.network.response.home.HomeSearchResponseDto
+import com.ganaljigi.kubf.core.network.response.home.HomeSignificantResponseDto
+import com.ganaljigi.kubf.core.model.getIconResByName
+import com.ganaljigi.kubf.feature.home.model.BuildingMarker
+import com.ganaljigi.kubf.feature.home.model.MapToggle
+import com.ganaljigi.kubf.feature.home.model.SearchResult
+import com.ganaljigi.kubf.feature.home.model.ToggleMarker
+import com.ganaljigi.kubf.feature.home.viewmodel.HomeUiState
+import com.ganaljigi.kubf.feature.home.viewmodel.SpecialMarkerInfo
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
 

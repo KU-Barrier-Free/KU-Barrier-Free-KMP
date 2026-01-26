@@ -1,10 +1,10 @@
 package com.ganaljigi.kubf.mapper
 
-import com.ganaljigi.kubf.data.remote.response.building.BuildingSummaryResponseDto
-import com.ganaljigi.kubf.ui.common.model.DoorInfo
-import com.ganaljigi.kubf.ui.common.model.fromLabel
-import com.ganaljigi.kubf.ui.home.model.DoorMarker
-import com.ganaljigi.kubf.ui.home.viewmodel.HomeBuildingInfo
+import com.ganaljigi.kubf.core.network.response.building.BuildingSummaryResponseDto
+import com.ganaljigi.kubf.core.model.DoorInfo
+import com.ganaljigi.kubf.core.model.fromLabel
+import com.ganaljigi.kubf.feature.home.model.DoorMarker
+import com.ganaljigi.kubf.feature.home.viewmodel.HomeBuildingInfo
 import kotlinx.collections.immutable.toPersistentList
 
 fun BuildingSummaryResponseDto.toHomeBuildingInfo() = HomeBuildingInfo(

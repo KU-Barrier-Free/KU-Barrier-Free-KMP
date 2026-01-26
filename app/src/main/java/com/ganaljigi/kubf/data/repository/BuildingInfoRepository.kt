@@ -1,8 +1,8 @@
 package com.ganaljigi.kubf.data.repository
 
-import com.ganaljigi.kubf.ui.buildinginfo.model.BuildingInfo
-import com.ganaljigi.kubf.ui.buildinginfo.model.RoomSearchResult
-import com.ganaljigi.kubf.ui.buildinginfo.model.TotalFloor
+import com.ganaljigi.kubf.feature.building.model.BuildingInfo
+import com.ganaljigi.kubf.feature.building.model.RoomSearchResult
+import com.ganaljigi.kubf.feature.building.model.TotalFloor
 
 interface BuildingInfoRepository {
     suspend fun fetchBuilding(id: Long): BuildingInfo

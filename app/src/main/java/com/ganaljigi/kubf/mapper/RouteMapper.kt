@@ -1,9 +1,9 @@
 package com.ganaljigi.kubf.mapper
 
-import com.ganaljigi.kubf.data.remote.response.route.PathResponseDto
-import com.ganaljigi.kubf.data.remote.response.route.RoutePathDto
-import com.ganaljigi.kubf.ui.common.model.RouteMode
-import com.ganaljigi.kubf.ui.home.model.RouteResult
+import com.ganaljigi.kubf.core.network.response.route.PathResponseDto
+import com.ganaljigi.kubf.core.network.response.route.RoutePathDto
+import com.ganaljigi.kubf.core.model.RouteMode
+import com.ganaljigi.kubf.feature.home.model.RouteResult
 import com.google.android.gms.maps.model.LatLng
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.serialization.json.JsonArray

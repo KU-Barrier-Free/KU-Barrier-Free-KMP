@@ -1,13 +1,13 @@
 package com.ganaljigi.kubf.data.repository
 
-import com.ganaljigi.kubf.data.remote.service.BuildingService
-import com.ganaljigi.kubf.ui.buildinginfo.mapper.toFacilityOrNull
-import com.ganaljigi.kubf.ui.buildinginfo.mapper.toRoomUi
-import com.ganaljigi.kubf.ui.buildinginfo.mapper.toUi
-import com.ganaljigi.kubf.ui.buildinginfo.mapper.toUiPair
-import com.ganaljigi.kubf.ui.buildinginfo.model.BuildingInfo
-import com.ganaljigi.kubf.ui.buildinginfo.model.RoomSearchResult
-import com.ganaljigi.kubf.ui.buildinginfo.model.TotalFloor
+import com.ganaljigi.kubf.core.network.service.BuildingService
+import com.ganaljigi.kubf.feature.building.mapper.toFacilityOrNull
+import com.ganaljigi.kubf.feature.building.mapper.toRoomUi
+import com.ganaljigi.kubf.feature.building.mapper.toUi
+import com.ganaljigi.kubf.feature.building.mapper.toUiPair
+import com.ganaljigi.kubf.feature.building.model.BuildingInfo
+import com.ganaljigi.kubf.feature.building.model.RoomSearchResult
+import com.ganaljigi.kubf.feature.building.model.TotalFloor
 import javax.inject.Inject
 
 class BuildingInfoRepositoryImpl @Inject constructor(
