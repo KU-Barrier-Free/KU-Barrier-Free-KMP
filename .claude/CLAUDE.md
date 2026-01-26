@@ -168,8 +168,16 @@ repository.getData().fold(
 
 ### PR 제목
 ```
-<type>: <간단한 설명> #<issue-number>
+[Type] #<issue-number> : <간단한 설명>
 ```
+
+| Type | 설명 |
+|------|------|
+| `Feat` | 새로운 기능 |
+| `Fix` | 버그 수정 |
+| `Refactor` | 리팩토링 |
+| `Chore` | 설정, 빌드 |
+| `Docs` | 문서 |
 
 ### PR 본문 템플릿
 ```markdown
