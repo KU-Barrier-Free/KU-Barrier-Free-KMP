@@ -95,7 +95,7 @@ fun HomeScreen(
         bottomSheetState = rememberStandardBottomSheetState(
             initialValue = SheetValue.Hidden,
             skipHiddenState = false,
-        )
+        ),
     )
     val bottomSheetState = scaffoldState.bottomSheetState
     val scope = rememberCoroutineScope()
@@ -116,11 +116,11 @@ fun HomeScreen(
         } else {
             if (ActivityCompat.shouldShowRequestPermissionRationale(
                     activity,
-                    Manifest.permission.ACCESS_FINE_LOCATION
+                    Manifest.permission.ACCESS_FINE_LOCATION,
                 ) ||
                 ActivityCompat.shouldShowRequestPermissionRationale(
                     activity,
-                    Manifest.permission.ACCESS_COARSE_LOCATION
+                    Manifest.permission.ACCESS_COARSE_LOCATION,
                 )
             ) {
                 shouldShowRationale = true
@@ -132,11 +132,11 @@ fun HomeScreen(
     LaunchedEffect(Unit) {
         val fineLocationGranted = ContextCompat.checkSelfPermission(
             context,
-            Manifest.permission.ACCESS_FINE_LOCATION
+            Manifest.permission.ACCESS_FINE_LOCATION,
         ) == PackageManager.PERMISSION_GRANTED
         val coarseLocationGranted = ContextCompat.checkSelfPermission(
             context,
-            Manifest.permission.ACCESS_COARSE_LOCATION
+            Manifest.permission.ACCESS_COARSE_LOCATION,
         ) == PackageManager.PERMISSION_GRANTED
 
         if (fineLocationGranted || coarseLocationGranted) {
@@ -145,28 +145,24 @@ fun HomeScreen(
             locationPermissionResultLauncher.launch(
                 arrayOf(
                     Manifest.permission.ACCESS_FINE_LOCATION,
-                    Manifest.permission.ACCESS_COARSE_LOCATION
-                )
+                    Manifest.permission.ACCESS_COARSE_LOCATION,
+                ),
             )
         }
     }
 
     LaunchedEffect(isLocationPermissionGranted) {
         if (isLocationPermissionGranted) {
-            try {
-                val fusedLocationClient = LocationServices.getFusedLocationProviderClient(context)
-                fusedLocationClient.getCurrentLocation(
-                    Priority.PRIORITY_HIGH_ACCURACY,
-                    null
-                ).addOnSuccessListener { location ->
-                    location?.let {
-                        viewModel.updateUserLocation(
-                            LatLng(it.latitude, it.longitude)
-                        )
-                    }
+            val fusedLocationClient = LocationServices.getFusedLocationProviderClient(context)
+            fusedLocationClient.getCurrentLocation(
+                Priority.PRIORITY_HIGH_ACCURACY,
+                null,
+            ).addOnSuccessListener { location ->
+                location?.let {
+                    viewModel.updateUserLocation(
+                        LatLng(it.latitude, it.longitude),
+                    )
                 }
-            } catch (e: SecurityException) {
-                // Handle security exception
             }
         }
     }
@@ -239,7 +235,7 @@ fun HomeScreen(
                     else -> {}
                 }
             }
-        }
+        },
     ) { innerPadding ->
 
         if (uiState.showInquiryDialog) {
@@ -249,7 +245,7 @@ fun HomeScreen(
                 onSubmit = {
                     viewModel.submitInquiry()
                 },
-                onDismissRequest = { viewModel.setShowInquiryDialog(false) }
+                onDismissRequest = { viewModel.setShowInquiryDialog(false) },
             )
         }
 
@@ -303,16 +299,16 @@ fun HomeScreen(
                 .padding(horizontal = 16.dp),
         ) {
             Box(
-                modifier = Modifier.align(Alignment.TopCenter)
+                modifier = Modifier.align(Alignment.TopCenter),
             ) {
                 androidx.compose.animation.AnimatedVisibility(
                     visible = uiState.homeUiMode == HomeUiMode.FIND_MODE || uiState.homeUiMode == HomeUiMode.ROUTE_MODE,
                     enter = slideInVertically(
-                        initialOffsetY = { -it / 2 }
+                        initialOffsetY = { -it / 2 },
                     ),
                     exit = slideOutVertically(
-                        targetOffsetY = { -it }
-                    ) + fadeOut()
+                        targetOffsetY = { -it },
+                    ) + fadeOut(),
                 ) {
                     HomeFindTopLocationComponent(
                         modifier = Modifier
@@ -326,19 +322,19 @@ fun HomeScreen(
                         },
                         onToLocationClick = {
                             navigateToSearch(SearchMode.FIND_TO_LOCATION)
-                        }
+                        },
                     )
                 }
 //                if (uiState.homeUiMode == HomeUiMode.DEFAULT) {
                 androidx.compose.animation.AnimatedVisibility(
-                    visible = uiState.homeUiMode == HomeUiMode.DEFAULT
-                            || uiState.homeUiMode == HomeUiMode.BARRIER_FREE_SHOWN,
+                    visible = uiState.homeUiMode == HomeUiMode.DEFAULT ||
+                        uiState.homeUiMode == HomeUiMode.BARRIER_FREE_SHOWN,
                     enter = slideInVertically(
-                        initialOffsetY = { -it / 2 }
+                        initialOffsetY = { -it / 2 },
                     ),
                     exit = slideOutVertically(
-                        targetOffsetY = { -it }
-                    ) + fadeOut()
+                        targetOffsetY = { -it },
+                    ) + fadeOut(),
                 ) {
                     Column {
                         Row(
@@ -354,17 +350,17 @@ fun HomeScreen(
                                         onClick = {
                                             viewModel.setDefaultMode()
                                             navigateToSearch(SearchMode.SEARCH)
-                                        }
+                                        },
                                     )
                                     .background(
                                         color = Color.White,
-                                        shape = RoundedCornerShape(10.dp)
+                                        shape = RoundedCornerShape(10.dp),
                                     )
                                     .weight(1f)
                                     .padding(horizontal = 12.dp)
                                     .height(44.dp),
                                 verticalAlignment = Alignment.CenterVertically,
-                                horizontalArrangement = Arrangement.spacedBy(8.dp)
+                                horizontalArrangement = Arrangement.spacedBy(8.dp),
                             ) {
                                 Icon(
                                     painter = painterResource(R.drawable.ic_search_bar_leading),
@@ -375,7 +371,7 @@ fun HomeScreen(
                                     modifier = Modifier.weight(1f),
                                     text = uiState.searchWord.text.ifEmpty { "건물, 편의시설 검색" },
                                     style = KUBFAndroidTheme.typography.medium15.copy(
-                                        color = if (uiState.searchWord.text.isEmpty()) Gray2 else Black
+                                        color = if (uiState.searchWord.text.isEmpty()) Gray2 else Black,
                                     ),
                                 )
                                 if (uiState.searchWord.text.isNotEmpty()) {
@@ -388,7 +384,7 @@ fun HomeScreen(
                                 }
                             }
                             FindWayButton(
-                                modifier = Modifier.size(44.dp)
+                                modifier = Modifier.size(44.dp),
                             ) { viewModel.setHomeUiMode(HomeUiMode.FIND_MODE) }
                         }
                         HomeToggle(
@@ -398,49 +394,49 @@ fun HomeScreen(
                             onToggleClick = { toggle ->
                                 viewModel.updateToggleUiStates(toggle)
                                 focusManager.clearFocus()
-                            }
+                            },
                         )
                     }
                 }
             }
 
             Box(
-                modifier = Modifier.align(Alignment.BottomCenter)
+                modifier = Modifier.align(Alignment.BottomCenter),
             ) {
                 androidx.compose.animation.AnimatedVisibility(
                     visible = uiState.homeUiMode == HomeUiMode.BARRIER_FREE_SHOWN,
                     enter = slideInVertically(
-                        initialOffsetY = { it / 2 }
+                        initialOffsetY = { it / 2 },
                     ),
                     exit = slideOutVertically(
-                        targetOffsetY = { it }
-                    )
+                        targetOffsetY = { it },
+                    ),
                 ) {
                     BarrierFreeInfoItem(
                         onClick = {
                             viewModel.setHomeUiMode(HomeUiMode.DEFAULT)
-                        }
+                        },
                     )
                 }
             }
             Box(
-                modifier = Modifier.align(Alignment.BottomCenter)
+                modifier = Modifier.align(Alignment.BottomCenter),
             ) {
                 androidx.compose.animation.AnimatedVisibility(
                     visible = uiState.homeUiMode == HomeUiMode.DEFAULT,
                     enter = slideInVertically(
-                        initialOffsetY = { it / 2 }
+                        initialOffsetY = { it / 2 },
                     ),
                     exit = slideOutVertically(
-                        targetOffsetY = { it }
-                    )
+                        targetOffsetY = { it },
+                    ),
                 ) {
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(bottom = 20.dp),
                         horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.Bottom
+                        verticalAlignment = Alignment.Bottom,
                     ) {
                         BarrierFreeInfoChip {
                             viewModel.setHomeUiMode(HomeUiMode.BARRIER_FREE_SHOWN)
@@ -448,33 +444,29 @@ fun HomeScreen(
 
                         Row(
                             horizontalArrangement = Arrangement.spacedBy(8.dp),
-                            modifier = Modifier.padding(end = 40.dp)
+                            modifier = Modifier.padding(end = 40.dp),
                         ) {
                             MyLocationButton {
                                 if (isLocationPermissionGranted) {
-                                    try {
-                                        val fusedLocationClient =
-                                            LocationServices.getFusedLocationProviderClient(context)
-                                        fusedLocationClient.getCurrentLocation(
-                                            Priority.PRIORITY_HIGH_ACCURACY,
-                                            null
-                                        ).addOnSuccessListener { location ->
-                                            location?.let {
-                                                viewModel.updateUserLocation(
-                                                    LatLng(it.latitude, it.longitude)
-                                                )
-                                                viewModel.moveToUserLocation()
-                                            }
+                                    val fusedLocationClient =
+                                        LocationServices.getFusedLocationProviderClient(context)
+                                    fusedLocationClient.getCurrentLocation(
+                                        Priority.PRIORITY_HIGH_ACCURACY,
+                                        null,
+                                    ).addOnSuccessListener { location ->
+                                        location?.let {
+                                            viewModel.updateUserLocation(
+                                                LatLng(it.latitude, it.longitude),
+                                            )
+                                            viewModel.moveToUserLocation()
                                         }
-                                    } catch (e: SecurityException) {
-                                        // Handle security exception
                                     }
                                 } else {
                                     locationPermissionResultLauncher.launch(
                                         arrayOf(
                                             Manifest.permission.ACCESS_FINE_LOCATION,
-                                            Manifest.permission.ACCESS_COARSE_LOCATION
-                                        )
+                                            Manifest.permission.ACCESS_COARSE_LOCATION,
+                                        ),
                                     )
                                 }
                             }
@@ -486,16 +478,16 @@ fun HomeScreen(
                 }
             }
             Box(
-                modifier = Modifier.align(Alignment.BottomCenter)
+                modifier = Modifier.align(Alignment.BottomCenter),
             ) {
                 androidx.compose.animation.AnimatedVisibility(
                     visible = uiState.homeUiMode == HomeUiMode.ROUTE_MODE,
                     enter = slideInVertically(
-                        initialOffsetY = { it / 2 }
+                        initialOffsetY = { it / 2 },
                     ),
                     exit = slideOutVertically(
-                        targetOffsetY = { it }
-                    )
+                        targetOffsetY = { it },
+                    ),
                 ) {
                     HomeRouteInfo(
                         modifier = Modifier
@@ -522,8 +514,8 @@ fun HomeScreen(
             locationPermissionResultLauncher.launch(
                 arrayOf(
                     Manifest.permission.ACCESS_FINE_LOCATION,
-                    Manifest.permission.ACCESS_COARSE_LOCATION
-                )
+                    Manifest.permission.ACCESS_COARSE_LOCATION,
+                ),
             )
         },
     )
@@ -534,7 +526,7 @@ fun HomeScreen(
 private fun HomeScreenPreview() {
     KUBFAndroidTheme {
         HomeScreen(
-            padding = PaddingValues(0.dp)
+            padding = PaddingValues(0.dp),
         )
     }
 }

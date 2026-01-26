@@ -8,24 +8,23 @@ import androidx.compose.ui.Modifier
 import com.ganaljigi.kubf.feature.helper.component.NoticeWebView
 import com.ganaljigi.kubf.feature.helper.component.WebViewTopAppBar
 
-
 @Composable
 fun JobInformationScreen(
-    onBackClick: () -> Unit
+    onBackClick: () -> Unit,
 ) {
     Scaffold(
         topBar = {
-            WebViewTopAppBar (
+            WebViewTopAppBar(
                 textTitle = "채용 정보",
-                onBackClick = onBackClick
+                onBackClick = onBackClick,
             )
-        }
+        },
     ) { innerPadding ->
         NoticeWebView(
             url = "https://www.konkuk.ac.kr/csd/15240/subview.do",
             modifier = Modifier
                 .fillMaxSize()
-                .padding(innerPadding)
+                .padding(innerPadding),
         )
     }
 }

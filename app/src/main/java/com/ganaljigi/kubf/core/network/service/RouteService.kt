@@ -11,6 +11,6 @@ interface RouteService {
         @Query("srcId") srcId: Long,
         @Query("srcType") srcType: String,
         @Query("destId") destId: Long,
-        @Query("destType") destType: String
+        @Query("destType") destType: String,
     ): BaseResponse<PathResponseDto>
 }

@@ -1,6 +1,5 @@
 package com.ganaljigi.kubf.core.network.response.building
 
-
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -21,7 +20,7 @@ data class BuildingSummaryResponseDto(
     @SerialName("name")
     val name: String,
     @SerialName("number")
-    val number: Int
+    val number: Int,
 ) {
     @Serializable
     data class DoorInfoDto(
@@ -36,6 +35,6 @@ data class BuildingSummaryResponseDto(
         @SerialName("longitude")
         val longitude: Double,
         @SerialName("wheelchair")
-        val wheelchair: Boolean
+        val wheelchair: Boolean,
     )
 }

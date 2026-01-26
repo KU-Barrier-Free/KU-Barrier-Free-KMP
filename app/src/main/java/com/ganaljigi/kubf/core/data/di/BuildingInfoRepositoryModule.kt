@@ -10,10 +10,10 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-abstract class BuildingInfoRepositoryModule{
+abstract class BuildingInfoRepositoryModule {
     @Binds
     @Singleton
     abstract fun bindBuildingInfoRepository(
-        impl: BuildingInfoRepositoryImpl
-    ):BuildingInfoRepository
+        impl: BuildingInfoRepositoryImpl,
+    ): BuildingInfoRepository
 }

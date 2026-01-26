@@ -1,6 +1,5 @@
 package com.ganaljigi.kubf.core.network.response.home
 
-
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -13,5 +12,5 @@ data class HomeSignificantResponseDto(
     @SerialName("latitude")
     val latitude: Double,
     @SerialName("longitude")
-    val longitude: Double
+    val longitude: Double,
 )

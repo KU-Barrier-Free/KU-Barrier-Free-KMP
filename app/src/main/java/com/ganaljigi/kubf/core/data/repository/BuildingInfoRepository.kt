@@ -6,7 +6,6 @@ import com.ganaljigi.kubf.feature.building.model.TotalFloor
 
 interface BuildingInfoRepository {
     suspend fun fetchBuilding(id: Long): BuildingInfo
-    suspend fun fetchBuildingSpaces(id: Long): Pair<BuildingInfo,TotalFloor>
+    suspend fun fetchBuildingSpaces(id: Long): Pair<BuildingInfo, TotalFloor>
     suspend fun searchSpaces(id: Long, keyword: String): List<RoomSearchResult>
 }
-

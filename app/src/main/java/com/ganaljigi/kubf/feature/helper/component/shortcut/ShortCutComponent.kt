@@ -3,7 +3,6 @@ package com.ganaljigi.kubf.feature.helper.component.shortcut
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -25,18 +24,16 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ganaljigi.kubf.core.designsystem.theme.MainGreen
 import com.ganaljigi.kubf.core.designsystem.theme.KUBFAndroidTheme
-import com.ganaljigi.kubf.core.designsystem.theme.KUBFTypography
 import com.ganalijigi.kubf.R
 import com.ganaljigi.kubf.core.designsystem.theme.Gray1
 import com.ganaljigi.kubf.core.designsystem.theme.Gray2
 
-//바로가기 제목 박스
+// 바로가기 제목 박스
 @Composable
 fun ShortCutTitle() {
     Row(
@@ -44,13 +41,13 @@ fun ShortCutTitle() {
             .fillMaxWidth()
             .padding(horizontal = 16.dp)
             .height(52.dp),
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         Text(
             text = "바로가기",
             style = KUBFAndroidTheme.typography.semiBold18.copy(
-                fontSize = 18.sp
-            )
+                fontSize = 18.sp,
+            ),
         )
     }
 }
@@ -69,12 +66,12 @@ fun ShortCutItem(
             .fillMaxWidth()
             .padding(horizontal = 16.dp)
             .shadow(
-                elevation = 6.dp,           // ← blur 느낌. 필요하면 4~8dp 사이에서 조절
+                elevation = 6.dp, // ← blur 느낌. 필요하면 4~8dp 사이에서 조절
                 shape = shape,
                 ambientColor = Color(0x1A000000),
-                spotColor = Color(0x1A000000)
+                spotColor = Color(0x1A000000),
             )
-            .clip(shape)
+            .clip(shape),
     ) {
         Surface(
             modifier = Modifier
@@ -85,26 +82,26 @@ fun ShortCutItem(
             border = BorderStroke(1.dp, Gray1),
             shadowElevation = 0.dp,
             tonalElevation = 0.dp,
-            onClick = onClick
+            onClick = onClick,
         ) {
             Row(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(start = 16.dp),
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
             ) {
                 if (iconResId != null) {
                     Image(
                         painter = painterResource(id = iconResId),
                         contentDescription = "바로가기 아이콘",
-                        modifier = Modifier.size(20.dp)
+                        modifier = Modifier.size(20.dp),
                     )
                 } else {
                     Icon(
                         imageVector = Icons.Default.KeyboardArrowRight,
                         contentDescription = "기본 아이콘",
                         modifier = Modifier.size(20.dp),
-                        tint = Color.Gray
+                        tint = Color.Gray,
                     )
                 }
 
@@ -113,7 +110,7 @@ fun ShortCutItem(
                 Text(
                     text = text,
                     color = MainGreen,
-                    style = KUBFAndroidTheme.typography.medium14.copy(fontSize = 14.sp)
+                    style = KUBFAndroidTheme.typography.medium14.copy(fontSize = 14.sp),
                 )
 
                 Spacer(modifier = Modifier.weight(1f))
@@ -124,13 +121,12 @@ fun ShortCutItem(
                     tint = Gray2,
                     modifier = Modifier
                         .padding(end = 16.dp)
-                        .size(24.dp)
+                        .size(24.dp),
                 )
             }
         }
     }
 }
-
 
 @Preview(showBackground = true)
 @Composable

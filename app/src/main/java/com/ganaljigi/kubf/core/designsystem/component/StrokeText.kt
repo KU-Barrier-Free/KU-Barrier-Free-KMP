@@ -20,7 +20,7 @@ fun StrokeText(
     style: TextStyle = TextStyle.Default,
     strokeColor: Color = Color.Black,
     strokeWidth: Dp = 1.dp,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val density = LocalDensity.current
     val fontSizePx = with(density) { style.fontSize.toPx() }

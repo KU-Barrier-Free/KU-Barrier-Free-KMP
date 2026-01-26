@@ -57,13 +57,13 @@ fun HomeInquiryDialog(
                 .fillMaxWidth()
                 .background(color = Color.White, shape = RoundedCornerShape(20.dp))
                 .padding(horizontal = 16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
+            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Spacer(modifier = Modifier.height(24.dp))
             Text(
                 text = "추가로 보고 싶은 내용을 알려주세요.",
                 style = KUBFAndroidTheme.typography.semiBold18,
-                modifier = Modifier.padding(vertical = 16.dp)
+                modifier = Modifier.padding(vertical = 16.dp),
             )
             Spacer(modifier = Modifier.height(24.dp))
             InquiryTextField(
@@ -74,7 +74,7 @@ fun HomeInquiryDialog(
                 inquiryField = inquiryField,
                 onInquiryFieldChange = onInquiryFieldChange,
                 interactionSource = interactionSource,
-                isFocused = isFocused
+                isFocused = isFocused,
             )
             Spacer(modifier = Modifier.height(8.dp))
             Row(
@@ -88,9 +88,9 @@ fun HomeInquiryDialog(
                 )
                 Text(
                     text = "모든 문의는 신중히 검토되며, 반복적이거나\n" +
-                            "부적절한 내용은 제외될 수 있습니다.",
+                        "부적절한 내용은 제외될 수 있습니다.",
                     style = KUBFAndroidTheme.typography.medium15.copy(color = Gray2),
-                    modifier = Modifier.padding(end = 8.dp)
+                    modifier = Modifier.padding(end = 8.dp),
                 )
             }
             Spacer(modifier = Modifier.height(24.dp))
@@ -101,12 +101,12 @@ fun HomeInquiryDialog(
                     .clip(RoundedCornerShape(10.dp))
                     .background(MainGreen)
                     .clickable(onClick = onSubmit),
-                contentAlignment = Alignment.Center
+                contentAlignment = Alignment.Center,
             ) {
                 Text(
                     modifier = Modifier.align(Alignment.Center),
                     text = "제출하기",
-                    style = KUBFAndroidTheme.typography.regular14.copy(color = Color.White)
+                    style = KUBFAndroidTheme.typography.regular14.copy(color = Color.White),
                 )
             }
             Spacer(modifier = Modifier.height(16.dp))
@@ -130,17 +130,17 @@ private fun InquiryTextField(
                     .border(
                         width = 1.dp,
                         shape = RoundedCornerShape(8.dp),
-                        color = MainGreen
+                        color = MainGreen,
                     )
                     .background(color = Color.White, shape = RoundedCornerShape(10.dp)),
                 modifierIfFalse = Modifier.border(
                     width = 1.dp,
                     shape = RoundedCornerShape(8.dp),
-                    color = Gray2
-                )
+                    color = Gray2,
+                ),
             )
             .padding(12.dp),
-        contentAlignment = Alignment.CenterStart
+        contentAlignment = Alignment.CenterStart,
     ) {
         BasicTextField(
             modifier = Modifier.align(Alignment.TopStart),
@@ -161,34 +161,34 @@ private fun InquiryTextField(
                         text = "예: OO 편의시설 정보가 없어요, 장애인 화장실 위치도 알려주세요",
                         style = KUBFAndroidTheme.typography.medium15.copy(
                             color = Gray2,
-                        )
+                        ),
                     )
                 }
                 innerTextField()
-            }
+            },
         )
 
         Row(
             modifier = Modifier.align(Alignment.BottomEnd),
-            horizontalArrangement = Arrangement.spacedBy(4.dp)
+            horizontalArrangement = Arrangement.spacedBy(4.dp),
         ) {
             Text(
                 text = inquiryField.text.length.toString(),
                 style = KUBFAndroidTheme.typography.medium16.copy(
                     color = MainGreen,
-                )
+                ),
             )
             Text(
                 text = "/",
                 style = KUBFAndroidTheme.typography.medium16.copy(
                     color = Gray3,
-                )
+                ),
             )
             Text(
                 text = "100",
                 style = KUBFAndroidTheme.typography.medium16.copy(
                     color = Gray3,
-                )
+                ),
             )
         }
     }
@@ -201,6 +201,6 @@ private fun HomeInquiryDialogPreview() {
         inquiryField = TextFieldValue("새로 생긴 이마트24 정보 추가해주세요. 새로 생긴 이마트24"),
         onInquiryFieldChange = {},
         onSubmit = {},
-        onDismissRequest = {}
+        onDismissRequest = {},
     )
 }

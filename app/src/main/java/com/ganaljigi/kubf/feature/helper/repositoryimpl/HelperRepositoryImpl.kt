@@ -6,7 +6,7 @@ import com.ganaljigi.kubf.core.network.service.HelperService
 import javax.inject.Inject
 
 class HelperRepositoryImpl @Inject constructor(
-    private val service: HelperService
+    private val service: HelperService,
 ) : HelperRepository {
 
     override suspend fun fetchNotices(): Result<HelperNoticeResponseDto> = runCatching {

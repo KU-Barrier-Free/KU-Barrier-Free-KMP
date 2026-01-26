@@ -13,7 +13,7 @@ import javax.inject.Inject
 
 class BuildingInfoRepositoryImpl @Inject constructor(
     private val api: BuildingService,
-): BuildingInfoRepository {
+) : BuildingInfoRepository {
     override suspend fun fetchBuilding(id: Long): BuildingInfo {
         val res = api.getBuildingInfo2(id).result
         return BuildingInfo(
@@ -25,7 +25,7 @@ class BuildingInfoRepositoryImpl @Inject constructor(
             doors = res.doorInfos.map { it.toUi() },
             notes = emptyList(),
             latitude = res.latitude,
-            longitude = res.longitude
+            longitude = res.longitude,
         )
     }
 
@@ -37,13 +37,13 @@ class BuildingInfoRepositoryImpl @Inject constructor(
     override suspend fun searchSpaces(id: Long, keyword: String): List<RoomSearchResult> {
         if (keyword.isBlank()) return emptyList()
         val res = api.searchSpaces(id, keyword).result
-        return res.spaces.map { s->
+        return res.spaces.map { s ->
             val room = s.toRoomUi()
             RoomSearchResult(
                 id = s.id,
                 name = room.name.ifBlank { room.number },
                 building = "",
-                room = room
+                room = room,
             )
         }
     }

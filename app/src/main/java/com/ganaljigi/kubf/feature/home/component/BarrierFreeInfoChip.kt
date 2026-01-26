@@ -5,7 +5,6 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -30,14 +29,14 @@ import com.ganaljigi.kubf.core.ui.util.noRippleClickable
 @Composable
 fun BarrierFreeInfoChip(
     modifier: Modifier = Modifier,
-    onClick: () -> Unit = { }
+    onClick: () -> Unit = { },
 ) {
     Box {
         Box(
             modifier = modifier
                 .matchParentSize()
                 .background(Color.White.copy(alpha = 0.6f), shape = RoundedCornerShape(8.dp))
-                .blur(8.dp, BlurredEdgeTreatment.Unbounded)
+                .blur(8.dp, BlurredEdgeTreatment.Unbounded),
         )
         Row(
             modifier = modifier
@@ -45,10 +44,10 @@ fun BarrierFreeInfoChip(
                 .border(
                     color = Gray1,
                     width = 1.dp,
-                    shape = RoundedCornerShape(8.dp)
+                    shape = RoundedCornerShape(8.dp),
                 )
                 .padding(vertical = 4.dp, horizontal = 8.dp),
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             Box(
                 modifier = Modifier
@@ -57,31 +56,31 @@ fun BarrierFreeInfoChip(
                     .border(
                         color = Gray4,
                         width = 1.dp,
-                        shape = CircleShape
-                    )
+                        shape = CircleShape,
+                    ),
             ) {
                 Text(
                     modifier = Modifier
                         .align(Alignment.Center),
                     text = "?",
                     style = KUBFAndroidTheme.typography.regular12.copy(
-                        color = Gray4
+                        color = Gray4,
                     ),
-                    textAlign = TextAlign.Center
+                    textAlign = TextAlign.Center,
                 )
             }
             Spacer(modifier = Modifier.width(4.dp))
             Text(
                 text = "배리어 프리",
                 style = KUBFAndroidTheme.typography.medium14.copy(
-                    color = MainGreen
-                )
+                    color = MainGreen,
+                ),
             )
             Text(
                 text = "란?",
                 style = KUBFAndroidTheme.typography.regular14.copy(
-                    color = Gray4
-                )
+                    color = Gray4,
+                ),
             )
         }
     }

@@ -21,19 +21,19 @@ object ApiModule {
     fun provideHomeService(retrofit: Retrofit): HomeService {
         return retrofit.create()
     }
-    
+
     @Provides
     @Singleton
     fun provideBuildingService(retrofit: Retrofit): BuildingService {
         return retrofit.create()
     }
-    
+
     @Provides
     @Singleton
     fun provideRouteService(retrofit: Retrofit): RouteService {
         return retrofit.create()
     }
-    
+
     @Provides
     @Singleton
     fun provideHelperService(retrofit: Retrofit): HelperService {

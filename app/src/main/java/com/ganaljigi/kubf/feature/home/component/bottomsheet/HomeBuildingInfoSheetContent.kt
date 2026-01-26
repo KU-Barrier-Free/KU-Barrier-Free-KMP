@@ -51,108 +51,107 @@ fun HomeBuildingInfoSheetContent(
     buildingInfo: HomeBuildingInfo,
     onItemClick: (Long) -> Unit = {},
 ) {
-    val buildingNumber = if(buildingInfo.buildingNumber == 0) "없음" else buildingInfo.buildingNumber.toString()
+    val buildingNumber = if (buildingInfo.buildingNumber == 0) "없음" else buildingInfo.buildingNumber.toString()
     var selectedDoorImages by remember { mutableStateOf<List<String>>(emptyList()) }
     var showDoorImageDialog by remember { mutableStateOf(false) }
 
     Box(modifier = modifier) {
         Column(
-        modifier = modifier
-            .fillMaxWidth()
-            .clip(RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp))
-    ) {
-        Box(
-            modifier = Modifier
-                .align(Alignment.CenterHorizontally)
-                .width(100.dp)
-                .height(28.dp)
-                .padding(top = 8.dp, bottom = 16.dp)
-                .background(
-                    color = Gray2,
-                    shape = RoundedCornerShape(4.dp)
-                )
-        )
-        Column(
             modifier = modifier
                 .fillMaxWidth()
-                .noRippleClickable { onItemClick(buildingInfo.id) }
+                .clip(RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp)),
         ) {
-
-            Row(
+            Box(
                 modifier = Modifier
+                    .align(Alignment.CenterHorizontally)
+                    .width(100.dp)
+                    .height(28.dp)
+                    .padding(top = 8.dp, bottom = 16.dp)
+                    .background(
+                        color = Gray2,
+                        shape = RoundedCornerShape(4.dp),
+                    ),
+            )
+            Column(
+                modifier = modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 16.dp, vertical = 4.dp),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween
+                    .noRippleClickable { onItemClick(buildingInfo.id) },
             ) {
                 Row(
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
-                    verticalAlignment = Alignment.Bottom,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp, vertical = 4.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween,
                 ) {
-                    Text(
-                        text = buildingInfo.name,
-                        style = KUBFAndroidTheme.typography.bold18
-                    )
-                    Text(
-                        modifier = Modifier.padding(start = 8.dp),
-                        text = "건물번호: $buildingNumber",
-                        style = KUBFAndroidTheme.typography.regular14.copy(
-                            color = Gray3
+                    Row(
+                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                        verticalAlignment = Alignment.Bottom,
+                    ) {
+                        Text(
+                            text = buildingInfo.name,
+                            style = KUBFAndroidTheme.typography.bold18,
                         )
+                        Text(
+                            modifier = Modifier.padding(start = 8.dp),
+                            text = "건물번호: $buildingNumber",
+                            style = KUBFAndroidTheme.typography.regular14.copy(
+                                color = Gray3,
+                            ),
+                        )
+                    }
+                    Icon(
+                        painter = painterResource(R.drawable.ic_chevron_right),
+                        contentDescription = null,
+                        tint = Color.Unspecified,
                     )
                 }
-                Icon(
-                    painter = painterResource(R.drawable.ic_chevron_right),
-                    contentDescription = null,
-                    tint = Color.Unspecified,
+                Spacer(Modifier.height(12.dp))
+                FlowRow(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp),
+                    verticalArrangement = Arrangement.spacedBy(4.dp),
+                    horizontalArrangement = Arrangement.spacedBy(4.dp),
+                ) {
+                    buildingInfo.convenienceList.forEach { convenience ->
+                        ConvenienceChip(convenience = convenience)
+                    }
+                }
+                Spacer(Modifier.height(20.dp))
+                Text(
+                    modifier = Modifier.padding(horizontal = 16.dp),
+                    text = "출입문",
+                    style = KUBFAndroidTheme.typography.semiBold18,
                 )
-            }
-            Spacer(Modifier.height(12.dp))
-            FlowRow(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp),
-                verticalArrangement = Arrangement.spacedBy(4.dp),
-                horizontalArrangement = Arrangement.spacedBy(4.dp)
-            ) {
-                buildingInfo.convenienceList.forEach { convenience ->
-                    ConvenienceChip(convenience = convenience)
+                Spacer(Modifier.height(12.dp))
+                LazyRow(
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    contentPadding = PaddingValues(horizontal = 16.dp),
+                ) {
+                    items(buildingInfo.doorInfoList.size) { index ->
+                        val doorInfo = buildingInfo.doorInfoList[index]
+                        DoorComponent(
+                            modifier = Modifier
+                                .width(80.dp),
+                            doorInfo = doorInfo,
+                            onClick = {
+                                selectedDoorImages = doorInfo.imageUrls.ifEmpty {
+                                    listOfNotNull(doorInfo.imageUrl.takeIf { it.isNotEmpty() })
+                                }
+                                showDoorImageDialog = true
+                            },
+                        )
+                    }
                 }
             }
-            Spacer(Modifier.height(20.dp))
-            Text(
-                modifier = Modifier.padding(horizontal = 16.dp),
-                text = "출입문",
-                style = KUBFAndroidTheme.typography.semiBold18
-            )
-            Spacer(Modifier.height(12.dp))
-            LazyRow(
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                contentPadding = PaddingValues(horizontal = 16.dp),
-            ) {
-                items(buildingInfo.doorInfoList.size) { index ->
-                    val doorInfo = buildingInfo.doorInfoList[index]
-                    DoorComponent(
-                        modifier = Modifier
-                            .width(80.dp),
-                        doorInfo = doorInfo,
-                        onClick = {
-                            selectedDoorImages = doorInfo.imageUrls.ifEmpty {
-                                listOfNotNull(doorInfo.imageUrl.takeIf { it.isNotEmpty() })
-                            }
-                            showDoorImageDialog = true
-                        }
-                    )
-                }
-            }
-        }
-        Spacer(Modifier.height(13.dp))
+            Spacer(Modifier.height(13.dp))
         }
 
         ImageViewerDialog(
             visible = showDoorImageDialog,
             images = selectedDoorImages,
-            onDismiss = { showDoorImageDialog = false }
+            onDismiss = { showDoorImageDialog = false },
         )
     }
 }
@@ -178,34 +177,34 @@ private fun HomeBuildingInfoBottomSheetPreview() {
                     label = "B",
                     imageUrl = "",
                     description = "입구 설명",
-                    isWheelchairAccessible = true
+                    isWheelchairAccessible = true,
                 ),
                 DoorInfo(
                     label = "B",
                     imageUrl = "",
                     description = "입구 설명",
-                    isWheelchairAccessible = true
+                    isWheelchairAccessible = true,
                 ),
                 DoorInfo(
                     label = "B",
                     imageUrl = "",
                     description = "입구 설명",
-                    isWheelchairAccessible = false
+                    isWheelchairAccessible = false,
                 ),
                 DoorInfo(
                     label = "B",
                     imageUrl = "",
                     description = "입구 설명",
-                    isWheelchairAccessible = false
+                    isWheelchairAccessible = false,
                 ),
                 DoorInfo(
                     label = "B",
                     imageUrl = "",
                     description = "입구 설명",
-                    isWheelchairAccessible = false
+                    isWheelchairAccessible = false,
                 ),
-            )
+            ),
         ),
-        onItemClick = {}
+        onItemClick = {},
     )
 }

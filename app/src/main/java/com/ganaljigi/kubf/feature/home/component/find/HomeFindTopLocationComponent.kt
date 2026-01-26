@@ -56,11 +56,11 @@ fun HomeFindTopLocationComponent(
                     .weight(1f)
                     .shadow(
                         elevation = 3.dp,
-                        shape = RoundedCornerShape(10.dp)
+                        shape = RoundedCornerShape(10.dp),
                     )
                     .background(
                         color = Color.White,
-                        shape = RoundedCornerShape(10.dp)
+                        shape = RoundedCornerShape(10.dp),
                     )
                     .clickable(onClick = onFromLocationClick)
                     .padding(12.dp),
@@ -75,27 +75,26 @@ fun HomeFindTopLocationComponent(
                 Text(
                     text = fromLocationResult.name.ifEmpty { "출발지 입력" },
                     style = KUBFAndroidTheme.typography.medium15.copy(
-                        color = if (fromLocationResult.name.isEmpty()) Gray2 else Color.Black
-                    )
+                        color = if (fromLocationResult.name.isEmpty()) Gray2 else Color.Black,
+                    ),
                 )
-
             }
             Box(
                 modifier = Modifier
                     .size(40.dp)
                     .shadow(
                         elevation = 3.dp,
-                        shape = CircleShape
+                        shape = CircleShape,
                     )
                     .background(
                         color = Color.White,
-                        shape = CircleShape
+                        shape = CircleShape,
                     )
                     .clickable(
                         indication = ripple(false, 20.dp),
                         interactionSource = null,
-                        onClick = onClose
-                    )
+                        onClick = onClose,
+                    ),
             ) {
                 Icon(
                     modifier = Modifier.align(Alignment.Center),
@@ -117,11 +116,11 @@ fun HomeFindTopLocationComponent(
                     .weight(1f)
                     .shadow(
                         elevation = 3.dp,
-                        shape = RoundedCornerShape(10.dp)
+                        shape = RoundedCornerShape(10.dp),
                     )
                     .background(
                         color = Color.White,
-                        shape = RoundedCornerShape(10.dp)
+                        shape = RoundedCornerShape(10.dp),
                     )
                     .clickable(onClick = onToLocationClick)
                     .padding(12.dp),
@@ -136,27 +135,26 @@ fun HomeFindTopLocationComponent(
                 Text(
                     text = toLocationResult.name.ifEmpty { "도착지 입력" },
                     style = KUBFAndroidTheme.typography.medium15.copy(
-                        color = if (toLocationResult.name.isEmpty()) Gray2 else Color.Black
-                    )
+                        color = if (toLocationResult.name.isEmpty()) Gray2 else Color.Black,
+                    ),
                 )
-
             }
             Box(
                 modifier = Modifier
                     .shadow(
                         elevation = 3.dp,
-                        shape = CircleShape
+                        shape = CircleShape,
                     )
                     .size(40.dp)
                     .background(
                         color = Color.White,
-                        shape = CircleShape
+                        shape = CircleShape,
                     )
                     .clickable(
                         indication = ripple(false, 20.dp),
                         interactionSource = null,
-                        onClick = onChange
-                    )
+                        onClick = onChange,
+                    ),
             ) {
                 Icon(
                     modifier = Modifier.align(Alignment.Center),
@@ -168,7 +166,6 @@ fun HomeFindTopLocationComponent(
         }
     }
 }
-
 
 @Preview
 @Composable

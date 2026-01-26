@@ -24,5 +24,5 @@ data class BuildingUIState(
     val currentBuildingName: String = "",
     val query: TextFieldValue = TextFieldValue(""),
     val result: List<RoomSearchResult> = persistentListOf(),
-    val isSearching: Boolean = false
+    val isSearching: Boolean = false,
 )

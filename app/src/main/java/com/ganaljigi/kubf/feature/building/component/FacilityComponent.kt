@@ -1,6 +1,5 @@
 package com.ganaljigi.kubf.feature.building.component
 
-import androidx.annotation.DrawableRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -21,13 +20,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.ganalijigi.kubf.R
 import com.ganaljigi.kubf.feature.building.model.Facility
 import com.ganaljigi.kubf.core.designsystem.theme.Gray2
 import com.ganaljigi.kubf.core.designsystem.theme.KUBFAndroidTheme
-
-
-
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
@@ -39,28 +34,28 @@ fun FacilityComponent(
             .padding(horizontal = 16.dp)
             .fillMaxWidth(),
         horizontalArrangement = Arrangement.spacedBy(8.dp),
-        verticalArrangement = Arrangement.spacedBy(8.dp)
+        verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         facilities.forEach { facility ->
             Box(
                 modifier = Modifier
                     .clip(RoundedCornerShape(10.dp))
                     .background(Gray2.copy(alpha = 0.16f))
-                    .padding(horizontal = 12.dp, vertical = 6.dp)
+                    .padding(horizontal = 12.dp, vertical = 6.dp),
             ) {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(4.dp)
+                    horizontalArrangement = Arrangement.spacedBy(4.dp),
                 ) {
                     Icon(
                         painter = painterResource(facility.iconResId),
                         contentDescription = facility.label,
                         modifier = Modifier.size(20.dp),
-                        tint = Color.Unspecified
+                        tint = Color.Unspecified,
                     )
                     Text(
                         text = facility.label,
-                        style = KUBFAndroidTheme.typography.medium13
+                        style = KUBFAndroidTheme.typography.medium13,
                     )
                 }
             }

@@ -14,6 +14,6 @@ abstract class RoomInfoRepositoryModule {
     @Binds
     @Singleton
     abstract fun bindRoomInfoRepository(
-        impl: RoomInfoRepositoryImpl
+        impl: RoomInfoRepositoryImpl,
     ): RoomInfoRepository
 }

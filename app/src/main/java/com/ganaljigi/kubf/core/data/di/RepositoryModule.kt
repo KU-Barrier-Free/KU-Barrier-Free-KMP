@@ -23,7 +23,7 @@ abstract class RepositoryModule {
     @Binds
     @Singleton
     abstract fun bindBuildingRepository(buildingRepositoryImpl: BuildingRepositoryImpl): BuildingRepository
-    
+
     @Binds
     @Singleton
     abstract fun bindRouteRepository(routeRepositoryImpl: RouteRepositoryImpl): RouteRepository

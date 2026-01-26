@@ -28,7 +28,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
-import com.ganaljigi.kubf.feature.building.model.Facility
 import com.ganaljigi.kubf.feature.building.model.FloorInfo
 import com.ganaljigi.kubf.feature.building.model.Room
 import com.ganaljigi.kubf.core.designsystem.component.ImageViewerDialog
@@ -38,7 +37,7 @@ import com.ganaljigi.kubf.core.designsystem.theme.KUBFAndroidTheme
 fun FloorComponent(
     current: FloorInfo,
     onRoomClick: (Room) -> Unit,
-    buildingName: String = ""
+    buildingName: String = "",
 ) {
     var showImage by remember { mutableStateOf(false) }
     var startIndex by remember { mutableStateOf(0) }
@@ -47,18 +46,18 @@ fun FloorComponent(
             if (current.imageUrl.isNotEmpty()) {
                 val pagerState = rememberPagerState(
                     initialPage = 0,
-                    pageCount = { current.imageUrl.size }
+                    pageCount = { current.imageUrl.size },
                 )
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(180.dp)
                         .padding(horizontal = 16.dp)
-                        .clip(RoundedCornerShape(10.dp))
+                        .clip(RoundedCornerShape(10.dp)),
                 ) {
                     HorizontalPager(
                         state = pagerState,
-                        modifier = Modifier.fillMaxSize()
+                        modifier = Modifier.fillMaxSize(),
                     ) { page ->
                         val url = current.imageUrl[page]
                         AsyncImage(
@@ -70,7 +69,7 @@ fun FloorComponent(
                                 .clickable {
                                     startIndex = page
                                     showImage = true
-                                }
+                                },
                         )
                     }
                     if (current.imageUrl.size > 1) {
@@ -81,13 +80,13 @@ fun FloorComponent(
                                 .clip(RoundedCornerShape(12.dp))
                                 .background(Color.Black.copy(alpha = 0.5f))
                                 .padding(horizontal = 10.dp, vertical = 4.dp),
-                            contentAlignment = Alignment.Center
+                            contentAlignment = Alignment.Center,
                         ) {
                             Text(
                                 text = "${pagerState.currentPage + 1}/${current.imageUrl.size}",
                                 color = Color.White,
                                 textAlign = TextAlign.Center,
-                                style = KUBFAndroidTheme.typography.medium13
+                                style = KUBFAndroidTheme.typography.medium13,
                             )
                         }
                     }
@@ -106,7 +105,7 @@ fun FloorComponent(
                 current.rooms.forEach { room ->
                     RoomComponent(
                         room = room,
-                        onClick = { onRoomClick(room) }
+                        onClick = { onRoomClick(room) },
                     )
                 }
             }
@@ -116,7 +115,7 @@ fun FloorComponent(
             visible = showImage,
             images = current.imageUrl,
             selectedIndex = startIndex,
-            onDismiss = { showImage = false }
+            onDismiss = { showImage = false },
         )
     }
 }
@@ -124,9 +123,10 @@ fun FloorComponent(
 @Preview
 @Composable
 private fun FloorCompPreview() {
-    val facilities = Facility.entries.toList()
-    val urllist = mutableListOf("httpsL")
-    //val rooms = mutableListOf(Room(urllist,"101", "전산실습실", "강의실", mutableListOf<String>()))
-    // val floorInfos = mutableListOf(FloorInfo(1,"https://",facilities, rooms))
-    //floorInfos.add(FloorInfo(2,"https://",facilities, rooms))
+    KUBFAndroidTheme {
+        FloorComponent(
+            current = FloorInfo(),
+            onRoomClick = { },
+        )
+    }
 }

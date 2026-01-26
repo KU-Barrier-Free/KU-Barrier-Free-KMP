@@ -27,7 +27,6 @@ private val PretendardRegular = TextStyle(
     fontWeight = FontWeight.Normal,
 )
 
-
 internal val Typography = KUBFTypography(
     bold18 = PretendardBold.copy(
         fontSize = 18.sp,
@@ -102,7 +101,7 @@ internal val Typography = KUBFTypography(
         fontSize = 14.sp,
         lineHeight = 25.sp,
         letterSpacing = (-2.5).sp,
-    )
+    ),
 
 )
 
@@ -140,4 +139,3 @@ data class KUBFTypography(
 val LocalTypography = staticCompositionLocalOf {
     Typography
 }
-

@@ -18,7 +18,7 @@ import com.ganaljigi.kubf.core.ui.util.noRippleClickable
 @Composable
 fun MyLocationButton(
     modifier: Modifier = Modifier,
-    onClick: () -> Unit = { }
+    onClick: () -> Unit = { },
 ) {
     Surface(
         modifier = modifier
@@ -26,14 +26,14 @@ fun MyLocationButton(
             .noRippleClickable(onClick),
         shape = CircleShape,
         color = MainGreen,
-        shadowElevation = 2.dp
+        shadowElevation = 2.dp,
     ) {
         Icon(
             modifier = Modifier
                 .padding(12.dp),
             painter = painterResource(R.drawable.ic_my_location),
             contentDescription = "현재 위치로 이동",
-            tint = Color.White
+            tint = Color.White,
         )
     }
 }

@@ -28,7 +28,7 @@ fun FindWayButton(
         modifier = modifier
             .shadow(10.dp, RoundedCornerShape(10.dp))
             .aspectRatio(1f)
-            .clickable(onClick = onClick)
+            .clickable(onClick = onClick),
     ) {
         Icon(
             modifier = Modifier
@@ -43,7 +43,7 @@ fun FindWayButton(
                 .padding(bottom = 4.dp),
             text = "길찾기",
             style = KUBFAndroidTheme.typography.medium9,
-            color = Color.White
+            color = Color.White,
         )
     }
 }
@@ -55,6 +55,6 @@ private fun FindWayButtonPreview() {
         modifier = Modifier
             .size(44.dp)
             .padding(4.dp),
-        onClick = {}
+        onClick = {},
     )
 }

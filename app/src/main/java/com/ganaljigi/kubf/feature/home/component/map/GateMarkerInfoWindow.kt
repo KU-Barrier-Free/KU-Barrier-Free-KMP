@@ -30,7 +30,7 @@ fun GateMarkerInfoWindow(
             painter = painterResource(R.drawable.ic_gate_pin),
             contentDescription = null,
             tint = Color.Unspecified,
-            modifier = Modifier.size(30.dp * scale)
+            modifier = Modifier.size(30.dp * scale),
         )
     }
 
@@ -44,14 +44,14 @@ fun GateMarkerInfoWindow(
             onGateInfoClick(gateMarkerInfo.imageUrls)
         },
         icon = icon,
-        infoWindowAnchor = Offset(0.5f, -0.2f)
+        infoWindowAnchor = Offset(0.5f, -0.2f),
     ) {
         MapGateInfo(
             painters = painters,
             description = gateMarkerInfo.description,
             modifier = Modifier.noRippleClickable {
                 onGateInfoClick(gateMarkerInfo.imageUrls)
-            }
+            },
         )
     }
 }

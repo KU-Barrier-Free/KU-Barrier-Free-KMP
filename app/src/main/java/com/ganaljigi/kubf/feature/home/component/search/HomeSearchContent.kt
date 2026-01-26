@@ -27,23 +27,20 @@ import com.ganaljigi.kubf.core.designsystem.theme.Gray3
 import com.ganaljigi.kubf.core.designsystem.theme.Gray4
 import com.ganaljigi.kubf.core.designsystem.theme.KUBFAndroidTheme
 import com.ganaljigi.kubf.core.designsystem.theme.MainGreen
-import com.ganaljigi.kubf.core.ui.util.noRippleClickable
 import com.ganaljigi.kubf.core.ui.util.noRippleClickableSingle
 import com.ganaljigi.kubf.core.ui.util.toAnnotatedString
 
 @Composable
 fun HomeSearchContent(
     modifier: Modifier = Modifier,
-    onKeywordClick: (String) -> Unit = {},
     onItemClick: (SearchResult) -> Unit = {},
-    popularKeywords: List<String> = emptyList(),
     searchResults: List<SearchResult> = emptyList(),
 ) {
     Column(
         modifier = modifier
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
-            .padding(horizontal = 16.dp)
+            .padding(horizontal = 16.dp),
     ) {
 //        Row(
 //            Modifier
@@ -75,12 +72,12 @@ fun HomeSearchContent(
                 modifier = Modifier.align(Alignment.CenterHorizontally),
                 text = "건물, 편의시설을 검색해보세요.",
                 style = KUBFAndroidTheme.typography.regular14.copy(
-                    color = Gray4
-                )
+                    color = Gray4,
+                ),
             )
         } else {
             HorizontalDivider(
-                color = Gray1
+                color = Gray1,
             )
             searchResults.forEach { result ->
                 if (result.isBuilding) {
@@ -96,7 +93,7 @@ fun HomeSearchContent(
                 }
 
                 HorizontalDivider(
-                    color = Gray1
+                    color = Gray1,
                 )
             }
         }
@@ -112,14 +109,14 @@ private fun HomeSearchBuildingItem(
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .noRippleClickableSingle() { onClick(item) }
+            .noRippleClickableSingle { onClick(item) }
             .padding(vertical = 16.dp),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween
+        horizontalArrangement = Arrangement.SpaceBetween,
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
         ) {
             Icon(
                 painter = painterResource(R.drawable.ic_building),
@@ -144,14 +141,14 @@ private fun HomeSearchConvItem(
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .noRippleClickableSingle() { onClick(item) }
+            .noRippleClickableSingle { onClick(item) }
             .padding(vertical = 16.dp),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween
+        horizontalArrangement = Arrangement.SpaceBetween,
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
         ) {
             Icon(
                 painter = painterResource(item.icon),
@@ -166,7 +163,7 @@ private fun HomeSearchConvItem(
         Text(
             text = item.building,
             style = KUBFAndroidTheme.typography.regular14.copy(
-                color = Gray3
+                color = Gray3,
             ),
         )
     }
@@ -176,29 +173,26 @@ private fun HomeSearchConvItem(
 @Composable
 private fun HomeSearchContentPreview() {
     HomeSearchContent(
-        popularKeywords = listOf(
-            "카페", "편의점", "복사실", "학술공간"
-        ),
         searchResults = listOf(
             SearchResult(
                 id = 1,
                 isBuilding = true,
                 name = "경영관",
                 building = "경영관",
-                searchKeyword = "레스티"
+                searchKeyword = "레스티",
             ),
             SearchResult(
                 id = 2,
                 name = "카페 레스티오",
                 building = "경영관",
-                searchKeyword = "레스티"
+                searchKeyword = "레스티",
             ),
             SearchResult(
                 id = 3,
                 name = "카페 레스티오",
                 building = "공학관",
-                searchKeyword = "레스티"
-            )
-        )
+                searchKeyword = "레스티",
+            ),
+        ),
     )
 }

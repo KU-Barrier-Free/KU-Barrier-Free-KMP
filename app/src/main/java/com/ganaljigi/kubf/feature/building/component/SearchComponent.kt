@@ -26,26 +26,20 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.input.TextFieldValue
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.ganaljigi.kubf.feature.building.model.Room
-import com.ganaljigi.kubf.feature.building.model.RoomSearchResult
-import com.ganaljigi.kubf.feature.building.viewmodel.BuildingUIState
-import com.ganaljigi.kubf.feature.building.viewmodel.BuildingViewModel
 import com.ganaljigi.kubf.core.designsystem.component.KUBFSearchBar
 import com.ganaljigi.kubf.core.designsystem.theme.Gray3
 import com.ganaljigi.kubf.core.designsystem.theme.KUBFAndroidTheme
 import com.ganaljigi.kubf.core.designsystem.theme.MainGreen
-import kotlinx.collections.immutable.toPersistentList
+import com.ganaljigi.kubf.feature.building.model.RoomSearchResult
+import com.ganaljigi.kubf.feature.building.viewmodel.BuildingViewModel
 
 @Composable
 fun SearchPopup(
     viewModel: BuildingViewModel = hiltViewModel(),
-    onClose: () -> Unit,
-    onRoomClick: (RoomSearchResult) -> Unit
+    onRoomClick: (RoomSearchResult) -> Unit,
 ) {
     val ui by viewModel.uiState.collectAsStateWithLifecycle()
 
@@ -58,21 +52,21 @@ fun SearchPopup(
     val expanded = isFocused || hasQuery
 
     val popupHeight by animateDpAsState(
-        targetValue = if(expanded) 480.dp else 302.dp
+        targetValue = if (expanded) 480.dp else 302.dp,
     )
     Box(
         modifier = Modifier
             .width(328.dp)
             .height(popupHeight)
             .clip(shape = RoundedCornerShape(6))
-            .background(Color.White)
+            .background(Color.White),
     ) {
         Column {
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(top = 16.dp, bottom = 24.dp),
-                contentAlignment = Alignment.Center
+                contentAlignment = Alignment.Center,
             ) {
                 Text(
                     text = "검색",
@@ -86,7 +80,7 @@ fun SearchPopup(
                 placeHolderText = "강의실명, 호실 검색",
                 interactionSource = interactionSource,
                 isFocused = isFocused,
-                onValueCleared = { viewModel.clearQuery() }
+                onValueCleared = { viewModel.clearQuery() },
             )
 
             // 결과 개수: 0이면 숨김
@@ -94,7 +88,11 @@ fun SearchPopup(
                 Spacer(Modifier.height(24.dp))
                 Row(Modifier.padding(horizontal = 16.dp)) {
                     Text("결과 ", style = KUBFAndroidTheme.typography.regular13, color = Gray3)
-                    Text("${ui.result.size}", style = KUBFAndroidTheme.typography.regular13, color = MainGreen)
+                    Text(
+                        "${ui.result.size}",
+                        style = KUBFAndroidTheme.typography.regular13,
+                        color = MainGreen,
+                    )
                 }
             }
 
@@ -103,7 +101,7 @@ fun SearchPopup(
                 Modifier
                     .fillMaxWidth()
                     .weight(1f)
-                    .padding(horizontal = 16.dp, vertical = 4.dp)
+                    .padding(horizontal = 16.dp, vertical = 4.dp),
             ) {
                 when {
                     !hasQuery -> {
@@ -111,7 +109,7 @@ fun SearchPopup(
                             Text(
                                 "강의실명, 호실을 검색해보세요.",
                                 style = KUBFAndroidTheme.typography.regular14,
-                                color = Gray3
+                                color = Gray3,
                             )
                         }
                     }
@@ -121,7 +119,7 @@ fun SearchPopup(
                             Text(
                                 "검색 결과가 없어요.",
                                 style = KUBFAndroidTheme.typography.regular14,
-                                color = Gray3
+                                color = Gray3,
                             )
                         }
                     }
@@ -130,14 +128,14 @@ fun SearchPopup(
                         LazyColumn(
                             modifier = Modifier.fillMaxWidth(),
                             verticalArrangement = Arrangement.spacedBy(12.dp),
-                            contentPadding = PaddingValues(bottom = 8.dp)
+                            contentPadding = PaddingValues(bottom = 8.dp),
                         ) {
                             items(
                                 items = ui.result,
-                                key = { it.id }
+                                key = { it.id },
                             ) { item ->
                                 val room = item.room ?: return@items
-                                RoomComponent(room = room){
+                                RoomComponent(room = room) {
                                     onRoomClick(item)
                                 }
                             }
@@ -147,18 +145,4 @@ fun SearchPopup(
             }
         }
     }
-}
-
-
-@Preview(showBackground = true)
-@Composable
-private fun SearchPreview() {
-    val fakeUi = BuildingUIState(
-        query = TextFieldValue("경영관"),
-        result = listOf(
-            RoomSearchResult(id = 1,  room = null),
-            RoomSearchResult(id = 2,  room = Room(id =10, name ="101호"))
-        ).toPersistentList()
-    )
-
 }

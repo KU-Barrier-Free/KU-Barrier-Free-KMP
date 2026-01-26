@@ -6,5 +6,5 @@ data class Door(
     val label: String = "",
     val wheelchair: Boolean = false,
     val latitude: Double? = null,
-    val longitude: Double? = null
+    val longitude: Double? = null,
 )

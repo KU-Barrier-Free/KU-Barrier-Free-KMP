@@ -1,6 +1,11 @@
 package com.ganaljigi.kubf.feature.room.component
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -25,18 +30,18 @@ fun DeskAndChairComponent(
     wheelChair: Boolean,
     wheelchairTable: Boolean,
     computerTable: Boolean,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Column(modifier = modifier.padding(start = 20.dp)) {
         HorizontalDivider(
             modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp),
             color = Gray1,
-            thickness = 1.dp
+            thickness = 1.dp,
         )
 
         Text(
             text = "책상 · 의자 종류",
-            style = KUBFAndroidTheme.typography.semiBold16
+            style = KUBFAndroidTheme.typography.semiBold16,
         )
 
         Spacer(modifier = Modifier.height(12.dp))
@@ -73,17 +78,17 @@ fun DeskAndChairComponent(
 @Composable
 fun DeskAndChairItem(
     label: String,
-    exists: Boolean
+    exists: Boolean,
 ) {
     Row(
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         Text(
             text = label,
             style = if (exists)
                 KUBFAndroidTheme.typography.semiBold16.copy(color = MainGreen)
             else
-                KUBFAndroidTheme.typography.regular14.copy(color = Gray3)
+                KUBFAndroidTheme.typography.regular14.copy(color = Gray3),
         )
         Spacer(modifier = Modifier.width(4.dp))
         Text(
@@ -91,7 +96,7 @@ fun DeskAndChairItem(
             style = if (exists)
                 KUBFAndroidTheme.typography.semiBold16.copy(color = MainGreen)
             else
-                KUBFAndroidTheme.typography.regular14.copy(color = Gray3)
+                KUBFAndroidTheme.typography.regular14.copy(color = Gray3),
         )
     }
 }
@@ -110,7 +115,7 @@ fun DeskAndChairComponentPreview() {
             backOfChair = true,
             wheelChair = true,
             wheelchairTable = false,
-            computerTable = false
+            computerTable = false,
         )
     }
 }

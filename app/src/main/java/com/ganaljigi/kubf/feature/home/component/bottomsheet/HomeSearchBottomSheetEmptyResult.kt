@@ -32,13 +32,13 @@ fun HomeSearchBottomSheetEmptyResult(
         modifier = modifier
             .fillMaxWidth()
             .padding(horizontal = 16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Row {
             Text(
                 text = "\"$searchKeyword\"",
                 style = KUBFAndroidTheme.typography.semiBold16.copy(
-                    color = MainGreen
+                    color = MainGreen,
                 ),
             )
             Text(
@@ -51,7 +51,7 @@ fun HomeSearchBottomSheetEmptyResult(
             text = "검색 결과가 없습니다.\n찾고 싶으신 정보가 없다면 문의를 남겨주세요.",
             textAlign = TextAlign.Center,
             style = KUBFAndroidTheme.typography.regular14.copy(
-                color = Gray4
+                color = Gray4,
             ),
         )
         Spacer(modifier = Modifier.height(41.dp))
@@ -59,15 +59,15 @@ fun HomeSearchBottomSheetEmptyResult(
             modifier = Modifier
                 .background(
                     color = LightGreen,
-                    shape = RoundedCornerShape(20.dp)
+                    shape = RoundedCornerShape(20.dp),
                 )
-                .noRippleClickable { onInquireClick() }
+                .noRippleClickable { onInquireClick() },
         ) {
             Text(
                 modifier = Modifier.padding(horizontal = 16.dp, vertical = 13.5.dp),
                 text = "문의하기",
                 style = KUBFAndroidTheme.typography.regular14.copy(
-                    color = MainGreen
+                    color = MainGreen,
                 ),
             )
         }

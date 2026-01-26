@@ -1,6 +1,5 @@
 package com.ganaljigi.kubf.core.network.response.building
 
-
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -27,7 +26,7 @@ data class BuildingInfoResponseDto(
     @SerialName("number")
     val number: Int,
     @SerialName("significantInfos")
-    val significantInfos: List<SignificantInfo>
+    val significantInfos: List<SignificantInfo>,
 ) {
     @Serializable
     data class DoorInfo(
@@ -40,13 +39,13 @@ data class BuildingInfoResponseDto(
         @SerialName("longitude")
         val longitude: Double,
         @SerialName("wheelchair")
-        val wheelchair: Boolean
+        val wheelchair: Boolean,
     )
 
     @Serializable
     data class FloorMap(
         @SerialName("B1")
-        val b1: B1
+        val b1: B1,
     ) {
         @Serializable
         data class B1(
@@ -55,7 +54,7 @@ data class BuildingInfoResponseDto(
             @SerialName("purposes")
             val purposes: List<String>,
             @SerialName("spaceSummaries")
-            val spaceSummaries: List<SpaceSummary>
+            val spaceSummaries: List<SpaceSummary>,
         ) {
             @Serializable
             data class SpaceSummary(
@@ -70,14 +69,14 @@ data class BuildingInfoResponseDto(
                 @SerialName("roomName")
                 val roomName: String,
                 @SerialName("roomNumber")
-                val roomNumber: String
+                val roomNumber: String,
             ) {
                 @Serializable
                 data class RoomImage(
                     @SerialName("imageType")
                     val imageType: String,
                     @SerialName("imageUrl")
-                    val imageUrl: String
+                    val imageUrl: String,
                 )
             }
         }
@@ -90,6 +89,6 @@ data class BuildingInfoResponseDto(
         @SerialName("id")
         val id: Int,
         @SerialName("imageUrl")
-        val imageUrl: List<String>
+        val imageUrl: List<String>,
     )
 }

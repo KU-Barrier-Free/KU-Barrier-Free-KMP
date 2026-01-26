@@ -18,7 +18,7 @@ import com.ganaljigi.kubf.core.ui.util.noRippleClickable
 @Composable
 fun NoticeButton(
     modifier: Modifier = Modifier,
-    onClick: () -> Unit = { }
+    onClick: () -> Unit = { },
 ) {
     Surface(
         modifier = modifier
@@ -26,14 +26,14 @@ fun NoticeButton(
             .noRippleClickable(onClick),
         shape = CircleShape,
         color = MainGreen,
-        shadowElevation = 2.dp
+        shadowElevation = 2.dp,
     ) {
         Icon(
             modifier = Modifier
                 .padding(12.dp),
             painter = painterResource(R.drawable.ic_notice_white_24),
             contentDescription = "장애학생 지원센터",
-            tint = Color.White
+            tint = Color.White,
         )
     }
 }

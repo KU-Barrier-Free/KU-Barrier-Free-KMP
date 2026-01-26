@@ -21,14 +21,14 @@ import com.ganaljigi.kubf.core.designsystem.theme.KUBFAndroidTheme
 fun HomeSearchTopBar(
     modifier: Modifier = Modifier,
     title: String,
-    onClick: () -> Unit = {}
+    onClick: () -> Unit = {},
 ) {
     Row(
         modifier = modifier
             .fillMaxWidth()
             .height(48.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         IconButton(
             onClick = onClick,
@@ -36,7 +36,7 @@ fun HomeSearchTopBar(
             Icon(
                 painter = painterResource(R.drawable.ic_chevron_left),
                 contentDescription = "Back",
-                tint = Color.Unspecified
+                tint = Color.Unspecified,
             )
         }
 

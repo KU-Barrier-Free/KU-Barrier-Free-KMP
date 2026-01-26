@@ -56,7 +56,6 @@ import com.google.maps.android.compose.MapProperties
 import com.google.maps.android.compose.MapType
 import com.google.maps.android.compose.MapUiSettings
 import com.google.maps.android.compose.MarkerComposable
-import com.google.maps.android.compose.MarkerInfoWindow
 import com.google.maps.android.compose.MarkerState
 import com.google.maps.android.compose.Polyline
 import com.google.maps.android.compose.rememberMarkerState
@@ -95,7 +94,7 @@ fun MapComponent(
     val markerScale = calculateMarkerScale(
         currentZoom = currentZoom,
         minZoom = MapParam.MIN_ZOOM,
-        maxZoom = MapParam.MAX_ZOOM
+        maxZoom = MapParam.MAX_ZOOM,
     )
 
     GoogleMap(
@@ -104,7 +103,7 @@ fun MapComponent(
         cameraPositionState = cameraPosition,
         properties = MapParam.mapProperties.copy(isMyLocationEnabled = false),
         uiSettings = MapParam.mapUiSettings,
-        googleMapOptionsFactory = { MapParam.mapOptions }
+        googleMapOptionsFactory = { MapParam.mapOptions },
     ) {
         // 선택된 경로만 렌더링
         selectedRouteResult?.let { selectedRoute ->
@@ -113,7 +112,7 @@ fun MapComponent(
                     points = selectedRoute.pathPoints,
                     color = MainGreen,
                     width = 10f,
-                    zIndex = 2f
+                    zIndex = 2f,
                 )
             }
         }
@@ -123,7 +122,7 @@ fun MapComponent(
                     ToggleMarker(
                         toggleMarker = mapMarker,
                         toggleIconRes = R.drawable.ic_curb_marker,
-                        scale = markerScale
+                        scale = markerScale,
                     )
                 }
 
@@ -131,7 +130,7 @@ fun MapComponent(
                     ToggleMarker(
                         toggleMarker = mapMarker,
                         toggleIconRes = R.drawable.ic_slope_marker,
-                        scale = markerScale
+                        scale = markerScale,
                     )
                 }
 
@@ -139,13 +138,13 @@ fun MapComponent(
                     ToggleMarker(
                         toggleMarker = mapMarker,
                         toggleIconRes = R.drawable.ic_stairs_marker,
-                        scale = markerScale
+                        scale = markerScale,
                     )
                 }
 
                 MapToggle.SPECIAL_MARK -> specialMarkers.forEach { mapMarker ->
                     val markerState = rememberMarkerState(
-                        position = LatLng(mapMarker.latitude, mapMarker.longitude)
+                        position = LatLng(mapMarker.latitude, mapMarker.longitude),
                     )
                     val isSelected = mapMarker == selectedSpecialMarker
                     SpecialMarker(
@@ -154,13 +153,13 @@ fun MapComponent(
                         specialMarkerInfo = if (isSelected) specialMarkerInfo else SpecialMarkerInfo(),
                         onSpecialMarkerClick = { onSpecialMarkerClick(mapMarker) },
                         onSpecialInfoClick = onSpecialInfoClick,
-                        scale = markerScale
+                        scale = markerScale,
                     )
                 }
 
                 MapToggle.GATE -> gateMarkers.forEach { mapMarker ->
                     val markerState = rememberMarkerState(
-                        position = LatLng(mapMarker.latitude, mapMarker.longitude)
+                        position = LatLng(mapMarker.latitude, mapMarker.longitude),
                     )
                     val isSelected = mapMarker == selectedGateMarker
                     GateMarker(
@@ -169,7 +168,7 @@ fun MapComponent(
                         gateMarkerInfo = if (isSelected) gateMarkerInfo else SpecialMarkerInfo(),
                         onGateMarkerClick = { onGateMarkerClick(mapMarker) },
                         onGateInfoClick = onGateInfoClick,
-                        scale = markerScale
+                        scale = markerScale,
                     )
                 }
             }
@@ -179,7 +178,7 @@ fun MapComponent(
             BuildingMarker(
                 buildingMarker = marker,
                 isSelected = true,
-                scale = markerScale
+                scale = markerScale,
             )
         }
 
@@ -187,7 +186,7 @@ fun MapComponent(
             BuildingMarker(
                 buildingMarker = mapMarker,
                 isSelected = false,
-                scale = markerScale
+                scale = markerScale,
             ) {
                 onBuildingMarkerClick(it)
             }
@@ -203,7 +202,6 @@ fun MapComponent(
     }
 }
 
-
 @Composable
 private fun ToggleMarker(
     toggleMarker: ToggleMarker,
@@ -213,11 +211,11 @@ private fun ToggleMarker(
     val markerState =
         rememberMarkerState(
             key = toggleMarker.toString(),
-            position = LatLng(toggleMarker.latitude, toggleMarker.longitude)
+            position = LatLng(toggleMarker.latitude, toggleMarker.longitude),
         )
     key(toggleMarker) {
         MarkerComposable(
-            state = markerState
+            state = markerState,
         ) {
             Icon(
                 painter = painterResource(toggleIconRes),
@@ -225,7 +223,7 @@ private fun ToggleMarker(
                 tint = Color.Unspecified,
                 modifier = Modifier
                     .size(16.dp * scale)
-                    .shadow(1.dp)
+                    .shadow(1.dp),
             )
         }
     }
@@ -257,7 +255,7 @@ private fun SpecialMarker(
                 .build(),
             placeholder = painterResource(R.drawable.img_special_info),
             error = painterResource(R.drawable.img_special_info),
-            onSuccess = { isImageLoaded[index] = true }
+            onSuccess = { isImageLoaded[index] = true },
         )
     }
     val allImagesLoaded by derivedStateOf { isImageLoaded.all { it } }
@@ -275,17 +273,17 @@ private fun SpecialMarker(
         specialMarkerInfo = specialMarkerInfo,
         onSpecialMarkerClick = onSpecialMarkerClick,
         onSpecialInfoClick = onSpecialInfoClick,
-        painters = painters
+        painters = painters,
     ) {
         Icon(
             painter = painterResource(
                 if (isSelected) R.drawable.ic_special_marker_selected
-                else R.drawable.ic_special_marker
+                else R.drawable.ic_special_marker,
             ),
             contentDescription = null,
             tint = Color.Unspecified,
             modifier = Modifier
-                .size(20.dp * iconScale)
+                .size(20.dp * iconScale),
         )
     }
 }
@@ -311,7 +309,7 @@ private fun GateMarker(
                 .build(),
             placeholder = painterResource(R.drawable.img_special_info),
             error = painterResource(R.drawable.img_special_info),
-            onSuccess = { isImageLoaded[index] = true }
+            onSuccess = { isImageLoaded[index] = true },
         )
     }
     val allImagesLoaded by derivedStateOf { isImageLoaded.all { it } }
@@ -330,7 +328,7 @@ private fun GateMarker(
         onGateMarkerClick = onGateMarkerClick,
         onGateInfoClick = onGateInfoClick,
         painters = painters,
-        scale = scale
+        scale = scale,
     )
 }
 
@@ -350,27 +348,27 @@ private fun BuildingMarker(
         state = MarkerState(
             position = LatLng(
                 buildingMarker.latitude,
-                buildingMarker.longitude
-            )
+                buildingMarker.longitude,
+            ),
         ),
         zIndex = if (isSelected) Float.MAX_VALUE else 0f,
-        keys = arrayOf({ buildingMarker.id }, { isSelected }, scale)
+        keys = arrayOf({ buildingMarker.id }, { isSelected }, scale),
     ) {
         Column(
             modifier = Modifier.noRippleClickable { onClick(buildingMarker) },
             verticalArrangement = Arrangement.spacedBy(1.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
+            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Icon(
                 painter = painterResource(
                     if (isSelected) R.drawable.ic_building_selected
-                    else R.drawable.ic_building
+                    else R.drawable.ic_building,
                 ),
                 contentDescription = null,
                 tint = Color.Unspecified,
                 modifier = Modifier
                     .shadow(10.dp)
-                    .size(iconSize)
+                    .size(iconSize),
             )
 
             Box {
@@ -387,7 +385,7 @@ private fun BuildingMarker(
                 Text(
                     text = buildingMarker.name,
                     style = KUBFAndroidTheme.typography.semiBold14.copy(
-                        fontSize = fontSize.sp
+                        fontSize = fontSize.sp,
                     ),
                     color = if (isSelected) MainGreen else Color(0xFF5A6860),
                 )
@@ -407,8 +405,8 @@ private fun DoorMarker(
         state = MarkerState(
             position = LatLng(
                 doorMarker.latitude,
-                doorMarker.longitude
-            )
+                doorMarker.longitude,
+            ),
         ),
         keys = arrayOf({ doorMarker.id }, scale),
     ) {
@@ -416,7 +414,7 @@ private fun DoorMarker(
             modifier = Modifier
                 .background(
                     color = if (doorMarker.isWheelChairAccessible) MainGreen else Gray4,
-                    shape = CircleShape
+                    shape = CircleShape,
                 )
                 .padding(horizontal = 4.dp * scale, vertical = 2.dp * scale)
                 .sizeIn(minWidth = 16.dp * scale, minHeight = 16.dp * scale),
@@ -426,7 +424,7 @@ private fun DoorMarker(
                 text = doorMarker.label,
                 style = KUBFAndroidTheme.typography.medium14.copy(
                     fontSize = fontSize.sp,
-                    color = Color.White
+                    color = Color.White,
                 ),
             )
         }
@@ -442,8 +440,8 @@ fun UserMarker(
         state = MarkerState(
             position = LatLng(
                 latLng.latitude,
-                latLng.longitude
-            )
+                latLng.longitude,
+            ),
         ),
         anchor = Offset(0.5f, 0.5f),
     ) {
@@ -452,9 +450,9 @@ fun UserMarker(
                 .size(40.dp)
                 .background(
                     color = MainGreen.copy(alpha = 0.12f),
-                    shape = CircleShape
+                    shape = CircleShape,
                 ),
-            contentAlignment = Alignment.Center
+            contentAlignment = Alignment.Center,
         ) {
             Box(
                 modifier = Modifier
@@ -462,24 +460,22 @@ fun UserMarker(
                     .border(
                         width = 2.dp,
                         color = Color.White,
-                        shape = CircleShape
+                        shape = CircleShape,
                     )
                     .background(
                         color = MainGreen,
-                        shape = CircleShape
-                    )
+                        shape = CircleShape,
+                    ),
             )
         }
     }
 }
-
 
 @Preview(showBackground = true)
 @Composable
 private fun MapComponentPreview() {
 //    MapComponent()
 }
-
 
 object MapParam {
     const val MIN_ZOOM = 16.0f
@@ -498,8 +494,8 @@ object MapParam {
             ),
             LatLng(
                 37.5450,
-                127.0952
-            )
+                127.0952,
+            ),
         ),
         mapStyleOptions = null,
         mapType = MapType.NORMAL,
@@ -516,7 +512,7 @@ object MapParam {
         scrollGesturesEnabledDuringRotateOrZoom = true,
         tiltGesturesEnabled = true,
         zoomControlsEnabled = true,
-        zoomGesturesEnabled = true
+        zoomGesturesEnabled = true,
     )
     val mapOptions = GoogleMapOptions().apply {
         mapId(BuildConfig.GOOGLE_MAPS_ID)

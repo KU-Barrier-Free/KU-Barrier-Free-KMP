@@ -18,7 +18,6 @@ import com.ganaljigi.kubf.core.navigation.MainNavHost
 import com.ganaljigi.kubf.core.navigation.Routes
 import com.ganaljigi.kubf.core.designsystem.theme.KUBFAndroidTheme
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.serialization.Serializable
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -47,7 +46,7 @@ class MainActivity : ComponentActivity() {
                 Scaffold(
                     modifier = Modifier
                         .fillMaxSize()
-                        .navigationBarsPadding()
+                        .navigationBarsPadding(),
                 ) { innerPadding ->
                     MainNavHost(
                         padding = innerPadding,

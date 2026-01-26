@@ -19,6 +19,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import coil3.compose.AsyncImage
+import com.ganaljigi.kubf.core.designsystem.theme.KUBFAndroidTheme
 import com.ganaljigi.kubf.core.ui.util.conditionalModifier
 
 @Composable
@@ -30,15 +31,15 @@ fun HomeSpecialMarkDialog(
     Dialog(
         onDismissRequest = { onDismissRequest(false) },
         properties = DialogProperties(
-            usePlatformDefaultWidth = false
-        )
+            usePlatformDefaultWidth = false,
+        ),
     ) {
         Row(
             modifier = modifier
                 .heightIn(max = 272.dp)
                 .padding(horizontal = 10.dp)
                 .horizontalScroll(rememberScrollState()),
-            horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally)
+            horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally),
         ) {
             imageUrls.forEach { imageUrl ->
                 AsyncImage(
@@ -46,7 +47,7 @@ fun HomeSpecialMarkDialog(
                         .conditionalModifier(
                             condition = imageUrls.size > 1,
                             modifierIfTrue = Modifier.width(180.dp),
-                            modifierIfFalse = Modifier.size(272.dp)
+                            modifierIfFalse = Modifier.size(272.dp),
                         )
                         .clip(RoundedCornerShape(10.dp)),
                     model = imageUrl,
@@ -58,9 +59,10 @@ fun HomeSpecialMarkDialog(
     }
 }
 
-
 @Preview
 @Composable
 private fun HomeSpecialMarkDialogPreview() {
-
+    KUBFAndroidTheme {
+        HomeSpecialMarkDialog()
+    }
 }

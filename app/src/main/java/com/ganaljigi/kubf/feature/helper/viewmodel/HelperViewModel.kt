@@ -1,6 +1,5 @@
 package com.ganaljigi.kubf.feature.helper.viewmodel
 
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ganaljigi.kubf.feature.helper.mapper.toUiState
@@ -21,7 +20,6 @@ import javax.inject.Inject
 @HiltViewModel
 class HelperViewModel @Inject constructor(
     private val repository: HelperRepository,
-    private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(HelperUiState())
@@ -30,7 +28,7 @@ class HelperViewModel @Inject constructor(
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5_000),
-            initialValue = HelperUiState()
+            initialValue = HelperUiState(),
         )
 
     private val dateFmt = DateTimeFormatter.ofPattern("yyyy.MM.dd", Locale.KOREA)
@@ -54,16 +52,15 @@ class HelperViewModel @Inject constructor(
 
                     _uiState.value = mapped.copy(
                         isLoading = false,
-                        notices = top3
+                        notices = top3,
                     )
                 },
                 onFailure = { e ->
                     _uiState.update { it.copy(isLoading = false, error = e.message ?: "") }
-                }
+                },
             )
         }
     }
-
 
     fun retry() = loadNotices()
 }
