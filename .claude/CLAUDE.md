@@ -232,3 +232,13 @@ repository.getData().fold(
 | `fix` | `fix/marker-crash` |
 | `refactor` | `refactor/viewmodel-split` |
 | `chore` | `chore/gradle-update` |
+
+---
+
+## 중요 규칙
+
+- **PR 베이스 브랜치는 항상 `develop`**
+- **커밋, 이슈, PR에 Claude/AI 관련 문구 절대 금지**
+  - `Co-Authored-By: Claude` 넣지 말 것
+  - `Generated with Claude Code` 넣지 말 것
+  - AI가 작성했다는 어떤 언급도 하지 말 것

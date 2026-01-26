@@ -108,7 +108,6 @@ fun HomeSearchScreen(
                 }
             },
             searchResults = uiState.searchResults,
-            popularKeywords = uiState.popularKeywords,
         )
     }
 }
