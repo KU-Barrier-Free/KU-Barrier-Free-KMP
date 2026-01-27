@@ -72,12 +72,20 @@
 -keepnames class okhttp3.internal.publicsuffix.PublicSuffixDatabase
 
 # ============================================
-# Hilt
+# Koin
 # ============================================
--keep class dagger.hilt.** { *; }
--keep class javax.inject.** { *; }
--keep class * extends dagger.hilt.android.internal.managers.ComponentSupplier { *; }
--keep class * extends dagger.hilt.android.internal.managers.ViewComponentManager$FragmentContextWrapper { *; }
+-keep class org.koin.** { *; }
+-keep class org.koin.core.** { *; }
+-keep class org.koin.dsl.** { *; }
+-keepclassmembers class * {
+    @org.koin.core.annotation.* <methods>;
+    @org.koin.core.annotation.* <fields>;
+}
+-keep class * extends org.koin.core.module.Module { *; }
+-keep @org.koin.core.annotation.Module class * { *; }
+-keep @org.koin.core.annotation.Single class * { *; }
+-keep @org.koin.core.annotation.Factory class * { *; }
+-keep @org.koin.android.annotation.KoinViewModel class * { *; }
 
 # ============================================
 # Coil
