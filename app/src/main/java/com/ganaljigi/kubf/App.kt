@@ -1,7 +1,6 @@
 package com.ganaljigi.kubf
 
 import android.app.Application
-import com.ganaljigi.kubf.core.data.di.ApiModule
 import com.ganaljigi.kubf.core.data.di.NetworkModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
@@ -19,7 +18,6 @@ class App : Application() {
             androidContext(this@App)
             modules(
                 defaultModule,
-                ApiModule().module,
                 NetworkModule().module,
             )
         }
