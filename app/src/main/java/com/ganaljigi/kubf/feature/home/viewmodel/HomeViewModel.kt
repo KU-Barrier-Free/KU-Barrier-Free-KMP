@@ -1,7 +1,7 @@
 package com.ganaljigi.kubf.feature.home.viewmodel
 
-import android.util.Log
 import androidx.compose.ui.text.input.TextFieldValue
+import io.github.aakira.napier.Napier
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ganaljigi.kubf.core.data.repository.BuildingRepository
@@ -90,7 +90,7 @@ class HomeViewModel(
                     updateSearchResults(response.toUiState(newSearchWord), showSheet)
                 },
                 onFailure = { error ->
-                    Log.e("HomeViewModel", "getSearchResults: Error fetching search results", error)
+                    Napier.e( "getSearchResults: Error fetching search results", error)
                 },
             )
         }
@@ -117,11 +117,7 @@ class HomeViewModel(
                     }
                 },
                 onFailure = { error ->
-                    Log.e(
-                        "HomeViewModel",
-                        "updateSpecialMarkerInfo: Error fetching special info",
-                        error,
-                    )
+                    Napier.e("updateSpecialMarkerInfo: Error fetching special info", error)
                 },
             )
         }
@@ -148,11 +144,7 @@ class HomeViewModel(
                     }
                 },
                 onFailure = { error ->
-                    Log.e(
-                        "HomeViewModel",
-                        "updateGateMarkerInfo: Error fetching gate info",
-                        error,
-                    )
+                    Napier.e("updateGateMarkerInfo: Error fetching gate info", error)
                 },
             )
         }
@@ -300,14 +292,11 @@ class HomeViewModel(
                             )
                         }
                     } else {
-                        Log.w(
-                            "HomeViewModel",
-                            "getRouteBetweenLocations: No routes returned from API",
-                        )
+                        Napier.w("getRouteBetweenLocations: No routes returned from API")
                     }
                 },
                 onFailure = { error ->
-                    Log.e("HomeViewModel", "getRouteBetweenLocations: Error fetching route", error)
+                    Napier.e( "getRouteBetweenLocations: Error fetching route", error)
                 },
             )
         }
@@ -331,11 +320,7 @@ class HomeViewModel(
                     setBottomSheetType(HomeBottomSheetType.BUILDING_INFO)
                 }
                 .onFailure { error ->
-                    Log.e(
-                        "HomeViewModel",
-                        "updateBuildingInfo: Error fetching building info",
-                        error,
-                    )
+                    Napier.e("updateBuildingInfo: Error fetching building info", error)
                 }
         }
     }
@@ -359,11 +344,7 @@ class HomeViewModel(
                     setBottomSheetType(HomeBottomSheetType.BUILDING_INFO)
                 }
                 .onFailure { error ->
-                    Log.e(
-                        "HomeViewModel",
-                        "updateBuildingInfo: Error fetching building info",
-                        error,
-                    )
+                    Napier.e("updateBuildingInfo: Error fetching building info", error)
                 }
         }
     }
@@ -521,7 +502,7 @@ class HomeViewModel(
                     _uiState.value = response.toUiState()
                 },
                 onFailure = { error ->
-                    Log.e("HomeViewModel", "fetchInitData: Error fetching home data", error)
+                    Napier.e( "fetchInitData: Error fetching home data", error)
                 },
             )
         }
@@ -639,11 +620,7 @@ class HomeViewModel(
                     setBottomSheetType(HomeBottomSheetType.BUILDING_INFO)
                 }
                 .onFailure { error ->
-                    Log.e(
-                        "HomeViewModel",
-                        "getBuildingInfoBySearchResult: Error fetching building info",
-                        error,
-                    )
+                    Napier.e("getBuildingInfoBySearchResult: Error fetching building info", error)
                 }
         }
     }

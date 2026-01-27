@@ -89,6 +89,9 @@ dependencies {
     implementation(libs.koin.annotations)
     ksp(libs.koin.ksp.compiler)
 
+    // Logging
+    implementation(libs.napier)
+
     // Coil
     implementation(libs.coil.compose)
     implementation(libs.coil.network.ktor3)
