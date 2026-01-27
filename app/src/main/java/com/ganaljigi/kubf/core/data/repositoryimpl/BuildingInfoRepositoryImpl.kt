@@ -1,7 +1,7 @@
 package com.ganaljigi.kubf.core.data.repositoryimpl
 
 import com.ganaljigi.kubf.core.data.repository.BuildingInfoRepository
-import com.ganaljigi.kubf.core.network.service.BuildingService
+import com.ganaljigi.kubf.core.network.api.BuildingApi
 import com.ganaljigi.kubf.feature.building.mapper.toFacilityOrNull
 import com.ganaljigi.kubf.feature.building.mapper.toRoomUi
 import com.ganaljigi.kubf.feature.building.mapper.toUi
@@ -13,10 +13,10 @@ import org.koin.core.annotation.Single
 
 @Single
 class BuildingInfoRepositoryImpl(
-    private val api: BuildingService,
+    private val api: BuildingApi,
 ) : BuildingInfoRepository {
     override suspend fun fetchBuilding(id: Long): BuildingInfo {
-        val res = api.getBuildingInfo2(id).result
+        val res = api.getBuildingInfo(id).result
         return BuildingInfo(
             id = res.id,
             name = res.name,
@@ -25,8 +25,8 @@ class BuildingInfoRepositoryImpl(
             facilities = res.facilityPurposes.mapNotNull { it.toFacilityOrNull() },
             doors = res.doorInfos.map { it.toUi() },
             notes = emptyList(),
-            latitude = res.latitude,
-            longitude = res.longitude,
+            latitude = res.latitude ?: 0.0,
+            longitude = res.longitude ?: 0.0,
         )
     }
 
