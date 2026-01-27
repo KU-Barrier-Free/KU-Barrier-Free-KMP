@@ -4,7 +4,6 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
-    alias(libs.plugins.hilt.android)
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.ksp)
     alias(libs.plugins.google.services)
@@ -61,10 +60,11 @@ android {
         compose = true
         buildConfig = true
     }
+
+    sourceSets["main"].java.srcDir("build/generated/ksp/main/kotlin")
 }
 
 dependencies {
-
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
@@ -86,13 +86,11 @@ dependencies {
     // Serialization
     implementation(libs.kotlinx.serialization.json)
 
-    // Hilt
-    implementation(libs.hilt.android)
-    implementation(libs.hilt.core)
-    implementation(libs.hilt.navigation.compose)
-    ksp(libs.hilt.android.compiler)
-    ksp(libs.hilt.compiler)
-    ksp(libs.hilt.manager)
+    // Koin
+    implementation(libs.koin.android)
+    implementation(libs.koin.androidx.compose)
+    implementation(libs.koin.annotations)
+    ksp(libs.koin.ksp.compiler)
 
     // Coil
     implementation(libs.coil.compose)
@@ -124,4 +122,8 @@ dependencies {
 
     // Detekt
     detektPlugins(libs.detekt.formatting)
+}
+
+ksp {
+    arg("KOIN_DEFAULT_MODULE", "true")
 }

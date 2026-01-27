@@ -9,9 +9,10 @@ import com.ganaljigi.kubf.feature.building.mapper.toUiPair
 import com.ganaljigi.kubf.feature.building.model.BuildingInfo
 import com.ganaljigi.kubf.feature.building.model.RoomSearchResult
 import com.ganaljigi.kubf.feature.building.model.TotalFloor
-import javax.inject.Inject
+import org.koin.core.annotation.Single
 
-class BuildingInfoRepositoryImpl @Inject constructor(
+@Single
+class BuildingInfoRepositoryImpl(
     private val api: BuildingService,
 ) : BuildingInfoRepository {
     override suspend fun fetchBuilding(id: Long): BuildingInfo {

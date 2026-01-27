@@ -7,7 +7,7 @@
 - **Language**: Kotlin 2.0.0
 - **UI**: Jetpack Compose (BOM 2024.09.00)
 - **Architecture**: MVVM + Repository Pattern
-- **DI**: Hilt 2.52
+- **DI**: Koin Annotations 2.0.0
 - **Network**: Retrofit 3.0.0 + OkHttp 4.12.0 + Kotlinx Serialization
 - **Maps**: Google Maps Compose 4.4.1
 - **Navigation**: Type-safe Navigation (Serializable routes)
@@ -18,23 +18,22 @@
 
 ```
 app/src/main/java/com/ganaljigi/kubf/
-├── data/
-│   ├── di/              # Hilt 모듈
-│   ├── remote/
-│   │   ├── repository/  # Repository 인터페이스
-│   │   ├── repositoryimpl/  # Repository 구현체
-│   │   ├── service/     # Retrofit 서비스
-│   │   └── response/    # DTO 모델
-│   └── mock/            # Mock 데이터
-├── mapper/              # DTO → Domain 변환
-├── navigation/          # 네비게이션 라우트
-└── ui/
-    ├── home/            # 홈(지도) 화면
-    ├── buildinginfo/    # 건물 정보 화면
-    ├── roominfo/        # 방 정보 화면
-    ├── helper/          # 도움말 화면
-    ├── common/          # 공통 컴포넌트
-    └── theme/           # 테마/스타일
+├── core/
+│   ├── data/
+│   │   ├── di/              # Koin 모듈 (AppModule, NetworkModule, ApiModule)
+│   │   ├── repository/      # Repository 인터페이스
+│   │   └── repositoryimpl/  # Repository 구현체 (@Single)
+│   ├── network/
+│   │   ├── service/         # Retrofit 서비스
+│   │   └── response/        # DTO 모델
+│   ├── mapper/              # DTO → Domain 변환
+│   ├── navigation/          # 네비게이션 라우트
+│   └── designsystem/        # 공통 컴포넌트, 테마
+└── feature/
+    ├── home/                # 홈(지도) 화면
+    ├── building/            # 건물 정보 화면
+    ├── room/                # 방 정보 화면
+    └── helper/              # 도움말 화면
 ```
 
 ## 주요 화면
@@ -73,11 +72,25 @@ interface HomeRepository {
     suspend fun getHomeData(): Result<HomeData>
 }
 
-// 구현체 (Hilt 주입)
-@Singleton
-class HomeRepositoryImpl @Inject constructor(
+// 구현체 (Koin Annotations)
+@Single(binds = [HomeRepository::class])
+class HomeRepositoryImpl(
     private val service: HomeService
 ) : HomeRepository
+```
+
+### ViewModel
+```kotlin
+@KoinViewModel
+class HomeViewModel(
+    private val repository: HomeRepository
+) : ViewModel()
+
+// Screen에서 사용
+@Composable
+fun HomeScreen(
+    viewModel: HomeViewModel = koinViewModel()
+)
 ```
 
 ### 에러 핸들링
@@ -151,7 +164,7 @@ repository.getData().fold(
 | `feat` | 새로운 기능 | `feat: 건물 검색 기능 구현 #12` |
 | `fix` | 버그 수정 | `fix: 마커 클릭 시 크래시 수정 #15` |
 | `refactor` | 코드 리팩토링 | `refactor: HomeViewModel 분리 #20` |
-| `chore` | 설정, 빌드, 의존성 | `chore: Hilt 버전 업데이트` |
+| `chore` | 설정, 빌드, 의존성 | `chore: Koin 버전 업데이트` |
 | `docs` | 문서 수정 | `docs: README 업데이트` |
 | `style` | 코드 포맷팅 | `style: ktlint 적용` |
 | `test` | 테스트 코드 | `test: HomeViewModel 테스트 추가` |

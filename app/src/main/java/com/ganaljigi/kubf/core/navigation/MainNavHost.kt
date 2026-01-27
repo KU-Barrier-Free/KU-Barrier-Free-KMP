@@ -2,7 +2,6 @@ package com.ganaljigi.kubf.core.navigation
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -16,13 +15,14 @@ import com.ganaljigi.kubf.feature.home.screen.HomeScreen
 import com.ganaljigi.kubf.feature.home.screen.HomeSearchScreen
 import com.ganaljigi.kubf.feature.home.viewmodel.HomeViewModel
 import com.ganaljigi.kubf.feature.room.RoomInfoScreen
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun MainNavHost(
     padding: PaddingValues,
     navController: NavHostController,
 ) {
-    val homeViewModel = hiltViewModel<HomeViewModel>()
+    val homeViewModel = koinViewModel<HomeViewModel>()
 
     NavHost(
         navController = navController,

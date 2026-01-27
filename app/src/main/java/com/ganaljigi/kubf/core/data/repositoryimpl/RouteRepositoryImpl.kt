@@ -1,12 +1,13 @@
 package com.ganaljigi.kubf.core.data.repositoryimpl
 
-import com.ganaljigi.kubf.core.network.response.handleBaseResponse
 import com.ganaljigi.kubf.core.data.repository.RouteRepository
+import com.ganaljigi.kubf.core.network.response.handleBaseResponse
 import com.ganaljigi.kubf.core.network.response.route.PathResponseDto
 import com.ganaljigi.kubf.core.network.service.RouteService
-import javax.inject.Inject
+import org.koin.core.annotation.Single
 
-class RouteRepositoryImpl @Inject constructor(
+@Single
+class RouteRepositoryImpl(
     private val routeService: RouteService,
 ) : RouteRepository {
     override suspend fun getPath(

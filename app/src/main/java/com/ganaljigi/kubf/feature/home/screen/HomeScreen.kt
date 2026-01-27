@@ -48,7 +48,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.hilt.navigation.compose.hiltViewModel
+import org.koin.androidx.compose.koinViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ganalijigi.kubf.R
 import com.ganaljigi.kubf.core.designsystem.component.PermissionDialog
@@ -87,7 +87,7 @@ fun HomeScreen(
     navigateToHelper: () -> Unit = { },
     navigateToSearch: (SearchMode) -> Unit = { },
     navigateToBuildingInfo: (Long) -> Unit = { },
-    viewModel: HomeViewModel = hiltViewModel(),
+    viewModel: HomeViewModel = koinViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
