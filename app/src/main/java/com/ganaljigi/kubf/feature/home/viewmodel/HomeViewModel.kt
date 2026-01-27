@@ -407,7 +407,6 @@ class HomeViewModel(
                         MapToggle.SLOPE -> uiState.value.slopeMarkers
                         MapToggle.STAIRS -> uiState.value.stairsMarkers
                         MapToggle.SPECIAL_MARK -> uiState.value.specialMarkers
-                        MapToggle.GATE -> uiState.value.gateMarkers
                     }
                 }.toPersistentList(),
             )
@@ -479,7 +478,6 @@ class HomeViewModel(
                         MapToggle.SLOPE -> uiState.value.slopeMarkers
                         MapToggle.STAIRS -> uiState.value.stairsMarkers
                         MapToggle.SPECIAL_MARK -> uiState.value.specialMarkers
-                        MapToggle.GATE -> uiState.value.gateMarkers
                     }
                 }.toPersistentList()
             it.copy(

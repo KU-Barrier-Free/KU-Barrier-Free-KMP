@@ -31,7 +31,7 @@ data class HomeUiState(
     val inquiryField: TextFieldValue = TextFieldValue(""),
     val toggleUiStates: ImmutableList<ToggleUiState> = MapToggle.entries.map {
         ToggleUiState(
-            isSelected = it == MapToggle.SPECIAL_MARK || it == MapToggle.GATE,
+            isSelected = it == MapToggle.SPECIAL_MARK,
             toggle = it,
         )
     }.toPersistentList(),

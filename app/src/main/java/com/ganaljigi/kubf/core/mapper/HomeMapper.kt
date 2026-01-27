@@ -60,7 +60,7 @@ fun List<HomeResponseDto.GatePin>.toGateMarkers() = this.map {
         name = it.name,
         latitude = it.latitude,
         longitude = it.longitude,
-        mapToggle = MapToggle.GATE,
+        mapToggle = MapToggle.SPECIAL_MARK,
     )
 }.toImmutableList()
 

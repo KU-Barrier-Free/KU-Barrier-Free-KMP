@@ -157,21 +157,7 @@ fun MapComponent(
                     )
                 }
 
-                MapToggle.GATE -> gateMarkers.forEach { mapMarker ->
-                    val markerState = rememberMarkerState(
-                        position = LatLng(mapMarker.latitude, mapMarker.longitude),
-                    )
-                    val isSelected = mapMarker == selectedGateMarker
-                    GateMarker(
-                        markerState = markerState,
-                        isSelected = isSelected,
-                        gateMarkerInfo = if (isSelected) gateMarkerInfo else SpecialMarkerInfo(),
-                        onGateMarkerClick = { onGateMarkerClick(mapMarker) },
-                        onGateInfoClick = onGateInfoClick,
-                        scale = markerScale,
-                    )
                 }
-            }
         }
 
         selectedBuildingMarker?.let { marker ->
@@ -193,6 +179,22 @@ fun MapComponent(
         }
         doorMarkers.forEach { mapMarker ->
             DoorMarker(doorMarker = mapMarker, scale = markerScale)
+        }
+
+        // 교문 마커 (토글과 별개로 항상 표시)
+        gateMarkers.forEach { mapMarker ->
+            val markerState = rememberMarkerState(
+                position = LatLng(mapMarker.latitude, mapMarker.longitude),
+            )
+            val isSelected = mapMarker == selectedGateMarker
+            GateMarker(
+                markerState = markerState,
+                isSelected = isSelected,
+                gateMarkerInfo = if (isSelected) gateMarkerInfo else SpecialMarkerInfo(),
+                onGateMarkerClick = { onGateMarkerClick(mapMarker) },
+                onGateInfoClick = onGateInfoClick,
+                scale = markerScale,
+            )
         }
 
         // 사용자 위치 마커 렌더링
