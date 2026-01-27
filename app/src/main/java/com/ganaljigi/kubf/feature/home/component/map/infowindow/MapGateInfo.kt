@@ -22,9 +22,12 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.ganalijigi.kubf.R
 import com.ganaljigi.kubf.core.designsystem.theme.Gray2
 import com.ganaljigi.kubf.core.designsystem.theme.KUBFAndroidTheme
 
@@ -74,6 +77,17 @@ fun MapGateInfo(
                 lineHeight = lineHeight.sp,
             ),
             textAlign = TextAlign.Center,
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun MapGateInfoPreview() {
+    KUBFAndroidTheme {
+        MapGateInfo(
+            description = "정문 출입구입니다.",
+            painters = listOf(painterResource(R.drawable.ic_building_marker)),
         )
     }
 }

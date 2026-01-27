@@ -304,19 +304,24 @@ fun HomeScreen(
         }
 
         // 지도
-        val isFindWayMode = uiState.homeUiMode == HomeUiMode.FIND_WAY
-        val findWayMarkers = remember(uiState.fromLocation, uiState.toLocation, uiState.routeDoorMarkers) {
-            val locationIds = listOfNotNull(uiState.fromLocation?.id, uiState.toLocation?.id)
-            val buildingMarkers = uiState.buildingMarkers.filter { it.id in locationIds }
-            (buildingMarkers + uiState.routeDoorMarkers).toImmutableList()
-        }
+        val isRouteMode =
+            uiState.homeUiMode == HomeUiMode.FIND_WAY && uiState.routeResults.isNotEmpty()
+        val findWayMarkers =
+            remember(uiState.fromLocation, uiState.toLocation, uiState.routeDoorMarkers) {
+                val locationIds = listOfNotNull(
+                    uiState.fromLocation?.getBuildingIdByType(),
+                    uiState.toLocation?.getBuildingIdByType()
+                )
+                val buildingMarkers = uiState.buildingMarkers.filter { it.id in locationIds }
+                (buildingMarkers + uiState.routeDoorMarkers).toImmutableList()
+            }
         HomeMapComponent(
             modifier = Modifier.fillMaxSize(),
             cameraPositionState = cameraPositionState,
             selectedMarker = uiState.selectedMarker,
             selectedMarkerInfo = uiState.selectedMarkerInfo,
-            showingMarkers = if (isFindWayMode) findWayMarkers else uiState.showingMarkers,
-            showingToggleMarkers = if (isFindWayMode) persistentListOf() else uiState.showingToggleMarkers,
+            showingMarkers = if (isRouteMode) findWayMarkers else uiState.showingMarkers,
+            showingToggleMarkers = if (isRouteMode) persistentListOf() else uiState.showingToggleMarkers,
             routeResult = uiState.selectedRoute,
             onBuildingMarkerClick = { onAction(HomeUiAction.OnBuildingMarkerClick(it)) },
             onGateMarkerClick = { onAction(HomeUiAction.OnGateMarkerClick(it)) },
@@ -354,7 +359,7 @@ fun HomeScreen(
                 // 기본/배리어프리 모드
                 AnimatedVisibility(
                     visible = uiState.homeUiMode == HomeUiMode.DEFAULT ||
-                        uiState.homeUiMode == HomeUiMode.BARRIER_FREE_INFO,
+                            uiState.homeUiMode == HomeUiMode.BARRIER_FREE_INFO,
                     enter = slideInVertically(initialOffsetY = { -it / 2 }),
                     exit = slideOutVertically(targetOffsetY = { -it }) + fadeOut(),
                 ) {
@@ -458,7 +463,7 @@ fun HomeScreen(
                 // 경로 정보
                 AnimatedVisibility(
                     visible = uiState.homeUiMode == HomeUiMode.FIND_WAY &&
-                        uiState.routeResults.isNotEmpty(),
+                            uiState.routeResults.isNotEmpty(),
                     enter = slideInVertically(initialOffsetY = { it / 2 }),
                     exit = slideOutVertically(targetOffsetY = { it }),
                 ) {
