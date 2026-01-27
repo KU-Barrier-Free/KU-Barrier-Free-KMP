@@ -3,6 +3,7 @@ package com.ganaljigi.kubf.feature.home.component.map
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import com.ganalijigi.kubf.BuildConfig
@@ -38,7 +39,7 @@ import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 
 @Composable
-fun HomeMapComponent(
+fun MapComponent(
     modifier: Modifier = Modifier,
     cameraPositionState: CameraPositionState,
     selectedMarker: SelectableMarker? = null,
@@ -137,13 +138,15 @@ fun HomeMapComponent(
         showingMarkers.forEach { marker ->
             when (marker) {
                 is BuildingMarker -> {
-                    val isSelected = selectedMarker?.id == marker.id
-                    BuildingMarkerComposable(
-                        buildingMarker = marker,
-                        isSelected = isSelected,
-                        scale = markerScale,
-                    ) {
-                        onBuildingMarkerClick(it)
+                    key("building_${marker.id}") {
+                        val isSelected = selectedMarker?.id == marker.id
+                        BuildingMarkerComposable(
+                            buildingMarker = marker,
+                            isSelected = isSelected,
+                            scale = markerScale,
+                        ) {
+                            onBuildingMarkerClick(it)
+                        }
                     }
                 }
 
