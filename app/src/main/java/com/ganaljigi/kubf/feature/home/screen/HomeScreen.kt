@@ -114,6 +114,7 @@ fun HomeScreen(
     var shouldShowRationale by remember { mutableStateOf(false) }
     var openAppSettingsDialog by remember { mutableStateOf(false) }
 
+    // 첫 진입 시 1회만 권한 요청 (거부해도 다이얼로그 없이 넘어감)
     LaunchedEffect(Unit) {
         val isGranted = permissionsController.isPermissionGranted(Permission.LOCATION)
         if (isGranted) {
@@ -122,10 +123,10 @@ fun HomeScreen(
             try {
                 permissionsController.providePermission(Permission.LOCATION)
                 isLocationPermissionGranted = true
-            } catch (e: DeniedAlwaysException) {
-                openAppSettingsDialog = true
-            } catch (e: DeniedException) {
-                shouldShowRationale = true
+            } catch (_: DeniedAlwaysException) {
+                // 첫 진입 시에는 다이얼로그 표시하지 않음
+            } catch (_: DeniedException) {
+                // 첫 진입 시에는 다이얼로그 표시하지 않음
             }
         }
     }
