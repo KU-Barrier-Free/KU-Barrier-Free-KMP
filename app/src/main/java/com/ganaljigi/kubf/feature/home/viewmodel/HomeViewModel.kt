@@ -54,7 +54,11 @@ class HomeViewModel(
             HomeUiAction.OnSearchBackClick -> resetSearchState()
             HomeUiAction.OnSearchInputCleared -> clearSearchInput()
             is HomeUiAction.OnSearchSubmit -> searchKeyword(action.keyword, action.showSheet)
-            is HomeUiAction.OnPopularKeywordClick -> searchKeyword(action.keyword, showSheet = false)
+            is HomeUiAction.OnPopularKeywordClick -> searchKeyword(
+                action.keyword,
+                showSheet = false
+            )
+
             is HomeUiAction.OnSearchResultClick -> handleSearchResultClick(action.result)
             // 지도 영역
             HomeUiAction.OnMapClick -> resetToDefaultState()
@@ -144,6 +148,7 @@ class HomeViewModel(
     private fun resetSearchState() {
         _uiState.update {
             it.copy(
+                isSearchScreenShown = false,
                 searchText = "",
                 fromLocation = null,
                 toLocation = null,
@@ -272,7 +277,11 @@ class HomeViewModel(
         sendEventAsync(HomeUiEvent.NavigateToBuildingInfo(buildingId))
     }
 
-    private fun searchKeyword(keyword: String, showSheet: Boolean) {
+    private fun searchKeyword(
+        keyword: String,
+        showSheet: Boolean,
+        withSetSearchText: Boolean = false,
+    ) {
         if (keyword.isEmpty()) return
 
         viewModelScope.launch {
@@ -281,7 +290,7 @@ class HomeViewModel(
                     val results = response.toSearchResults(keyword).toImmutableList()
                     _uiState.update {
                         it.copy(
-                            searchText = keyword,
+                            searchText = if(withSetSearchText) keyword else it.searchText,
                             searchResults = results,
                             bottomSheetType = if (showSheet) {
                                 HomeBottomSheetType.SEARCH_RESULT
@@ -466,14 +475,17 @@ class HomeViewModel(
                 onSuccess = { response ->
                     val routeResults = response.toRouteResults()
                     if (routeResults.isNotEmpty()) {
-                        // 출발지/도착지 문 마커 조회
+                        // 출발지/도착지 문 마커 조회 (편의시설인 경우 해당 건물의 문 마커)
                         val doorMarkers = mutableListOf<DoorMarker>()
-                        if (fromLocation.isBuilding) {
-                            buildingRepository.getBuildingInfo(fromLocation.id)
-                                .onSuccess { doorMarkers.addAll(it.toDoorMarkers()) }
-                        }
-                        if (toLocation.isBuilding) {
-                            buildingRepository.getBuildingInfo(toLocation.id)
+                        val fromBuildingId = fromLocation.getBuildingIdByType()
+                        val toBuildingId = toLocation.getBuildingIdByType()
+
+                        buildingRepository.getBuildingInfo(fromBuildingId)
+                            .onSuccess { doorMarkers.addAll(it.toDoorMarkers()) }
+
+                        // 같은 건물이 아닌 경우에만 도착지 건물 정보 조회
+                        if (fromBuildingId != toBuildingId) {
+                            buildingRepository.getBuildingInfo(toBuildingId)
                                 .onSuccess { doorMarkers.addAll(it.toDoorMarkers()) }
                         }
 

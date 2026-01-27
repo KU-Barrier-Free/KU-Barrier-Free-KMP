@@ -20,7 +20,12 @@ sealed interface HomeUiAction {
     // 검색 영역
     data object OnSearchBackClick : HomeUiAction
     data object OnSearchInputCleared : HomeUiAction
-    data class OnSearchSubmit(val keyword: String, val showSheet: Boolean = true) : HomeUiAction
+    data class OnSearchSubmit(
+        val keyword: String,
+        val showSheet: Boolean = true,
+        val withSetSearchText: Boolean = true,
+    ) : HomeUiAction
+
     data class OnPopularKeywordClick(val keyword: String) : HomeUiAction
     data class OnSearchResultClick(val result: SearchResult) : HomeUiAction
 
