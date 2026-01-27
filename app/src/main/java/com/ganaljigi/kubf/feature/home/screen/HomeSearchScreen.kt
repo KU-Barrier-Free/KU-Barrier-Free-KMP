@@ -67,7 +67,7 @@ fun HomeSearchScreen(
             onSearchKeyboardEntered = { text ->
                 // SEARCH 모드에서만 엔터 허용
                 if (uiState.searchMode == SearchMode.SEARCH && text.isNotEmpty()) {
-                    onAction(HomeUiAction.OnSearchSubmit(text))
+                    onAction(HomeUiAction.OnSearchSubmit(keyword = text, withSetSearchText = true))
                     onAction(HomeUiAction.OnSearchCloseClick)
                 }
             },
@@ -96,6 +96,7 @@ fun HomeSearchScreen(
                 }
             },
             onPopularKeywordClick = { keyword ->
+                textFieldState.edit { replace(0, length, keyword) }
                 onAction(HomeUiAction.OnPopularKeywordClick(keyword))
             },
         )

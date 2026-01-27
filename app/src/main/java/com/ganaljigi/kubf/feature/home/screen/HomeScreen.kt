@@ -61,7 +61,7 @@ import com.ganaljigi.kubf.feature.home.component.bottomsheet.HomeSearchBottomShe
 import com.ganaljigi.kubf.feature.home.component.bottomsheet.HomeSearchBottomSheetSingleItem
 import com.ganaljigi.kubf.feature.home.component.find.HomeFindTopLocationComponent
 import com.ganaljigi.kubf.feature.home.component.find.HomeRouteInfo
-import com.ganaljigi.kubf.feature.home.component.map.HomeMapComponent
+import com.ganaljigi.kubf.feature.home.component.map.MapComponent
 import com.ganaljigi.kubf.feature.home.component.map.HomeSpecialMarkDialog
 import com.ganaljigi.kubf.feature.home.component.search.HomeInquiryDialog
 import com.ganaljigi.kubf.feature.home.viewmodel.HomeBottomSheetType
@@ -195,8 +195,14 @@ fun HomeScreen(
     }
 
     // 뒤로가기 처리
-    BackHandler(enabled = uiState.homeUiMode != HomeUiMode.DEFAULT) {
-        viewModel.onHomeUiAction(HomeUiAction.OnMapClick)
+    BackHandler(
+        enabled = uiState.homeUiMode != HomeUiMode.DEFAULT || uiState.isSearchScreenShown,
+    ) {
+        if (uiState.isSearchScreenShown) {
+            viewModel.onHomeUiAction(HomeUiAction.OnSearchBackClick)
+        } else {
+            viewModel.onHomeUiAction(HomeUiAction.OnMapClick)
+        }
     }
 
     HomeScreen(
@@ -306,16 +312,20 @@ fun HomeScreen(
         // 지도
         val isRouteMode =
             uiState.homeUiMode == HomeUiMode.FIND_WAY && uiState.routeResults.isNotEmpty()
-        val findWayMarkers =
-            remember(uiState.fromLocation, uiState.toLocation, uiState.routeDoorMarkers) {
-                val locationIds = listOfNotNull(
-                    uiState.fromLocation?.getBuildingIdByType(),
-                    uiState.toLocation?.getBuildingIdByType()
-                )
-                val buildingMarkers = uiState.buildingMarkers.filter { it.id in locationIds }
-                (buildingMarkers + uiState.routeDoorMarkers).toImmutableList()
-            }
-        HomeMapComponent(
+        val findWayMarkers = remember(
+            uiState.fromLocation,
+            uiState.toLocation,
+            uiState.buildingMarkers,
+            uiState.routeDoorMarkers,
+        ) {
+            val locationIds = listOfNotNull(
+                uiState.fromLocation?.getBuildingIdByType(),
+                uiState.toLocation?.getBuildingIdByType(),
+            )
+            val buildingMarkers = uiState.buildingMarkers.filter { it.id in locationIds }
+            (buildingMarkers + uiState.routeDoorMarkers).toImmutableList()
+        }
+        MapComponent(
             modifier = Modifier.fillMaxSize(),
             cameraPositionState = cameraPositionState,
             selectedMarker = uiState.selectedMarker,
