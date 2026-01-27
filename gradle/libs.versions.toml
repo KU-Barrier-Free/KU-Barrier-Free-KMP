@@ -1,7 +1,7 @@
 [versions]
 agp = "8.9.2"
 firebaseBom = "34.6.0"
-kotlin = "2.0.0"
+kotlin = "2.2.20"
 coreKtx = "1.10.1"
 junit = "4.13.2"
 junitVersion = "1.1.5"
@@ -10,11 +10,11 @@ lifecycleRuntimeKtx = "2.6.1"
 activityCompose = "1.8.0"
 coilCompose = "3.1.0"
 composeBom = "2024.09.00"
-ksp = "2.0.0-1.0.24"
+ksp = "2.3.2"
 mapsCompose = "4.4.1"
 navigationCompose = "2.8.9"
-koin = "4.0.2"
-koinAnnotations = "2.0.0"
+koin = "4.1.1"
+koinAnnotations = "2.3.1"
 kotlinxSerializationJson = "1.8.0"
 playServicesLocation = "21.3.0"
 playServicesMaps = "19.2.0"
@@ -47,10 +47,8 @@ androidx-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit
 androidx-material3 = { group = "androidx.compose.material3", name = "material3" }
 androidx-navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigationCompose" }
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxSerializationJson" }
-koin-bom = { group = "io.insert-koin", name = "koin-bom", version.ref = "koin" }
-koin-core = { group = "io.insert-koin", name = "koin-core" }
-koin-android = { group = "io.insert-koin", name = "koin-android" }
-koin-androidx-compose = { group = "io.insert-koin", name = "koin-androidx-compose" }
+koin-android = { group = "io.insert-koin", name = "koin-android", version.ref = "koin" }
+koin-androidx-compose = { group = "io.insert-koin", name = "koin-androidx-compose", version.ref = "koin" }
 koin-annotations = { group = "io.insert-koin", name = "koin-annotations", version.ref = "koinAnnotations" }
 koin-ksp-compiler = { group = "io.insert-koin", name = "koin-ksp-compiler", version.ref = "koinAnnotations" }
 maps-compose = { module = "com.google.maps.android:maps-compose", version.ref = "mapsCompose" }

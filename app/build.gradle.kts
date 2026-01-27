@@ -64,12 +64,7 @@ android {
     sourceSets["main"].java.srcDir("build/generated/ksp/main/kotlin")
 }
 
-ksp {
-    arg("KOIN_CONFIG_CHECK", "true")
-}
-
 dependencies {
-
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
@@ -92,8 +87,6 @@ dependencies {
     implementation(libs.kotlinx.serialization.json)
 
     // Koin
-    implementation(platform(libs.koin.bom))
-    implementation(libs.koin.core)
     implementation(libs.koin.android)
     implementation(libs.koin.androidx.compose)
     implementation(libs.koin.annotations)
@@ -129,4 +122,8 @@ dependencies {
 
     // Detekt
     detektPlugins(libs.detekt.formatting)
+}
+
+ksp {
+    arg("KOIN_DEFAULT_MODULE", "true")
 }
