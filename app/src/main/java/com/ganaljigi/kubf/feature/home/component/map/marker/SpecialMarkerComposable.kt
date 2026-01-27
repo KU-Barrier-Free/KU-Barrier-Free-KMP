@@ -34,7 +34,7 @@ fun SpecialMarkerComposable(
     val iconScale = if (isSelected) scale * 2.0f else scale
     val imageUrls = specialMarkerInfo?.imageUrls?.take(2) ?: emptyList()
     val isImageLoaded =
-        remember(isSelected, imageUrls.size) { mutableStateListOf(*Array(imageUrls.size) { false }) }
+        remember(imageUrls, isSelected) { mutableStateListOf(*Array(imageUrls.size) { false }) }
     val painters = imageUrls.mapIndexed { index, imageUrl ->
         rememberAsyncImagePainter(
             model = ImageRequest.Builder(LocalContext.current)
@@ -44,6 +44,7 @@ fun SpecialMarkerComposable(
             placeholder = painterResource(R.drawable.img_special_info),
             error = painterResource(R.drawable.img_special_info),
             onSuccess = { isImageLoaded[index] = true },
+            onError = { isImageLoaded[index] = true },
         )
     }
     val allImagesLoaded by remember { derivedStateOf { isImageLoaded.all { it } } }
