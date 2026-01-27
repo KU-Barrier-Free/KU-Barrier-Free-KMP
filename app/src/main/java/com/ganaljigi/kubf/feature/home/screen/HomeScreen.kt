@@ -1,11 +1,7 @@
 package com.ganaljigi.kubf.feature.home.screen
 
-import android.Manifest
 import android.app.Activity
-import android.content.pm.PackageManager
 import androidx.activity.compose.BackHandler
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
@@ -46,13 +42,14 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
-import org.koin.androidx.compose.koinViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ganalijigi.kubf.R
 import com.ganaljigi.kubf.core.designsystem.component.PermissionDialog
+import com.ganaljigi.kubf.core.designsystem.theme.Black
+import com.ganaljigi.kubf.core.designsystem.theme.Gray2
+import com.ganaljigi.kubf.core.designsystem.theme.KUBFAndroidTheme
 import com.ganaljigi.kubf.core.model.SearchMode
+import com.ganaljigi.kubf.core.ui.util.noRippleClickable
 import com.ganaljigi.kubf.feature.home.component.BarrierFreeInfoChip
 import com.ganaljigi.kubf.feature.home.component.BarrierFreeInfoItem
 import com.ganaljigi.kubf.feature.home.component.FindWayButton
@@ -69,16 +66,19 @@ import com.ganaljigi.kubf.feature.home.component.search.HomeInquiryDialog
 import com.ganaljigi.kubf.feature.home.viewmodel.HomeBottomSheetType
 import com.ganaljigi.kubf.feature.home.viewmodel.HomeUiMode
 import com.ganaljigi.kubf.feature.home.viewmodel.HomeViewModel
-import com.ganaljigi.kubf.core.designsystem.theme.Black
-import com.ganaljigi.kubf.core.designsystem.theme.Gray2
-import com.ganaljigi.kubf.core.designsystem.theme.KUBFAndroidTheme
-import com.ganaljigi.kubf.core.ui.util.noRippleClickable
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.Priority
 import com.google.android.gms.maps.model.LatLng
+import dev.icerock.moko.permissions.DeniedAlwaysException
+import dev.icerock.moko.permissions.DeniedException
+import dev.icerock.moko.permissions.Permission
+import dev.icerock.moko.permissions.PermissionsController
+import dev.icerock.moko.permissions.compose.BindEffect
+import dev.icerock.moko.permissions.compose.rememberPermissionsControllerFactory
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.launch
+import org.koin.androidx.compose.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -102,67 +102,50 @@ fun HomeScreen(
     val focusManager = LocalFocusManager.current
     val activity = LocalContext.current as Activity
     val context = LocalContext.current
+
+    // Moko Permissions
+    val permissionsControllerFactory = rememberPermissionsControllerFactory()
+    val permissionsController: PermissionsController = remember(permissionsControllerFactory) {
+        permissionsControllerFactory.createPermissionsController()
+    }
+    BindEffect(permissionsController)
+
     var isLocationPermissionGranted by remember { mutableStateOf(false) }
     var shouldShowRationale by remember { mutableStateOf(false) }
     var openAppSettingsDialog by remember { mutableStateOf(false) }
-    val locationPermissionResultLauncher = rememberLauncherForActivityResult(
-        ActivityResultContracts.RequestMultiplePermissions(),
-    ) { permissions ->
-        val fineLocationGranted = permissions[Manifest.permission.ACCESS_FINE_LOCATION] ?: false
-        val coarseLocationGranted = permissions[Manifest.permission.ACCESS_COARSE_LOCATION] ?: false
 
-        if (fineLocationGranted || coarseLocationGranted) {
-            isLocationPermissionGranted = true
-        } else {
-            if (ActivityCompat.shouldShowRequestPermissionRationale(
-                    activity,
-                    Manifest.permission.ACCESS_FINE_LOCATION,
-                ) ||
-                ActivityCompat.shouldShowRequestPermissionRationale(
-                    activity,
-                    Manifest.permission.ACCESS_COARSE_LOCATION,
-                )
-            ) {
-                shouldShowRationale = true
-            } else {
-                openAppSettingsDialog = true
-            }
-        }
-    }
     LaunchedEffect(Unit) {
-        val fineLocationGranted = ContextCompat.checkSelfPermission(
-            context,
-            Manifest.permission.ACCESS_FINE_LOCATION,
-        ) == PackageManager.PERMISSION_GRANTED
-        val coarseLocationGranted = ContextCompat.checkSelfPermission(
-            context,
-            Manifest.permission.ACCESS_COARSE_LOCATION,
-        ) == PackageManager.PERMISSION_GRANTED
-
-        if (fineLocationGranted || coarseLocationGranted) {
+        val isGranted = permissionsController.isPermissionGranted(Permission.LOCATION)
+        if (isGranted) {
             isLocationPermissionGranted = true
         } else {
-            locationPermissionResultLauncher.launch(
-                arrayOf(
-                    Manifest.permission.ACCESS_FINE_LOCATION,
-                    Manifest.permission.ACCESS_COARSE_LOCATION,
-                ),
-            )
+            try {
+                permissionsController.providePermission(Permission.LOCATION)
+                isLocationPermissionGranted = true
+            } catch (e: DeniedAlwaysException) {
+                openAppSettingsDialog = true
+            } catch (e: DeniedException) {
+                shouldShowRationale = true
+            }
         }
     }
 
     LaunchedEffect(isLocationPermissionGranted) {
         if (isLocationPermissionGranted) {
             val fusedLocationClient = LocationServices.getFusedLocationProviderClient(context)
-            fusedLocationClient.getCurrentLocation(
-                Priority.PRIORITY_HIGH_ACCURACY,
-                null,
-            ).addOnSuccessListener { location ->
-                location?.let {
-                    viewModel.updateUserLocation(
-                        LatLng(it.latitude, it.longitude),
-                    )
+            try {
+                fusedLocationClient.getCurrentLocation(
+                    Priority.PRIORITY_HIGH_ACCURACY,
+                    null,
+                ).addOnSuccessListener { location ->
+                    location?.let {
+                        viewModel.updateUserLocation(
+                            LatLng(it.latitude, it.longitude),
+                        )
+                    }
                 }
+            } catch (_: SecurityException) {
+                // Permission not granted
             }
         }
     }
@@ -301,7 +284,7 @@ fun HomeScreen(
             Box(
                 modifier = Modifier.align(Alignment.TopCenter),
             ) {
-                androidx.compose.animation.AnimatedVisibility(
+                AnimatedVisibility(
                     visible = uiState.homeUiMode == HomeUiMode.FIND_MODE || uiState.homeUiMode == HomeUiMode.ROUTE_MODE,
                     enter = slideInVertically(
                         initialOffsetY = { -it / 2 },
@@ -325,8 +308,7 @@ fun HomeScreen(
                         },
                     )
                 }
-//                if (uiState.homeUiMode == HomeUiMode.DEFAULT) {
-                androidx.compose.animation.AnimatedVisibility(
+                AnimatedVisibility(
                     visible = uiState.homeUiMode == HomeUiMode.DEFAULT ||
                         uiState.homeUiMode == HomeUiMode.BARRIER_FREE_SHOWN,
                     enter = slideInVertically(
@@ -403,7 +385,7 @@ fun HomeScreen(
             Box(
                 modifier = Modifier.align(Alignment.BottomCenter),
             ) {
-                androidx.compose.animation.AnimatedVisibility(
+                AnimatedVisibility(
                     visible = uiState.homeUiMode == HomeUiMode.BARRIER_FREE_SHOWN,
                     enter = slideInVertically(
                         initialOffsetY = { it / 2 },
@@ -422,7 +404,7 @@ fun HomeScreen(
             Box(
                 modifier = Modifier.align(Alignment.BottomCenter),
             ) {
-                androidx.compose.animation.AnimatedVisibility(
+                AnimatedVisibility(
                     visible = uiState.homeUiMode == HomeUiMode.DEFAULT,
                     enter = slideInVertically(
                         initialOffsetY = { it / 2 },
@@ -447,27 +429,35 @@ fun HomeScreen(
                             modifier = Modifier.padding(end = 40.dp),
                         ) {
                             MyLocationButton {
-                                if (isLocationPermissionGranted) {
-                                    val fusedLocationClient =
-                                        LocationServices.getFusedLocationProviderClient(context)
-                                    fusedLocationClient.getCurrentLocation(
-                                        Priority.PRIORITY_HIGH_ACCURACY,
-                                        null,
-                                    ).addOnSuccessListener { location ->
-                                        location?.let {
-                                            viewModel.updateUserLocation(
-                                                LatLng(it.latitude, it.longitude),
-                                            )
-                                            viewModel.moveToUserLocation()
+                                scope.launch {
+                                    if (isLocationPermissionGranted) {
+                                        val fusedLocationClient =
+                                            LocationServices.getFusedLocationProviderClient(context)
+                                        try {
+                                            fusedLocationClient.getCurrentLocation(
+                                                Priority.PRIORITY_HIGH_ACCURACY,
+                                                null,
+                                            ).addOnSuccessListener { location ->
+                                                location?.let {
+                                                    viewModel.updateUserLocation(
+                                                        LatLng(it.latitude, it.longitude),
+                                                    )
+                                                    viewModel.moveToUserLocation()
+                                                }
+                                            }
+                                        } catch (_: SecurityException) {
+                                            // Permission not granted
+                                        }
+                                    } else {
+                                        try {
+                                            permissionsController.providePermission(Permission.LOCATION)
+                                            isLocationPermissionGranted = true
+                                        } catch (e: DeniedAlwaysException) {
+                                            openAppSettingsDialog = true
+                                        } catch (e: DeniedException) {
+                                            shouldShowRationale = true
                                         }
                                     }
-                                } else {
-                                    locationPermissionResultLauncher.launch(
-                                        arrayOf(
-                                            Manifest.permission.ACCESS_FINE_LOCATION,
-                                            Manifest.permission.ACCESS_COARSE_LOCATION,
-                                        ),
-                                    )
                                 }
                             }
                             NoticeButton {
@@ -480,7 +470,7 @@ fun HomeScreen(
             Box(
                 modifier = Modifier.align(Alignment.BottomCenter),
             ) {
-                androidx.compose.animation.AnimatedVisibility(
+                AnimatedVisibility(
                     visible = uiState.homeUiMode == HomeUiMode.ROUTE_MODE,
                     enter = slideInVertically(
                         initialOffsetY = { it / 2 },
@@ -511,12 +501,16 @@ fun HomeScreen(
         onDismissOpenAppSettingsDialog = { openAppSettingsDialog = false },
         onRetryClick = {
             shouldShowRationale = false
-            locationPermissionResultLauncher.launch(
-                arrayOf(
-                    Manifest.permission.ACCESS_FINE_LOCATION,
-                    Manifest.permission.ACCESS_COARSE_LOCATION,
-                ),
-            )
+            scope.launch {
+                try {
+                    permissionsController.providePermission(Permission.LOCATION)
+                    isLocationPermissionGranted = true
+                } catch (e: DeniedAlwaysException) {
+                    openAppSettingsDialog = true
+                } catch (e: DeniedException) {
+                    shouldShowRationale = true
+                }
+            }
         },
     )
 }
