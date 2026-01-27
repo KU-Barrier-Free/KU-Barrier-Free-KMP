@@ -369,7 +369,7 @@ fun HomeScreen(
                 // 기본/배리어프리 모드
                 AnimatedVisibility(
                     visible = uiState.homeUiMode == HomeUiMode.DEFAULT ||
-                            uiState.homeUiMode == HomeUiMode.BARRIER_FREE_INFO,
+                        uiState.homeUiMode == HomeUiMode.BARRIER_FREE_INFO,
                     enter = slideInVertically(initialOffsetY = { -it / 2 }),
                     exit = slideOutVertically(targetOffsetY = { -it }) + fadeOut(),
                 ) {
@@ -473,7 +473,7 @@ fun HomeScreen(
                 // 경로 정보
                 AnimatedVisibility(
                     visible = uiState.homeUiMode == HomeUiMode.FIND_WAY &&
-                            uiState.routeResults.isNotEmpty(),
+                        uiState.routeResults.isNotEmpty(),
                     enter = slideInVertically(initialOffsetY = { it / 2 }),
                     exit = slideOutVertically(targetOffsetY = { it }),
                 ) {

@@ -56,7 +56,7 @@ class HomeViewModel(
             is HomeUiAction.OnSearchSubmit -> searchKeyword(action.keyword, action.showSheet)
             is HomeUiAction.OnPopularKeywordClick -> searchKeyword(
                 action.keyword,
-                showSheet = false
+                showSheet = false,
             )
 
             is HomeUiAction.OnSearchResultClick -> handleSearchResultClick(action.result)
@@ -290,7 +290,7 @@ class HomeViewModel(
                     val results = response.toSearchResults(keyword).toImmutableList()
                     _uiState.update {
                         it.copy(
-                            searchText = if(withSetSearchText) keyword else it.searchText,
+                            searchText = if (withSetSearchText) keyword else it.searchText,
                             searchResults = results,
                             bottomSheetType = if (showSheet) {
                                 HomeBottomSheetType.SEARCH_RESULT
