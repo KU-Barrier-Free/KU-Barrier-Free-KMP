@@ -18,7 +18,7 @@ koinAnnotations = "2.3.1"
 kotlinxSerializationJson = "1.8.0"
 playServicesLocation = "21.3.0"
 playServicesMaps = "19.2.0"
-accompanistPermissions = "0.37.3"
+mokoPermissions = "0.18.0"
 kotlinxCollectionsImmutable = "0.4.0"
 ktor = "3.0.3"
 crashlytics = "3.0.6"
@@ -27,7 +27,8 @@ detekt = "1.23.7"
 napier = "2.7.1"
 
 [libraries]
-accompanist-permissions = { module = "com.google.accompanist:accompanist-permissions", version.ref = "accompanistPermissions" }
+moko-permissions = { module = "dev.icerock.moko:permissions", version.ref = "mokoPermissions" }
+moko-permissions-compose = { module = "dev.icerock.moko:permissions-compose", version.ref = "mokoPermissions" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 coil-compose = { module = "io.coil-kt.coil3:coil-compose", version.ref = "coilCompose" }
 coil-network-ktor3 = { module = "io.coil-kt.coil3:coil-network-ktor3", version.ref = "coilCompose" }

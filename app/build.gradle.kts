@@ -97,7 +97,8 @@ dependencies {
     implementation(libs.coil.network.ktor3)
 
     // Permissions
-    implementation(libs.accompanist.permissions)
+    implementation(libs.moko.permissions)
+    implementation(libs.moko.permissions.compose)
 
     // Google Map
     implementation(libs.play.services.location)
