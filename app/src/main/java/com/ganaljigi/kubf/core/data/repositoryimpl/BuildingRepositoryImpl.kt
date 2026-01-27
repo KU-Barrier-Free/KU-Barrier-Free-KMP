@@ -6,7 +6,7 @@ import com.ganaljigi.kubf.core.network.response.handleBaseResponse
 import com.ganaljigi.kubf.core.network.service.BuildingService
 import org.koin.core.annotation.Single
 
-@Single(binds = [BuildingRepository::class])
+@Single
 class BuildingRepositoryImpl(
     private val buildingService: BuildingService,
 ) : BuildingRepository {

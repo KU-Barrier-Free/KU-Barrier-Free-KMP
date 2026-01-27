@@ -11,7 +11,7 @@ import com.ganaljigi.kubf.feature.building.model.RoomSearchResult
 import com.ganaljigi.kubf.feature.building.model.TotalFloor
 import org.koin.core.annotation.Single
 
-@Single(binds = [BuildingInfoRepository::class])
+@Single
 class BuildingInfoRepositoryImpl(
     private val api: BuildingService,
 ) : BuildingInfoRepository {

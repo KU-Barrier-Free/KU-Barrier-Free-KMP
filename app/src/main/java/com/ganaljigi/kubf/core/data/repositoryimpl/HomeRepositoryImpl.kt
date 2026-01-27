@@ -9,7 +9,7 @@ import com.ganaljigi.kubf.core.network.response.home.HomeSignificantResponseDto
 import com.ganaljigi.kubf.core.network.service.HomeService
 import org.koin.core.annotation.Single
 
-@Single(binds = [HomeRepository::class])
+@Single
 class HomeRepositoryImpl(
     private val homeService: HomeService,
 ) : HomeRepository {

@@ -6,7 +6,7 @@ import com.ganaljigi.kubf.core.network.response.route.PathResponseDto
 import com.ganaljigi.kubf.core.network.service.RouteService
 import org.koin.core.annotation.Single
 
-@Single(binds = [RouteRepository::class])
+@Single
 class RouteRepositoryImpl(
     private val routeService: RouteService,
 ) : RouteRepository {
