@@ -8,60 +8,41 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import org.koin.androidx.compose.koinViewModel
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.ganaljigi.kubf.core.model.SearchMode
+import com.ganaljigi.kubf.core.designsystem.theme.KUBFAndroidTheme
 import com.ganaljigi.kubf.feature.home.component.search.HomeSearchBar
 import com.ganaljigi.kubf.feature.home.component.search.HomeSearchContent
 import com.ganaljigi.kubf.feature.home.component.search.HomeSearchTopBar
-import com.ganaljigi.kubf.feature.home.viewmodel.HomeViewModel
-import com.ganaljigi.kubf.feature.home.viewmodel.HomeBottomSheetType
-import com.ganaljigi.kubf.feature.home.viewmodel.HomeUiMode
-import com.ganaljigi.kubf.core.designsystem.theme.KUBFAndroidTheme
+import com.ganaljigi.kubf.feature.home.viewmodel.HomeUiAction
+import com.ganaljigi.kubf.feature.home.viewmodel.HomeUiState
+import com.ganaljigi.kubf.feature.home.viewmodel.SearchMode
 
 @Composable
 fun HomeSearchScreen(
     padding: PaddingValues,
-    searchMode: SearchMode,
-    navigateUp: () -> Unit = {},
-    viewModel: HomeViewModel = koinViewModel(),
+    uiState: HomeUiState,
+    onAction: (HomeUiAction) -> Unit,
 ) {
-    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-    val focusRequester = remember { FocusRequester() }
-    var shouldNavigateUp by remember { mutableStateOf(false) }
+    val textFieldState = rememberTextFieldState(uiState.searchText)
 
-    LaunchedEffect(Unit) {
-        focusRequester.requestFocus()
-        viewModel.getSearchResults(showSheet = false)
-    }
-    LaunchedEffect(Unit) {
-        viewModel.updateSearchWord(TextFieldValue(""))
-        viewModel.updateSearchResults(emptyList(), false)
-    }
-
-    // SearchMode.SEARCH이고 길찾기 모드가 아닐 때만 바텀시트가 설정되면 화면 닫기
-    LaunchedEffect(shouldNavigateUp, uiState.bottomSheetType, uiState.homeUiMode) {
-        if (shouldNavigateUp &&
-            searchMode == SearchMode.SEARCH &&
-            uiState.bottomSheetType != HomeBottomSheetType.NONE &&
-            uiState.homeUiMode != HomeUiMode.FIND_MODE &&
-            uiState.homeUiMode != HomeUiMode.ROUTE_MODE) {
-            navigateUp()
-            shouldNavigateUp = false
+    // uiState.searchText가 변경되면 textFieldState에 반영 (인기 검색어 클릭 시)
+    LaunchedEffect(uiState.searchText) {
+        if (textFieldState.text.toString() != uiState.searchText) {
+            textFieldState.edit { replace(0, length, uiState.searchText) }
         }
+    }
+
+    val title = when (uiState.searchMode) {
+        SearchMode.SEARCH -> "검색"
+        SearchMode.DEPARTURE -> "출발지"
+        SearchMode.DESTINATION -> "도착지"
+        SearchMode.NONE -> ""
     }
 
     Column(
@@ -71,43 +52,52 @@ fun HomeSearchScreen(
             .padding(padding),
     ) {
         HomeSearchTopBar(
-            title = searchMode.title,
-            onClick = { navigateUp() },
+            title = title,
+            onClick = { onAction(HomeUiAction.OnSearchCloseClick) },
         )
         Spacer(modifier = Modifier.height(8.dp))
         HomeSearchBar(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 16.dp)
-                .focusRequester(focusRequester),
-            onValueChange = viewModel::updateSearchWord,
-            onValueCleared = viewModel::updateSearchWord,
-            onSearchKeyboardEntered = {
-                if (searchMode == SearchMode.SEARCH) {
-                    viewModel.getSearchResults()
-                    shouldNavigateUp = true
+                .padding(horizontal = 16.dp),
+            textFieldState = textFieldState,
+            requestFocus = true,
+            onTextChanged = { onAction(HomeUiAction.OnSearchSubmit(it, showSheet = false)) },
+            onCleared = { onAction(HomeUiAction.OnSearchInputCleared) },
+            onSearchKeyboardEntered = { text ->
+                // SEARCH 모드에서만 엔터 허용
+                if (uiState.searchMode == SearchMode.SEARCH && text.isNotEmpty()) {
+                    onAction(HomeUiAction.OnSearchSubmit(text))
+                    onAction(HomeUiAction.OnSearchCloseClick)
                 }
             },
-            value = uiState.searchWord,
         )
         HomeSearchContent(
-            onItemClick = {
-                when (searchMode) {
+            searchResults = uiState.searchResults,
+            popularKeywords = uiState.popularKeywords,
+            onItemClick = { result ->
+                when (uiState.searchMode) {
                     SearchMode.SEARCH -> {
-                        viewModel.updateSearchResults(listOf(it))
-                        shouldNavigateUp = true
+                        onAction(HomeUiAction.OnSearchResultClick(result))
+                        onAction(HomeUiAction.OnSearchCloseClick)
                     }
-                    SearchMode.FIND_FROM_LOCATION -> {
-                        viewModel.onFromClick(it)
-                        navigateUp()
+
+                    SearchMode.DEPARTURE -> {
+                        onAction(HomeUiAction.OnFromClick(result))
+                        onAction(HomeUiAction.OnSearchCloseClick)
                     }
-                    SearchMode.FIND_TO_LOCATION -> {
-                        viewModel.onToClick(it)
-                        navigateUp()
+
+                    SearchMode.DESTINATION -> {
+                        onAction(HomeUiAction.OnToClick(result))
+                        onAction(HomeUiAction.OnSearchCloseClick)
                     }
+
+                    SearchMode.NONE -> {}
                 }
             },
-            searchResults = uiState.searchResults,
+            onPopularKeywordClick = { keyword ->
+                onAction(HomeUiAction.OnPopularKeywordClick(keyword))
+            },
         )
     }
 }
@@ -118,7 +108,8 @@ private fun HomeSearchScreenPreview() {
     KUBFAndroidTheme {
         HomeSearchScreen(
             padding = PaddingValues(),
-            searchMode = SearchMode.SEARCH,
+            uiState = HomeUiState(),
+            onAction = {},
         )
     }
 }

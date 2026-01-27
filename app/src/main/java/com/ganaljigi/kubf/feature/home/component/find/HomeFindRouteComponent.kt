@@ -35,7 +35,7 @@ import com.ganaljigi.kubf.core.ui.util.toDistanceString
 @Composable
 fun HomeRouteInfo(
     modifier: Modifier = Modifier,
-    selectedRoute: RouteResult,
+    selectedRoute: RouteResult?,
     routeResults: List<RouteResult>,
     onRouteSelected: (RouteResult) -> Unit = {},
 ) {
@@ -52,7 +52,7 @@ fun HomeRouteInfo(
                         .weight(1f)
                         .fillMaxHeight(),
                     routeResult = route,
-                    isSelected = selectedRoute.routeMode == routeMode,
+                    isSelected = selectedRoute?.routeMode == routeMode,
                     onClick = onRouteSelected,
                 )
             }

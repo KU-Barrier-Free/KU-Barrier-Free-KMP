@@ -1,4 +1,4 @@
-package com.ganaljigi.kubf.feature.home.component.map
+package com.ganaljigi.kubf.feature.home.component.map.infowindow
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -6,6 +6,7 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.painter.Painter
 import com.ganaljigi.kubf.feature.home.viewmodel.SpecialMarkerInfo
 import com.ganaljigi.kubf.core.ui.util.noRippleClickable
+import com.ganaljigi.kubf.feature.home.component.map.rememberComposeBitmapDescriptor
 import com.google.maps.android.compose.MarkerInfoWindow
 import com.google.maps.android.compose.MarkerState
 

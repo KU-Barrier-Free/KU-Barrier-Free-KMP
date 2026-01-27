@@ -1,28 +1,24 @@
 package com.ganaljigi.kubf.feature.home.viewmodel
 
-import androidx.compose.ui.text.input.TextFieldValue
-import io.github.aakira.napier.Napier
-import androidx.lifecycle.ViewModel
+import androidx.compose.foundation.text.input.TextFieldState
 import androidx.lifecycle.viewModelScope
 import com.ganaljigi.kubf.core.data.repository.BuildingRepository
 import com.ganaljigi.kubf.core.data.repository.HomeRepository
 import com.ganaljigi.kubf.core.data.repository.RouteRepository
 import com.ganaljigi.kubf.core.mapper.toDoorMarkers
-import com.ganaljigi.kubf.core.mapper.toGateMarkerInfo
-import com.ganaljigi.kubf.core.mapper.toHomeBuildingInfo
+import com.ganaljigi.kubf.core.mapper.toHomeBuildingSheetInfo
+import com.ganaljigi.kubf.core.mapper.toHomeUiState
 import com.ganaljigi.kubf.core.mapper.toRouteResults
-import com.ganaljigi.kubf.core.mapper.toSpecialMarkerInfo
-import com.ganaljigi.kubf.core.mapper.toUiState
-import com.ganaljigi.kubf.feature.home.model.BuildingMarker
+import com.ganaljigi.kubf.core.mapper.toSearchResults
+import com.ganaljigi.kubf.core.ui.viewmodel.BaseViewModel
 import com.ganaljigi.kubf.feature.home.model.MapToggle
 import com.ganaljigi.kubf.feature.home.model.RouteResult
 import com.ganaljigi.kubf.feature.home.model.SearchResult
-import com.ganaljigi.kubf.feature.home.model.ToggleMarker
-import com.google.android.gms.maps.model.LatLng
+import io.github.aakira.napier.Napier
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
-import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -33,245 +29,432 @@ class HomeViewModel(
     private val homeRepository: HomeRepository,
     private val buildingRepository: BuildingRepository,
     private val routeRepository: RouteRepository,
-) : ViewModel() {
-    private val _uiState: MutableStateFlow<HomeUiState> = MutableStateFlow(HomeUiState())
-    val uiState = _uiState.asStateFlow()
+) : BaseViewModel<HomeUiEvent>() {
+
+    private val _uiState = MutableStateFlow(HomeUiState())
+    val uiState: StateFlow<HomeUiState> = _uiState.asStateFlow()
 
     init {
         fetchInitData()
     }
 
-    /**
-     * 검색어를 업데이트하고, 관련 검색 결과를 가져옵니다.
-     * @param newSearchWord 새로운 검색어
-     */
-    fun updateSearchWord(newSearchWord: TextFieldValue = TextFieldValue("")) {
-        if (newSearchWord.text == uiState.value.searchWord.text) return
+    fun onHomeUiAction(action: HomeUiAction) {
+        when (action) {
+            // 상단 영역 - 검색 화면 표시/숨김
+            HomeUiAction.OnSearchBarClick -> setSearchScreen(true, SearchMode.SEARCH)
+            HomeUiAction.OnSearchCloseClick -> setSearchScreen(false, SearchMode.NONE)
+            HomeUiAction.OnFromLocationClick -> setSearchScreen(true, SearchMode.DEPARTURE)
+            HomeUiAction.OnToLocationClick -> setSearchScreen(true, SearchMode.DESTINATION)
+            is HomeUiAction.OnToggleClick -> updateToggleState(action.toggle)
+            HomeUiAction.OnFindWayClick -> enterFindWayMode()
+            HomeUiAction.OnFindWayCloseClick -> exitFindWayMode()
+            HomeUiAction.OnSwapLocationClick -> swapAndFetchRoute()
+            is HomeUiAction.OnRouteClick -> selectRoute(action.route)
+            // 검색 영역
+            HomeUiAction.OnSearchBackClick -> resetSearchState()
+            HomeUiAction.OnSearchInputCleared -> clearSearchInput()
+            is HomeUiAction.OnSearchSubmit -> searchKeyword(action.keyword, action.showSheet)
+            is HomeUiAction.OnPopularKeywordClick -> searchKeyword(action.keyword, showSheet = false)
+            is HomeUiAction.OnSearchResultClick -> handleSearchResultClick(action.result)
+            // 지도 영역
+            HomeUiAction.OnMapClick -> resetToDefaultState()
+            HomeUiAction.OnBottomSheetHidden -> resetToDefaultState()
+            is HomeUiAction.OnGateMarkerClick -> fetchGateMarkerInfo(action.marker)
+            is HomeUiAction.OnSpecialMarkerClick -> fetchSpecialMarkerInfo(action.marker)
+            is HomeUiAction.OnBuildingMarkerClick -> selectBuildingMarker(action.marker)
+            // 이미지 다이얼로그
+            is HomeUiAction.OnGateImageClick -> showImageDialog(action.imageUrls)
+            is HomeUiAction.OnSpecialImageClick -> showImageDialog(action.imageUrls)
+            is HomeUiAction.OnDoorClick -> showImageDialog(action.imageUrls)
+            HomeUiAction.OnSpecialImageDialogDismiss -> hideImageDialog()
+            // 네비게이션
+            HomeUiAction.OnMyLocationClick -> sendEventAsync(HomeUiEvent.RequestMyLocation)
+            HomeUiAction.OnHelperClick -> sendEventAsync(HomeUiEvent.NavigateToHelper)
+            is HomeUiAction.OnBuildingInfoClick -> navigateToBuildingInfo(action.buildingId)
+            is HomeUiAction.OnBuildingViewClick -> navigateToBuildingInfo(action.buildingId)
+            // 배리어프리 모드
+            HomeUiAction.OnShowBarrierFreeInfoClick -> setHomeUiMode(HomeUiMode.BARRIER_FREE_INFO)
+            HomeUiAction.OnBarrierFreeDescriptionClick -> setHomeUiMode(HomeUiMode.DEFAULT)
+            // 출발/도착 설정
+            is HomeUiAction.OnFromClick -> setFromLocation(action.result)
+            is HomeUiAction.OnToClick -> setToLocation(action.result)
+            // 문의
+            HomeUiAction.OnInquiryClick -> showInquiryDialog()
+            HomeUiAction.OnInquirySubmit -> submitInquiry()
+            HomeUiAction.OnInquiryDialogDismiss -> hideInquiryDialog()
+        }
+    }
+
+    private fun setSearchScreen(shown: Boolean, mode: SearchMode) {
         _uiState.update {
             it.copy(
-                searchWord = newSearchWord,
-                searchResults = if (newSearchWord.text.isEmpty()) persistentListOf() else it.searchResults,
-            )
-        }
-        getSearchResults(newSearchWord.text)
-    }
-
-    /**
-     * 문의하기 입력 필드를 업데이트합니다.
-     * @param newInquiryField 새로운 문의 내용
-     */
-    fun updateInquiryField(newInquiryField: TextFieldValue) {
-        _uiState.update { it.copy(inquiryField = newInquiryField) }
-    }
-
-    /**
-     * 문의를 제출합니다.
-     */
-    fun submitInquiry() {
-        // TODO: 문의 API 호출
-        setShowInquiryDialog(false)
-    }
-
-    /**
-     * 검색어를 기반으로 검색 결과를 가져옵니다.
-     * @param newSearchWord 검색어
-     */
-    // 검색 결과 호출 API
-    fun getSearchResults(
-        newSearchWord: String = uiState.value.searchWord.text,
-        showSheet: Boolean = true,
-    ) {
-        if (newSearchWord.isEmpty()) {
-            return
-        }
-        viewModelScope.launch {
-            homeRepository.getHomeSearchResult(newSearchWord).fold(
-                onSuccess = { response ->
-                    updateSearchResults(response.toUiState(newSearchWord), showSheet)
-                },
-                onFailure = { error ->
-                    Napier.e( "getSearchResults: Error fetching search results", error)
-                },
+                isSearchScreenShown = shown,
+                searchMode = mode,
             )
         }
     }
 
-    /**
-     * 선택된 특이사항 마커의 정보를 가져옵니다.
-     * @param selectedSpecialMarker 선택된 특이사항 마커
-     */
-    fun getSpecialMarkerInfo(selectedSpecialMarker: ToggleMarker) {
-        viewModelScope.launch {
-            homeRepository.getSpecialInfo(selectedSpecialMarker.id).fold(
-                onSuccess = { response ->
-                    _uiState.update {
-                        it.copy(
-                            specialMarkerInfo = response.toSpecialMarkerInfo(),
-                            selectedBuildingMarker = null,
-                            selectedSpecialMarker = selectedSpecialMarker,
-                            selectedGateMarker = null,
-                            bottomSheetType = HomeBottomSheetType.NONE,
-                            searchResults = persistentListOf(),
-                            showingBuildingMarkers = it.buildingMarkers,
-                        )
-                    }
-                },
-                onFailure = { error ->
-                    Napier.e("updateSpecialMarkerInfo: Error fetching special info", error)
-                },
-            )
-        }
+    private fun setHomeUiMode(mode: HomeUiMode) {
+        _uiState.update { it.copy(homeUiMode = mode) }
     }
 
-    /**
-     * 선택된 교문 마커의 정보를 가져옵니다.
-     * @param selectedGateMarker 선택된 교문 마커
-     */
-    fun getGateMarkerInfo(selectedGateMarker: ToggleMarker) {
-        viewModelScope.launch {
-            homeRepository.getGateInfo(selectedGateMarker.id).fold(
-                onSuccess = { response ->
-                    _uiState.update {
-                        it.copy(
-                            gateMarkerInfo = response.toGateMarkerInfo(),
-                            selectedBuildingMarker = null,
-                            selectedSpecialMarker = null,
-                            selectedGateMarker = selectedGateMarker,
-                            bottomSheetType = HomeBottomSheetType.NONE,
-                            searchResults = persistentListOf(),
-                            showingBuildingMarkers = it.buildingMarkers,
-                        )
-                    }
-                },
-                onFailure = { error ->
-                    Napier.e("updateGateMarkerInfo: Error fetching gate info", error)
-                },
-            )
-        }
-    }
+    private fun getDefaultShowingMarkers() =
+        (_uiState.value.buildingMarkers + _uiState.value.gateMarkers).toImmutableList()
 
-    /**
-     * 검색 결과를 업데이트하고, 바텀 시트 표시 여부를 결정합니다.
-     * @param newSearchResults 새로운 검색 결과 목록
-     * @param showSheet 바텀 시트 표시 여부
-     */
-    fun updateSearchResults(
-        newSearchResults: List<SearchResult> = uiState.value.searchResults,
-        showSheet: Boolean = true,
-    ) {
-        if (newSearchResults.size == 1) {
-            setSingleResult(newSearchResults.first())
-        } else {
-            _uiState.update {
-                it.copy(
-                    selectedBuildingMarker = null,
-                    searchResults = newSearchResults.toImmutableList(),
-                )
-            }
-            if (showSheet) {
-                setBottomSheetType(HomeBottomSheetType.SEARCH)
-            }
-        }
-    }
-
-    /**
-     * 단일 검색 결과를 처리합니다.
-     * @param searchResult 단일 검색 결과
-     */
-    private fun setSingleResult(searchResult: SearchResult) {
-        if (searchResult.isBuilding) {
-            getBuildingInfoByResult(searchResult)
-        } else {
-            _uiState.update {
-                it.copy(
-                    selectedBuildingMarker = null,
-                    searchResults = persistentListOf(searchResult),
-                    homeUiMode = HomeUiMode.DEFAULT,
-                )
-            }
-            setBottomSheetType(HomeBottomSheetType.SEARCH)
-        }
-    }
-
-    /**
-     * '출발' 버튼 클릭을 처리합니다.
-     * @param searchResult 선택된 검색 결과
-     */
-    fun onFromClick(searchResult: SearchResult) {
-        setHomeUiMode(HomeUiMode.FIND_MODE)
-        setBottomSheetType(HomeBottomSheetType.NONE)
-        updateFromLocation(searchResult)
-    }
-
-    /**
-     * '도착' 버튼 클릭을 처리합니다.
-     * @param searchResult 선택된 검색 결과
-     */
-    fun onToClick(searchResult: SearchResult) {
-        setHomeUiMode(HomeUiMode.FIND_MODE)
-        setBottomSheetType(HomeBottomSheetType.NONE)
-        updateToLocation(searchResult)
-    }
-
-    /**
-     * 출발지를 업데이트하고, 필요한 경우 경로를 검색합니다.
-     * @param fromLocation 출발지
-     */
-    fun updateFromLocation(fromLocation: SearchResult) {
+    private fun enterFindWayMode() {
         _uiState.update {
             it.copy(
-                searchWord = TextFieldValue(""),
+                selectedMarker = null,
+                buildingSheetInfo = null,
+                selectedMarkerInfo = null,
+                bottomSheetType = HomeBottomSheetType.NONE,
+                homeUiMode = HomeUiMode.FIND_WAY,
+            )
+        }
+    }
+
+    private fun exitFindWayMode() {
+        _uiState.update {
+            it.copy(
+                fromLocation = null,
+                toLocation = null,
                 searchResults = persistentListOf(),
-                fromLocation = fromLocation,
+                routeResults = persistentListOf(),
+                routeDoorMarkers = persistentListOf(),
+                selectedRoute = null,
+                homeUiMode = HomeUiMode.DEFAULT,
             )
-        }
-        if (fromLocation.name.isNotEmpty() && uiState.value.toLocation.name.isNotEmpty()) {
-            getRouteBetweenLocations()
         }
     }
 
-    /**
-     * 도착지를 업데이트하고, 필요한 경우 경로를 검색합니다.
-     * @param toLocation 도착지
-     */
-    fun updateToLocation(toLocation: SearchResult) {
-        _uiState.update {
-            it.copy(
-                searchWord = TextFieldValue(""),
-                searchResults = persistentListOf(),
-                toLocation = toLocation,
-            )
-        }
-        if (toLocation.name.isNotEmpty() && uiState.value.fromLocation.name.isNotEmpty()) {
-            getRouteBetweenLocations()
-        }
-    }
-
-    /**
-     * 출발지와 도착지를 바꿉니다.
-     */
-    fun changeFromToLocation() {
+    private fun swapAndFetchRoute() {
         _uiState.update {
             it.copy(
                 fromLocation = it.toLocation,
                 toLocation = it.fromLocation,
             )
         }
+        fetchRoute()
+    }
 
-        // 바뀐 출발지와 도착지로 경로 다시 검색
-        val fromLocation = uiState.value.fromLocation
-        val toLocation = uiState.value.toLocation
-        if (fromLocation.name.isNotEmpty() && toLocation.name.isNotEmpty()) {
-            getRouteBetweenLocations()
+    private fun selectRoute(route: RouteResult) {
+        _uiState.update { it.copy(selectedRoute = route) }
+    }
+
+    private fun resetSearchState() {
+        _uiState.update {
+            it.copy(
+                searchText = "",
+                fromLocation = null,
+                toLocation = null,
+                searchMode = SearchMode.NONE,
+                searchResults = persistentListOf(),
+                routeResults = persistentListOf(),
+                selectedRoute = null,
+                homeUiMode = HomeUiMode.DEFAULT,
+            )
         }
     }
 
-    /**
-     * 출발지와 도착지 사이의 경로를 가져옵니다.
-     */
-    private fun getRouteBetweenLocations() {
-        val fromLocation = _uiState.value.fromLocation
-        val toLocation = _uiState.value.toLocation
+    private fun clearSearchInput() {
+        _uiState.update {
+            it.copy(
+                searchText = "",
+                searchResults = persistentListOf(),
+            )
+        }
+    }
+
+    private fun selectBuildingMarker(marker: BuildingMarker) {
+        _uiState.update {
+            it.copy(
+                selectedMarker = marker,
+                selectedMarkerInfo = null,
+            )
+        }
+        fetchBuildingInfo(marker.id)
+    }
+
+    private fun showImageDialog(imageUrls: List<String>) {
+        _uiState.update {
+            it.copy(
+                isImageDialogVisible = true,
+                imageDialogUrls = imageUrls.toImmutableList(),
+                bottomSheetType = HomeBottomSheetType.NONE,
+            )
+        }
+    }
+
+    private fun hideImageDialog() {
+        _uiState.update {
+            it.copy(
+                isImageDialogVisible = false,
+                imageDialogUrls = persistentListOf(),
+                selectedMarker = null,
+                selectedMarkerInfo = null,
+                bottomSheetType = HomeBottomSheetType.NONE,
+            )
+        }
+    }
+
+    private fun showInquiryDialog() {
+        _uiState.update { it.copy(isInquiryDialogVisible = true) }
+    }
+
+    private fun submitInquiry() {
+        sendEventAsync(HomeUiEvent.ShowToast("문의가 등록되었습니다."))
+        hideInquiryDialog()
+    }
+
+    private fun hideInquiryDialog() {
+        _uiState.update {
+            it.copy(
+                isInquiryDialogVisible = false,
+                inquiryTextField = TextFieldState(),
+            )
+        }
+    }
+
+    private fun resetToDefaultState() {
+        _uiState.update {
+            it.copy(
+                selectedMarker = null,
+                buildingSheetInfo = null,
+                selectedMarkerInfo = null,
+                searchText = "",
+                fromLocation = null,
+                toLocation = null,
+                searchMode = SearchMode.NONE,
+                searchResults = persistentListOf(),
+                routeResults = persistentListOf(),
+                selectedRoute = null,
+                homeUiMode = HomeUiMode.DEFAULT,
+                bottomSheetType = HomeBottomSheetType.NONE,
+                doorMarkers = persistentListOf(),
+                showingMarkers = getDefaultShowingMarkers(),
+            )
+        }
+        sendEventAsync(HomeUiEvent.SetBottomSheetExpanded(false))
+    }
+
+    private fun updateToggleState(toggle: MapToggle) {
+        _uiState.update {
+            it.toggleStates.forEach { toggleUiState ->
+                if (toggleUiState.toggle == toggle) {
+                    toggleUiState.isSelected = !toggleUiState.isSelected
+                }
+            }
+
+            val newShowingToggleMarkers = it.toggleStates
+                .filter { state -> state.isSelected }
+                .flatMap { state ->
+                    when (state.toggle) {
+                        MapToggle.CURB -> _uiState.value.curbMarkers
+                        MapToggle.SLOPE -> _uiState.value.slopeMarkers
+                        MapToggle.STAIRS -> _uiState.value.stairsMarkers
+                        MapToggle.SPECIAL_MARK -> _uiState.value.specialMarkers
+                    }
+                }.toImmutableList()
+
+            it.copy(
+                showingToggleMarkers = newShowingToggleMarkers,
+                selectedMarker = null,
+                selectedMarkerInfo = null,
+            )
+        }
+    }
+
+    private fun sendEventAsync(event: HomeUiEvent) {
+        viewModelScope.launch { sendEvent(event) }
+    }
+
+    private fun navigateToBuildingInfo(buildingId: Long) {
+        sendEventAsync(HomeUiEvent.NavigateToBuildingInfo(buildingId))
+    }
+
+    private fun searchKeyword(keyword: String, showSheet: Boolean) {
+        if (keyword.isEmpty()) return
+
+        viewModelScope.launch {
+            homeRepository.getHomeSearchResult(keyword).fold(
+                onSuccess = { response ->
+                    val results = response.toSearchResults(keyword).toImmutableList()
+                    _uiState.update {
+                        it.copy(
+                            searchText = keyword,
+                            searchResults = results,
+                            bottomSheetType = if (showSheet) {
+                                HomeBottomSheetType.SEARCH_RESULT
+                            } else {
+                                it.bottomSheetType
+                            },
+                        )
+                    }
+                    if (showSheet) {
+                        sendEvent(HomeUiEvent.SetBottomSheetExpanded(true))
+                    }
+                },
+                onFailure = { error ->
+                    Napier.e("getSearchResults error", error)
+                    sendEvent(HomeUiEvent.ShowToast("검색 결과를 불러오는데 실패했습니다."))
+                },
+            )
+        }
+    }
+
+    private fun handleSearchResultClick(result: SearchResult) {
+        sendEventAsync(HomeUiEvent.MoveCamera(result.latitude, result.longitude, 17f))
+
+        if (result.isBuilding) {
+            _uiState.update { it.copy(searchText = result.name) }
+            fetchBuildingInfo(result.id)
+        } else {
+            _uiState.update {
+                it.copy(
+                    searchText = result.name,
+                    selectedMarker = null,
+                    buildingSheetInfo = null,
+                    selectedMarkerInfo = null,
+                    searchResults = persistentListOf(result),
+                    bottomSheetType = HomeBottomSheetType.CONVENIENCE_INFO,
+                )
+            }
+            sendEventAsync(HomeUiEvent.SetBottomSheetExpanded(true))
+        }
+    }
+
+    private fun setFromLocation(result: SearchResult) {
+        _uiState.update {
+            it.copy(
+                fromLocation = result,
+                homeUiMode = HomeUiMode.FIND_WAY,
+            )
+        }
+        if (_uiState.value.toLocation != null) fetchRoute()
+    }
+
+    private fun setToLocation(result: SearchResult) {
+        _uiState.update {
+            it.copy(
+                toLocation = result,
+                homeUiMode = HomeUiMode.FIND_WAY,
+            )
+        }
+        if (_uiState.value.fromLocation != null) fetchRoute()
+    }
+
+    private fun fetchInitData() {
+        viewModelScope.launch {
+            homeRepository.getHomeData().fold(
+                onSuccess = { response ->
+                    val newState = response.toHomeUiState()
+                    val defaultShowingMarkers =
+                        (newState.buildingMarkers + newState.gateMarkers).toImmutableList()
+                    _uiState.update {
+                        it.copy(
+                            buildingMarkers = newState.buildingMarkers,
+                            curbMarkers = newState.curbMarkers,
+                            slopeMarkers = newState.slopeMarkers,
+                            stairsMarkers = newState.stairsMarkers,
+                            specialMarkers = newState.specialMarkers,
+                            gateMarkers = newState.gateMarkers,
+                            showingMarkers = defaultShowingMarkers,
+                            showingToggleMarkers = newState.showingToggleMarkers,
+                        )
+                    }
+                },
+                onFailure = { error ->
+                    Napier.e("fetchInitData error", error)
+                    sendEvent(HomeUiEvent.ShowToast("데이터를 불러오는데 실패했습니다."))
+                },
+            )
+        }
+    }
+
+    private fun fetchBuildingInfo(buildingId: Long) {
+        viewModelScope.launch {
+            buildingRepository.getBuildingInfo(buildingId).fold(
+                onSuccess = { response ->
+                    val doorMarkers = response.toDoorMarkers()
+                    val selectedBuilding =
+                        _uiState.value.buildingMarkers.find { it.id == buildingId }
+                    val newShowingMarkers =
+                        listOfNotNull(selectedBuilding) + doorMarkers + _uiState.value.gateMarkers
+                    _uiState.update {
+                        it.copy(
+                            buildingSheetInfo = response.toHomeBuildingSheetInfo(),
+                            doorMarkers = doorMarkers.toImmutableList(),
+                            showingMarkers = newShowingMarkers.toImmutableList(),
+                            bottomSheetType = HomeBottomSheetType.BUILDING_INFO,
+                        )
+                    }
+                    sendEvent(HomeUiEvent.SetBottomSheetExpanded(true))
+                },
+                onFailure = { error ->
+                    Napier.e("getBuildingInfo error", error)
+                },
+            )
+        }
+    }
+
+    private fun fetchGateMarkerInfo(marker: GateMarker) {
+        viewModelScope.launch {
+            homeRepository.getGateInfo(marker.id)
+                .onSuccess { response ->
+                    val markerInfo = GateMarkerInfo(
+                        description = response.description,
+                        imageUrls = persistentListOf(response.imageUrl),
+                    )
+                    _uiState.update {
+                        it.copy(
+                            bottomSheetType = HomeBottomSheetType.NONE,
+                            selectedMarker = marker,
+                            selectedMarkerInfo = markerInfo,
+                            doorMarkers = persistentListOf(),
+                            showingMarkers = getDefaultShowingMarkers(),
+                        )
+                    }
+                }
+                .onFailure { error ->
+                    Napier.e("getGateMarkerInfo error", error)
+                }
+        }
+    }
+
+    private fun fetchSpecialMarkerInfo(marker: ToggleMarker) {
+        viewModelScope.launch {
+            homeRepository.getSpecialInfo(marker.id).fold(
+                onSuccess = { response ->
+                    val markerInfo = SpecialMarkerInfo(
+                        description = response.description,
+                        imageUrls = response.imageUrls.toImmutableList(),
+                    )
+                    _uiState.update {
+                        it.copy(
+                            bottomSheetType = HomeBottomSheetType.NONE,
+                            selectedMarker = marker,
+                            selectedMarkerInfo = markerInfo,
+                            doorMarkers = persistentListOf(),
+                            showingMarkers = getDefaultShowingMarkers(),
+                        )
+                    }
+                },
+                onFailure = { error ->
+                    Napier.e("getSpecialMarkerInfo error", error)
+                },
+            )
+        }
+    }
+
+    private fun fetchRoute() {
+        val fromLocation = _uiState.value.fromLocation ?: return
+        val toLocation = _uiState.value.toLocation ?: return
+
+        // 출발지와 도착지가 동일한 경우
+        if (fromLocation.id == toLocation.id) {
+            sendEventAsync(HomeUiEvent.ShowToast("출발지와 도착지가 동일합니다."))
+            return
+        }
 
         viewModelScope.launch {
             routeRepository.getPath(
@@ -283,343 +466,40 @@ class HomeViewModel(
                 onSuccess = { response ->
                     val routeResults = response.toRouteResults()
                     if (routeResults.isNotEmpty()) {
+                        // 출발지/도착지 문 마커 조회
+                        val doorMarkers = mutableListOf<DoorMarker>()
+                        if (fromLocation.isBuilding) {
+                            buildingRepository.getBuildingInfo(fromLocation.id)
+                                .onSuccess { doorMarkers.addAll(it.toDoorMarkers()) }
+                        }
+                        if (toLocation.isBuilding) {
+                            buildingRepository.getBuildingInfo(toLocation.id)
+                                .onSuccess { doorMarkers.addAll(it.toDoorMarkers()) }
+                        }
+
                         _uiState.update {
                             it.copy(
-                                homeUiMode = HomeUiMode.ROUTE_MODE,
-                                bottomSheetType = HomeBottomSheetType.NONE,
+                                homeUiMode = HomeUiMode.FIND_WAY,
                                 routeResults = routeResults.toImmutableList(),
-                                selectedRouteResult = routeResults.first(),
+                                selectedRoute = routeResults.first(),
+                                routeDoorMarkers = doorMarkers.toImmutableList(),
+                                isSearchScreenShown = false,
+                                searchMode = SearchMode.NONE,
                             )
                         }
+                        // 카메라를 출발지와 도착지 중간으로 이동
+                        val centerLat = (fromLocation.latitude + toLocation.latitude) / 2
+                        val centerLng = (fromLocation.longitude + toLocation.longitude) / 2
+                        sendEvent(HomeUiEvent.MoveCamera(centerLat, centerLng, 16f))
                     } else {
-                        Napier.w("getRouteBetweenLocations: No routes returned from API")
+                        sendEvent(HomeUiEvent.ShowToast("경로를 찾을 수 없습니다."))
                     }
                 },
                 onFailure = { error ->
-                    Napier.e( "getRouteBetweenLocations: Error fetching route", error)
+                    Napier.e("fetchRoute error", error)
+                    sendEvent(HomeUiEvent.ShowToast("경로를 불러오는데 실패했습니다."))
                 },
             )
-        }
-    }
-
-    /**
-     * 검색 결과로부터 건물 정보를 가져옵니다.
-     * @param searchResult 검색 결과
-     */
-    private fun getBuildingInfoByResult(searchResult: SearchResult) {
-        viewModelScope.launch {
-            buildingRepository.getBuildingInfo(buildingId = searchResult.id)
-                .onSuccess { response ->
-                    _uiState.update {
-                        it.copy(
-                            buildingInfo = response.toHomeBuildingInfo(),
-                            showingDoorMarkers = response.toDoorMarkers().toImmutableList(),
-                            homeUiMode = HomeUiMode.DEFAULT,
-                        )
-                    }
-                    setBottomSheetType(HomeBottomSheetType.BUILDING_INFO)
-                }
-                .onFailure { error ->
-                    Napier.e("updateBuildingInfo: Error fetching building info", error)
-                }
-        }
-    }
-
-    /**
-     * 마커로부터 건물 정보를 가져옵니다.
-     * @param selectedBuildingMarker 선택된 건물 마커
-     */
-    fun getBuildingInfoByMarker(selectedBuildingMarker: BuildingMarker) {
-        viewModelScope.launch {
-            buildingRepository.getBuildingInfo(buildingId = selectedBuildingMarker.id)
-                .onSuccess { response ->
-                    _uiState.update {
-                        it.copy(
-                            buildingInfo = response.toHomeBuildingInfo(),
-                            showingDoorMarkers = response.toDoorMarkers().toImmutableList(),
-                            homeUiMode = HomeUiMode.DEFAULT,
-                        )
-                    }
-                    updateSelectedBuildingMarker(selectedBuildingMarker)
-                    setBottomSheetType(HomeBottomSheetType.BUILDING_INFO)
-                }
-                .onFailure { error ->
-                    Napier.e("updateBuildingInfo: Error fetching building info", error)
-                }
-        }
-    }
-
-    /**
-     * 선택된 건물 마커를 업데이트합니다.
-     * @param selectedBuildingMarker 선택된 건물 마커
-     */
-    private fun updateSelectedBuildingMarker(selectedBuildingMarker: BuildingMarker) {
-        _uiState.update {
-            it.copy(
-                selectedBuildingMarker = selectedBuildingMarker,
-                showingToggleMarkers = persistentListOf(),
-                showingBuildingMarkers = persistentListOf(selectedBuildingMarker),
-                selectedSpecialMarker = null,
-                selectedGateMarker = null,
-                searchResults = persistentListOf(),
-            )
-        }
-    }
-
-    /**
-     * 홈 화면 UI 모드를 설정합니다.
-     * @param homeUiMode 홈 화면 UI 모드
-     */
-    fun setHomeUiMode(homeUiMode: HomeUiMode) {
-        _uiState.update {
-            it.copy(
-                homeUiMode = homeUiMode,
-                isBottomSheetExpanded = homeUiMode != HomeUiMode.FIND_MODE && homeUiMode != HomeUiMode.ROUTE_MODE,
-            )
-        }
-    }
-
-    fun setSelectedMarkersUnselected() {
-        _uiState.update {
-            it.copy(
-                selectedBuildingMarker = null,
-                selectedSpecialMarker = null,
-                selectedGateMarker = null,
-            )
-        }
-    }
-
-    /**
-     * 바텀 시트 타입을 설정합니다.
-     * @param bottomSheetType 바텀 시트 타입
-     */
-    fun setBottomSheetType(bottomSheetType: HomeBottomSheetType) {
-        val isBottomSheetExpanded = bottomSheetType != HomeBottomSheetType.NONE
-        _uiState.update {
-            it.copy(
-                bottomSheetType = bottomSheetType,
-                isBottomSheetExpanded = isBottomSheetExpanded,
-                showingDoorMarkers = if (bottomSheetType == HomeBottomSheetType.BUILDING_INFO) it.showingDoorMarkers else persistentListOf(),
-                showingBuildingMarkers = if (bottomSheetType == HomeBottomSheetType.BUILDING_INFO) it.showingBuildingMarkers else it.buildingMarkers,
-                showingToggleMarkers = if (bottomSheetType == HomeBottomSheetType.BUILDING_INFO) it.showingToggleMarkers else it.toggleUiStates.filter { toggleUiState -> toggleUiState.isSelected }.map { toggleUiState ->
-                    when (toggleUiState.toggle) {
-                        MapToggle.CURB -> uiState.value.curbMarkers
-                        MapToggle.SLOPE -> uiState.value.slopeMarkers
-                        MapToggle.STAIRS -> uiState.value.stairsMarkers
-                        MapToggle.SPECIAL_MARK -> uiState.value.specialMarkers
-                    }
-                }.toPersistentList(),
-            )
-        }
-    }
-
-    /**
-     * 바텀 표시 여부를.
-     * @param flag 바텀 시트 표시 여부
-     */
-    fun setBottomSheetVisible(flag: Boolean) {
-        _uiState.update { it.copy(isBottomSheetExpanded = flag) }
-    }
-
-    /**
-     * 문의하기 다이얼로그 표시 여부를 설정합니다.
-     * @param showInquiryDialog 문의하기 다이얼로그 표시 여부
-     */
-    fun setShowInquiryDialog(showInquiryDialog: Boolean) {
-        val newInquiryField =
-            uiState.value.inquiryField.takeIf { !showInquiryDialog } ?: TextFieldValue("")
-        _uiState.update {
-            it.copy(
-                showInquiryDialog = showInquiryDialog,
-                inquiryField = newInquiryField,
-            )
-        }
-    }
-
-    /**
-     * 특이사항 이미지 다이얼로그 표시 여부를 설정합니다.
-     * @param showSpecialImageDialog 특이사항 이미지 다이얼로그 표시 여부
-     * @param imageUrl 이미지 URL 목록
-     */
-    fun setShowSpecialImageDialog(
-        showSpecialImageDialog: Boolean,
-        imageUrl: List<String> = emptyList(),
-    ) {
-        _uiState.update {
-            it.copy(
-                specialImageUrl = imageUrl.toImmutableList(),
-                showSpecialImageDialog = showSpecialImageDialog,
-                selectedSpecialMarker =
-                if (showSpecialImageDialog) it.selectedSpecialMarker else null,
-                selectedGateMarker =
-                if (showSpecialImageDialog) it.selectedGateMarker else null,
-            )
-        }
-    }
-
-    /**
-     * 지도 토글 UI 상태를 업데이트합니다.
-     * @param toggle 지도 토글
-     */
-    fun updateToggleUiStates(toggle: MapToggle) {
-        _uiState.update {
-            val updatedToggles = it.toggleUiStates.map { toggleUiState ->
-                if (toggleUiState.toggle == toggle) {
-                    toggleUiState.copy(isSelected = !toggleUiState.isSelected)
-                } else {
-                    toggleUiState
-                }
-            }.toPersistentList()
-            val newShowingToggleMarkers = updatedToggles
-                .filter { toggleUiState -> toggleUiState.isSelected }
-                .map { toggleUiState ->
-                    when (toggleUiState.toggle) {
-                        MapToggle.CURB -> uiState.value.curbMarkers
-                        MapToggle.SLOPE -> uiState.value.slopeMarkers
-                        MapToggle.STAIRS -> uiState.value.stairsMarkers
-                        MapToggle.SPECIAL_MARK -> uiState.value.specialMarkers
-                    }
-                }.toPersistentList()
-            it.copy(
-                homeUiMode = HomeUiMode.DEFAULT,
-                toggleUiStates = updatedToggles,
-                showingToggleMarkers = newShowingToggleMarkers,
-                selectedSpecialMarker = null,
-                selectedGateMarker = null,
-            )
-        }
-    }
-
-    /**
-     * 초기 데이터를 가져옵니다.
-     */
-    private fun fetchInitData() {
-        viewModelScope.launch {
-            homeRepository.getHomeData().fold(
-                onSuccess = { response ->
-                    _uiState.value = response.toUiState()
-                },
-                onFailure = { error ->
-                    Napier.e( "fetchInitData: Error fetching home data", error)
-                },
-            )
-        }
-    }
-
-    /**
-     * 경로를 선택합니다.
-     * @param routeResult 선택된 경로
-     */
-    fun selectRoute(routeResult: RouteResult) {
-        _uiState.update {
-            it.copy(
-                selectedRouteResult = routeResult,
-            )
-        }
-    }
-
-    /**
-     * 기본 모드로 설정합니다.
-     */
-    fun setDefaultMode() {
-        _uiState.update {
-            it.copy(
-                homeUiMode = HomeUiMode.DEFAULT,
-                bottomSheetType = HomeBottomSheetType.NONE,
-                showInquiryDialog = false,
-                selectedBuildingMarker = null,
-                selectedSpecialMarker = null,
-                selectedGateMarker = null,
-                selectedRouteResult = RouteResult(),
-                fromLocation = SearchResult(),
-                toLocation = SearchResult(),
-                searchResults = persistentListOf(),
-                showingDoorMarkers = persistentListOf(),
-                showingBuildingMarkers = it.buildingMarkers,
-            )
-        }
-    }
-
-    /**
-     * 사용자의 현재 위치를 업데이트합니다.
-     * @param location 사용자의 위치
-     */
-    fun updateUserLocation(location: LatLng) {
-        _uiState.update {
-            it.copy(userLocation = location)
-        }
-    }
-
-    /**
-     * 카메라를 사용자의 현재 위치로 이동합니다.
-     */
-    fun moveToUserLocation() {
-        val userLocation = _uiState.value.userLocation ?: return
-        _uiState.value.cameraPositionState.move(
-            com.google.android.gms.maps.CameraUpdateFactory.newLatLng(userLocation),
-        )
-    }
-
-    /**
-     * 카메라를 특정 좌표로 이동합니다.
-     * @param latitude 위도
-     * @param longitude 경도
-     */
-    fun moveCameraToLocation(latitude: Double, longitude: Double) {
-        if (latitude == 0.0 && longitude == 0.0) return
-        _uiState.value.cameraPositionState.move(
-            com.google.android.gms.maps.CameraUpdateFactory.newLatLng(
-                LatLng(latitude, longitude),
-            ),
-        )
-    }
-
-    /**
-     * 검색 결과 아이템 클릭을 처리합니다.
-     * @param searchResult 선택된 검색 결과
-     */
-    fun onSearchResultItemClick(searchResult: SearchResult) {
-        if (searchResult.isBuilding) {
-            // 빌딩인 경우: 해당 빌딩 정보를 가져오고 마커를 업데이트
-            getBuildingInfoBySearchResult(searchResult)
-        }
-        // 좌표로 카메라 이동
-        moveCameraToLocation(searchResult.latitude, searchResult.longitude)
-    }
-
-    /**
-     * 검색 결과로부터 건물 정보를 가져오고, 마커를 업데이트합니다.
-     * @param searchResult 검색 결과
-     */
-    private fun getBuildingInfoBySearchResult(searchResult: SearchResult) {
-        viewModelScope.launch {
-            buildingRepository.getBuildingInfo(buildingId = searchResult.id)
-                .onSuccess { response ->
-                    // 선택된 빌딩의 마커 생성
-                    val selectedMarker = BuildingMarker(
-                        id = searchResult.id,
-                        name = searchResult.name,
-                        latitude = searchResult.latitude,
-                        longitude = searchResult.longitude,
-                    )
-                    _uiState.update {
-                        it.copy(
-                            buildingInfo = response.toHomeBuildingInfo(),
-                            showingDoorMarkers = response.toDoorMarkers().toImmutableList(),
-                            homeUiMode = HomeUiMode.DEFAULT,
-                            selectedBuildingMarker = selectedMarker,
-                            showingToggleMarkers = persistentListOf(),
-                            showingBuildingMarkers = persistentListOf(selectedMarker),
-                            selectedSpecialMarker = null,
-                            selectedGateMarker = null,
-                            searchResults = persistentListOf(),
-                        )
-                    }
-                    setBottomSheetType(HomeBottomSheetType.BUILDING_INFO)
-                }
-                .onFailure { error ->
-                    Napier.e("getBuildingInfoBySearchResult: Error fetching building info", error)
-                }
         }
     }
 }

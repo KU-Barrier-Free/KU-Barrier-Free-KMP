@@ -15,6 +15,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.text.input.TextFieldState
+import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -41,13 +43,13 @@ import com.ganaljigi.kubf.core.ui.util.conditionalModifier
 @Composable
 fun HomeInquiryDialog(
     modifier: Modifier = Modifier,
-    inquiryField: TextFieldValue,
-    onInquiryFieldChange: (TextFieldValue) -> Unit = {},
+    inquiryField: TextFieldState = rememberTextFieldState(),
     onSubmit: () -> Unit = {},
     onDismissRequest: () -> Unit = {},
 ) {
     val interactionSource = remember { MutableInteractionSource() }
     val isFocused by interactionSource.collectIsFocusedAsState()
+    val textFieldValue = TextFieldValue(inquiryField.text.toString())
 
     Dialog(
         onDismissRequest = onDismissRequest,
@@ -71,8 +73,12 @@ fun HomeInquiryDialog(
                     .fillMaxWidth()
                     .height(160.dp)
                     .background(color = Color.White, shape = RoundedCornerShape(10.dp)),
-                inquiryField = inquiryField,
-                onInquiryFieldChange = onInquiryFieldChange,
+                inquiryField = textFieldValue,
+                onInquiryFieldChange = { newValue ->
+                    inquiryField.edit {
+                        replace(0, length, newValue.text)
+                    }
+                },
                 interactionSource = interactionSource,
                 isFocused = isFocused,
             )
@@ -198,8 +204,7 @@ private fun InquiryTextField(
 @Composable
 private fun HomeInquiryDialogPreview() {
     HomeInquiryDialog(
-        inquiryField = TextFieldValue("새로 생긴 이마트24 정보 추가해주세요. 새로 생긴 이마트24"),
-        onInquiryFieldChange = {},
+        inquiryField = rememberTextFieldState("새로 생긴 이마트24 정보 추가해주세요."),
         onSubmit = {},
         onDismissRequest = {},
     )

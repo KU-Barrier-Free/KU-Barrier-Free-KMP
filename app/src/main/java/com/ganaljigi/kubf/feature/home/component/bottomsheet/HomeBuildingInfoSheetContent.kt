@@ -30,14 +30,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import coil3.compose.AsyncImagePainter.State.Empty.painter
 import com.ganalijigi.kubf.R
 import com.ganaljigi.kubf.core.designsystem.component.ConvenienceChip
 import com.ganaljigi.kubf.core.designsystem.component.DoorComponent
 import com.ganaljigi.kubf.core.designsystem.component.ImageViewerDialog
 import com.ganaljigi.kubf.core.model.Convenience
 import com.ganaljigi.kubf.core.model.DoorInfo
-import com.ganaljigi.kubf.feature.home.viewmodel.HomeBuildingInfo
+import com.ganaljigi.kubf.feature.home.viewmodel.BuildingSheetInfo
 import com.ganaljigi.kubf.core.designsystem.theme.Gray2
 import com.ganaljigi.kubf.core.designsystem.theme.Gray3
 import com.ganaljigi.kubf.core.designsystem.theme.KUBFAndroidTheme
@@ -48,10 +47,10 @@ import kotlinx.collections.immutable.persistentListOf
 @Composable
 fun HomeBuildingInfoSheetContent(
     modifier: Modifier = Modifier,
-    buildingInfo: HomeBuildingInfo,
+    buildingInfo: BuildingSheetInfo,
     onItemClick: (Long) -> Unit = {},
 ) {
-    val buildingNumber = if (buildingInfo.buildingNumber == 0) "없음" else buildingInfo.buildingNumber.toString()
+    val buildingNumberText = if (buildingInfo.buildingNumber == 0) "없음" else buildingInfo.buildingNumber.toString()
     var selectedDoorImages by remember { mutableStateOf<List<String>>(emptyList()) }
     var showDoorImageDialog by remember { mutableStateOf(false) }
 
@@ -94,7 +93,7 @@ fun HomeBuildingInfoSheetContent(
                         )
                         Text(
                             modifier = Modifier.padding(start = 8.dp),
-                            text = "건물번호: $buildingNumber",
+                            text = "건물번호: $buildingNumberText",
                             style = KUBFAndroidTheme.typography.regular14.copy(
                                 color = Gray3,
                             ),
@@ -162,7 +161,7 @@ fun HomeBuildingInfoSheetContent(
 private fun HomeBuildingInfoBottomSheetPreview() {
     HomeBuildingInfoSheetContent(
         modifier = Modifier.fillMaxWidth(),
-        buildingInfo = HomeBuildingInfo(
+        buildingInfo = BuildingSheetInfo(
             id = 1L,
             name = "경영관",
             buildingNumber = 123,
@@ -184,18 +183,6 @@ private fun HomeBuildingInfoBottomSheetPreview() {
                     imageUrl = "",
                     description = "입구 설명",
                     isWheelchairAccessible = true,
-                ),
-                DoorInfo(
-                    label = "B",
-                    imageUrl = "",
-                    description = "입구 설명",
-                    isWheelchairAccessible = false,
-                ),
-                DoorInfo(
-                    label = "B",
-                    imageUrl = "",
-                    description = "입구 설명",
-                    isWheelchairAccessible = false,
                 ),
                 DoorInfo(
                     label = "B",

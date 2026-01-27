@@ -4,11 +4,11 @@ import com.ganaljigi.kubf.core.model.DoorInfo
 import com.ganaljigi.kubf.core.model.fromLabel
 import com.ganaljigi.kubf.feature.building.response.BuildingDto
 import com.ganaljigi.kubf.feature.building.response.DoorInfoDto
-import com.ganaljigi.kubf.feature.home.model.DoorMarker
-import com.ganaljigi.kubf.feature.home.viewmodel.HomeBuildingInfo
+import com.ganaljigi.kubf.feature.home.viewmodel.BuildingSheetInfo
+import com.ganaljigi.kubf.feature.home.viewmodel.DoorMarker
 import kotlinx.collections.immutable.toPersistentList
 
-fun BuildingDto.toHomeBuildingInfo() = HomeBuildingInfo(
+fun BuildingDto.toHomeBuildingSheetInfo() = BuildingSheetInfo(
     id = id,
     name = name,
     buildingNumber = number,

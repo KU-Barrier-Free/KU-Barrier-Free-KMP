@@ -32,8 +32,8 @@ import com.ganaljigi.kubf.core.designsystem.theme.KUBFAndroidTheme
 @Composable
 fun HomeFindTopLocationComponent(
     modifier: Modifier = Modifier,
-    fromLocationResult: SearchResult,
-    toLocationResult: SearchResult,
+    fromLocationResult: SearchResult?,
+    toLocationResult: SearchResult?,
     onClose: () -> Unit = {},
     onChange: () -> Unit = {},
     onFromLocationClick: () -> Unit = {},
@@ -73,9 +73,9 @@ fun HomeFindTopLocationComponent(
                     tint = Color.Unspecified,
                 )
                 Text(
-                    text = fromLocationResult.name.ifEmpty { "출발지 입력" },
+                    text = fromLocationResult?.name?.ifEmpty { "출발지 입력" } ?: "출발지 입력",
                     style = KUBFAndroidTheme.typography.medium15.copy(
-                        color = if (fromLocationResult.name.isEmpty()) Gray2 else Color.Black,
+                        color = if (fromLocationResult?.name.isNullOrEmpty()) Gray2 else Color.Black,
                     ),
                 )
             }
@@ -133,9 +133,9 @@ fun HomeFindTopLocationComponent(
                     tint = Color.Unspecified,
                 )
                 Text(
-                    text = toLocationResult.name.ifEmpty { "도착지 입력" },
+                    text = toLocationResult?.name?.ifEmpty { "도착지 입력" } ?: "도착지 입력",
                     style = KUBFAndroidTheme.typography.medium15.copy(
-                        color = if (toLocationResult.name.isEmpty()) Gray2 else Color.Black,
+                        color = if (toLocationResult?.name.isNullOrEmpty()) Gray2 else Color.Black,
                     ),
                 )
             }
