@@ -19,7 +19,6 @@ import com.ganaljigi.kubf.feature.home.model.RouteResult
 import com.ganaljigi.kubf.feature.home.model.SearchResult
 import com.ganaljigi.kubf.feature.home.model.ToggleMarker
 import com.google.android.gms.maps.model.LatLng
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.collections.immutable.toPersistentList
@@ -27,10 +26,10 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import javax.inject.Inject
+import org.koin.android.annotation.KoinViewModel
 
-@HiltViewModel
-class HomeViewModel @Inject constructor(
+@KoinViewModel
+class HomeViewModel(
     private val homeRepository: HomeRepository,
     private val buildingRepository: BuildingRepository,
     private val routeRepository: RouteRepository,

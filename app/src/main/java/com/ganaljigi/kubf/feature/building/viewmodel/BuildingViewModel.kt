@@ -6,17 +6,16 @@ import androidx.lifecycle.viewModelScope
 import com.ganaljigi.kubf.core.data.repository.BuildingInfoRepository
 import com.ganaljigi.kubf.feature.building.model.Room
 import com.ganaljigi.kubf.feature.building.model.RoomSearchResult
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import javax.inject.Inject
+import org.koin.android.annotation.KoinViewModel
 
-@HiltViewModel
-class BuildingViewModel @Inject constructor(
+@KoinViewModel
+class BuildingViewModel(
     private val repo: BuildingInfoRepository,
 ) : ViewModel() {
     private val _uiState: MutableStateFlow<BuildingUIState> = MutableStateFlow(BuildingUIState())

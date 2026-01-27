@@ -3,9 +3,8 @@ package com.ganaljigi.kubf.feature.room.viewmodel
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.ganaljigi.kubf.feature.room.repository.RoomInfoRepository
 import com.ganaljigi.kubf.feature.room.mapper.toUiState
-import dagger.hilt.android.lifecycle.HiltViewModel
+import com.ganaljigi.kubf.feature.room.repository.RoomInfoRepository
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -15,10 +14,10 @@ import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import javax.inject.Inject
+import org.koin.android.annotation.KoinViewModel
 
-@HiltViewModel
-class RoomInfoViewModel @Inject constructor(
+@KoinViewModel
+class RoomInfoViewModel(
     private val repository: RoomInfoRepository,
     private val savedStateHandle: SavedStateHandle,
 ) : ViewModel() {

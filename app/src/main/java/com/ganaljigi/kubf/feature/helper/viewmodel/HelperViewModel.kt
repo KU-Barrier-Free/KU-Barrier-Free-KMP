@@ -4,7 +4,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ganaljigi.kubf.feature.helper.mapper.toUiState
 import com.ganaljigi.kubf.feature.helper.repository.HelperRepository
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -12,13 +11,13 @@ import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import org.koin.android.annotation.KoinViewModel
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.Locale
-import javax.inject.Inject
 
-@HiltViewModel
-class HelperViewModel @Inject constructor(
+@KoinViewModel
+class HelperViewModel(
     private val repository: HelperRepository,
 ) : ViewModel() {
 
