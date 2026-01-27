@@ -1,15 +1,16 @@
 package com.ganaljigi.kubf.core.data.repositoryimpl
 
-import com.ganaljigi.kubf.core.network.response.handleBaseResponse
 import com.ganaljigi.kubf.core.data.repository.HomeRepository
+import com.ganaljigi.kubf.core.network.response.handleBaseResponse
 import com.ganaljigi.kubf.core.network.response.home.HomeGateResponseDto
 import com.ganaljigi.kubf.core.network.response.home.HomeResponseDto
 import com.ganaljigi.kubf.core.network.response.home.HomeSearchResponseDto
 import com.ganaljigi.kubf.core.network.response.home.HomeSignificantResponseDto
 import com.ganaljigi.kubf.core.network.service.HomeService
-import javax.inject.Inject
+import org.koin.core.annotation.Single
 
-class HomeRepositoryImpl @Inject constructor(
+@Single(binds = [HomeRepository::class])
+class HomeRepositoryImpl(
     private val homeService: HomeService,
 ) : HomeRepository {
     override suspend fun getHomeData(): Result<HomeResponseDto> = runCatching {

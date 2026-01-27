@@ -1,11 +1,12 @@
 package com.ganaljigi.kubf.feature.room.repositoryimpl
 
+import com.ganaljigi.kubf.feature.room.repository.RoomInfoRepository
 import com.ganaljigi.kubf.feature.room.response.RoomInfoResponseDto
 import com.ganaljigi.kubf.feature.room.service.RoomInfoService
-import com.ganaljigi.kubf.feature.room.repository.RoomInfoRepository
-import javax.inject.Inject
+import org.koin.core.annotation.Single
 
-class RoomInfoRepositoryImpl @Inject constructor(
+@Single(binds = [RoomInfoRepository::class])
+class RoomInfoRepositoryImpl(
     private val service: RoomInfoService,
 ) : RoomInfoRepository {
     override suspend fun getRoomInfo(
