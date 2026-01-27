@@ -44,7 +44,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
-import androidx.hilt.navigation.compose.hiltViewModel
+import org.koin.androidx.compose.koinViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.AsyncImage
 import com.ganalijigi.kubf.R
@@ -68,7 +68,7 @@ fun BuildingInfoScreen(
     buildingId: Long,
     onBack: () -> Unit,
     onRoomClick: (Room, String) -> Unit,
-    viewModel: BuildingViewModel = hiltViewModel(),
+    viewModel: BuildingViewModel = koinViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     LaunchedEffect(buildingId) {

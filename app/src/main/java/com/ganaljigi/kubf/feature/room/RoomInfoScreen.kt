@@ -19,7 +19,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
+import org.koin.androidx.compose.koinViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ganaljigi.kubf.feature.room.component.DeskAndChairComponent
 import com.ganaljigi.kubf.feature.room.component.DoorComponent
@@ -117,7 +117,7 @@ fun RoomInfoScreen(
 @Composable
 fun RoomInfoScreen(
     onBackClick: () -> Unit,
-    viewModel: RoomInfoViewModel = hiltViewModel(),
+    viewModel: RoomInfoViewModel = koinViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     RoomInfoScreen(uiState = uiState, onBackClick = onBackClick)

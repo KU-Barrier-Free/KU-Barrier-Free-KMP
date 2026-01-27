@@ -27,7 +27,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
+import org.koin.androidx.compose.koinViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ganaljigi.kubf.core.designsystem.component.KUBFSearchBar
 import com.ganaljigi.kubf.core.designsystem.theme.Gray3
@@ -38,7 +38,7 @@ import com.ganaljigi.kubf.feature.building.viewmodel.BuildingViewModel
 
 @Composable
 fun SearchPopup(
-    viewModel: BuildingViewModel = hiltViewModel(),
+    viewModel: BuildingViewModel = koinViewModel(),
     onRoomClick: (RoomSearchResult) -> Unit,
 ) {
     val ui by viewModel.uiState.collectAsStateWithLifecycle()

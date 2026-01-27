@@ -16,7 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
+import org.koin.androidx.compose.koinViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ganalijigi.kubf.R
 import com.ganaljigi.kubf.feature.helper.component.information.InfoBox
@@ -34,7 +34,7 @@ fun HelperScreen(
     navigateToDisableStudentHelper: () -> Unit = {},
     navigateToSupport: () -> Unit = {},
     navigateToJobInformation: () -> Unit = {},
-    vm: HelperViewModel = hiltViewModel(),
+    vm: HelperViewModel = koinViewModel(),
 ) {
     val state by vm.uiState.collectAsStateWithLifecycle()
     val uriHandler = LocalUriHandler.current

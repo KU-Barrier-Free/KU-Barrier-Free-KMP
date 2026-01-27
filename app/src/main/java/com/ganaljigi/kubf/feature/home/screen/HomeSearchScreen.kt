@@ -21,7 +21,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
+import org.koin.androidx.compose.koinViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ganaljigi.kubf.core.model.SearchMode
 import com.ganaljigi.kubf.feature.home.component.search.HomeSearchBar
@@ -37,7 +37,7 @@ fun HomeSearchScreen(
     padding: PaddingValues,
     searchMode: SearchMode,
     navigateUp: () -> Unit = {},
-    viewModel: HomeViewModel = hiltViewModel(),
+    viewModel: HomeViewModel = koinViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val focusRequester = remember { FocusRequester() }
