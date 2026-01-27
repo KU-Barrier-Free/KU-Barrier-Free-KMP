@@ -60,8 +60,6 @@ android {
         compose = true
         buildConfig = true
     }
-
-    sourceSets["main"].java.srcDir("build/generated/ksp/main/kotlin")
 }
 
 dependencies {
@@ -81,7 +79,6 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
-    implementation(libs.okhttp.dnsoverhttps)
 
     // Serialization
     implementation(libs.kotlinx.serialization.json)
@@ -94,7 +91,7 @@ dependencies {
 
     // Coil
     implementation(libs.coil.compose)
-    implementation(libs.coil.network.okhttp)
+    implementation(libs.coil.network.ktor3)
 
     // Permissions
     implementation(libs.accompanist.permissions)
@@ -107,13 +104,12 @@ dependencies {
     // Immutable
     implementation(libs.kotlinx.collections.immutable)
 
-    // Network
-    implementation(platform(libs.okhttp.bom))
-    implementation(libs.okhttp)
-    implementation(libs.okhttp.logging.interceptor)
-    implementation(libs.retrofit)
-    implementation(libs.retrofit.kotlin.serialization.converter)
-    implementation(libs.kotlinx.serialization.json)
+    // Ktor
+    implementation(libs.ktor.client.core)
+    implementation(libs.ktor.client.android)
+    implementation(libs.ktor.client.content.negotiation)
+    implementation(libs.ktor.serialization.kotlinx.json)
+    implementation(libs.ktor.client.logging)
 
     // Import the BoM for the Firebase platform
     implementation(platform(libs.firebase.bom))

@@ -1,39 +1,40 @@
 package com.ganaljigi.kubf.core.mapper
 
-import com.ganaljigi.kubf.core.network.response.building.BuildingSummaryResponseDto
 import com.ganaljigi.kubf.core.model.DoorInfo
 import com.ganaljigi.kubf.core.model.fromLabel
+import com.ganaljigi.kubf.feature.building.response.BuildingDto
+import com.ganaljigi.kubf.feature.building.response.DoorInfoDto
 import com.ganaljigi.kubf.feature.home.model.DoorMarker
 import com.ganaljigi.kubf.feature.home.viewmodel.HomeBuildingInfo
 import kotlinx.collections.immutable.toPersistentList
 
-fun BuildingSummaryResponseDto.toHomeBuildingInfo() = HomeBuildingInfo(
+fun BuildingDto.toHomeBuildingInfo() = HomeBuildingInfo(
     id = id,
     name = name,
     buildingNumber = number,
-    latitude = latitude,
-    longitude = longitude,
+    latitude = latitude ?: 0.0,
+    longitude = longitude ?: 0.0,
     convenienceList = facilityPurposes.mapNotNull { fromLabel(it) }.toPersistentList(),
     doorInfoList = doorInfos.map { it.toDoorInfo() }.toPersistentList(),
 )
 
-fun BuildingSummaryResponseDto.DoorInfoDto.toDoorInfo() = DoorInfo(
+fun DoorInfoDto.toDoorInfo() = DoorInfo(
     id = this.id,
-    imageUrl = this.imageUrl.first(),
+    imageUrl = this.imageUrl.firstOrNull() ?: "",
     label = label,
-    latitude = latitude,
-    longitude = longitude,
+    latitude = latitude ?: 0.0,
+    longitude = longitude ?: 0.0,
     isWheelchairAccessible = wheelchair,
     description = "",
     imageUrls = this.imageUrl,
 )
 
-fun BuildingSummaryResponseDto.DoorInfoDto.toDoorMarker() = DoorMarker(
+fun DoorInfoDto.toDoorMarker() = DoorMarker(
     id = this.id,
     label = this.label,
-    latitude = this.latitude,
-    longitude = this.longitude,
+    latitude = this.latitude ?: 0.0,
+    longitude = this.longitude ?: 0.0,
     isWheelChairAccessible = this.wheelchair,
 )
 
-fun BuildingSummaryResponseDto.toDoorMarkers() = doorInfos.map { it.toDoorMarker() }
+fun BuildingDto.toDoorMarkers() = doorInfos.map { it.toDoorMarker() }
