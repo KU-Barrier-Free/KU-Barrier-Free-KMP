@@ -15,90 +15,42 @@ import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.pager.HorizontalPager
-import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.Dialog
-import androidx.compose.ui.window.DialogProperties
 import coil3.compose.AsyncImage
-import com.ganaljigi.kubf.feature.building.model.Door
-import com.ganaljigi.kubf.core.designsystem.component.TransformableImage
 import com.ganaljigi.kubf.core.designsystem.theme.Gray2
 import com.ganaljigi.kubf.core.designsystem.theme.Gray3
 import com.ganaljigi.kubf.core.designsystem.theme.Gray4
-import com.ganaljigi.kubf.core.designsystem.theme.MainGreen
 import com.ganaljigi.kubf.core.designsystem.theme.KUBFAndroidTheme
+import com.ganaljigi.kubf.core.designsystem.theme.MainGreen
+import com.ganaljigi.kubf.feature.building.model.Door
 
 /**
  * - 출입문 컴포넌트 - 문 사진과 휠체어 가능 여부,
  * - 가로로 스크롤 가능
  */
 @Composable
-fun DoorComponent(doors: List<Door>) {
-    var previewDoor by remember { mutableStateOf<Door?>(null) }
+fun DoorComponent(
+    doors: List<Door>,
+    onImageClick: (String) -> Unit = {},
+) {
     LazyRow(
         horizontalArrangement = Arrangement.spacedBy(8.dp),
         modifier = Modifier.padding(horizontal = 16.dp),
     ) {
         items(doors, key = { it.label }) { door ->
             DoorCard(door) {
-                previewDoor = door
-            }
-        }
-    }
-    previewDoor?.let { door ->
-        DoorImageDialog(
-            door = door,
-            onDismiss = { previewDoor = null },
-        )
-    }
-}
-
-@Composable
-fun DoorImageDialog(door: Door, onDismiss: () -> Unit) {
-    val images = door.imageUrl.ifEmpty { listOf<String>() }
-    Dialog(
-        onDismissRequest =
-        onDismiss,
-        properties = DialogProperties(usePlatformDefaultWidth = false),
-    ) {
-        Box(Modifier.fillMaxWidth()) {
-            val pagerState =
-                rememberPagerState(pageCount = { images.size })
-            HorizontalPager(
-                state =
-                pagerState,
-                modifier = Modifier.fillMaxWidth(),
-            ) { page ->
-                TransformableImage(
-                    modifier = Modifier.fillMaxWidth(),
-                    images.getOrNull(page),
-                )
-            }
-            if (images.size > 1) {
-                Text(
-                    text = "${pagerState.currentPage + 1}/${images.size}",
-                    color = Color.White,
-                    modifier = Modifier
-                        .align(Alignment.BottomCenter)
-                        .padding(bottom = 16.dp),
-                    textAlign = TextAlign.Center,
-                    style = KUBFAndroidTheme.typography.medium13,
-                )
+                door.imageUrl.firstOrNull()?.let { imageUrl ->
+                    onImageClick(imageUrl)
+                }
             }
         }
     }
@@ -128,7 +80,7 @@ fun DoorCard(door: Door, onClick: () -> Unit) {
                     .size(80.dp),
             ) {
                 AsyncImage(
-                    model = door.imageUrl.first(),
+                    model = door.imageUrl.firstOrNull(),
                     contentDescription = "${door.label}",
                     modifier = Modifier
                         .matchParentSize()
@@ -147,7 +99,7 @@ fun DoorCard(door: Door, onClick: () -> Unit) {
                         .wrapContentWidth(),
                     contentAlignment = Alignment.Center,
                 ) {
-                    Text( // 출입문 이름
+                    Text(
                         text = door.label,
                         style = KUBFAndroidTheme.typography.medium14,
                         color = Color.White,

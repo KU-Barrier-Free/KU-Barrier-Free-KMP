@@ -5,6 +5,8 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -15,69 +17,68 @@ import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.onGloballyPositioned
-import androidx.compose.ui.layout.onSizeChanged
-import androidx.compose.ui.unit.IntSize
 import coil3.compose.AsyncImage
 import kotlin.math.absoluteValue
 
 @Composable
 fun TransformableImage(
     modifier: Modifier = Modifier,
-    imageUrl: String?,
+    screenWidth: Int,
+    screenHeight: Int,
+    imageUrl: String,
 ) {
-    var containerSize by remember { mutableStateOf(IntSize.Zero) }
-    var imageSize by remember { mutableStateOf(IntSize.Zero) }
-    var scale by remember { mutableStateOf(1f) }
+    var imageWidth by remember { mutableIntStateOf(0) }
+    var imageHeight by remember { mutableIntStateOf(0) }
+
+    var scale by remember { mutableFloatStateOf(1f) }
     var offset by remember { mutableStateOf(Offset.Zero) }
-    val scaledWidth by remember(imageSize, scale) { derivedStateOf { imageSize.width * scale } }
-    val scaledHeight by remember(imageSize, scale) { derivedStateOf { imageSize.height * scale } }
+
+    val scaledWidth by remember(imageWidth, scale) { derivedStateOf { imageWidth * scale } }
+    val scaledHeight by remember(imageHeight, scale) { derivedStateOf { imageHeight * scale } }
     val imageRect by remember(
-        scaledHeight,
         scaledWidth,
+        scaledHeight,
         offset,
-        containerSize,
     ) {
         derivedStateOf {
-            val cx = containerSize.width / 2f
-            val cy = containerSize.height / 2f
             Rect(
                 offset = Offset(
-                    x = cx - scaledWidth / 2f + offset.x,
-                    y = cy - scaledHeight / 2f + offset.y,
+                    x = ((screenWidth - scaledWidth) / 2f + offset.x).coerceAtLeast(0f),
+                    y = ((screenHeight - scaledHeight) / 2f + offset.y).coerceAtLeast(0f),
                 ),
                 size = Size(scaledWidth, scaledHeight),
             )
         }
     }
+
     Box(
         modifier = modifier
-            .onSizeChanged { containerSize = it }
             .pointerInput(Unit) {
-                detectTransformGestures { centroid, panChange, zoomChange, _ ->
+                detectTransformGestures { centroid, offsetChange, zoomChange, _ ->
                     if (!imageRect.contains(centroid)) return@detectTransformGestures
                     if (zoomChange != 1f) {
-                        val newScale = (scale * zoomChange).coerceAtLeast(1f)
-                        val currentCenter = Offset(
-                            x = containerSize.width / 2f + offset.x,
-                            y = containerSize.height / 2f + offset.y,
+                        val newScale = (scale * zoomChange).coerceAtLeast(minimumValue = 1f)
+                        val currentImageCenter = Offset(
+                            x = screenWidth / 2f + offset.x,
+                            y = screenHeight / 2f + offset.y,
                         )
-                        val relative = centroid - currentCenter
+
+                        val relativePoint = centroid - currentImageCenter
+
                         val scaleChange = newScale / scale
-                        var newOffsetX = offset.x + relative.x * (1f - scaleChange)
-                        var newOffsetY = offset.y + relative.y * (1f - scaleChange)
-                        newOffsetX += panChange.x
-                        newOffsetY += panChange.y
+                        var newOffsetX = offset.x + relativePoint.x * (1f - scaleChange)
+                        var newOffsetY = offset.y + relativePoint.y * (1f - scaleChange)
+                        newOffsetX += offsetChange.x
+                        newOffsetY += offsetChange.y
+
                         scale = newScale
+
                         val maxOffsetX =
-                            ((imageSize.width * newScale - containerSize.width) / 2f).coerceAtLeast(
-                                0f,
-                            )
+                            ((imageWidth * newScale - screenWidth) / 2f).coerceAtLeast(0f)
                         val maxOffsetY =
-                            ((imageSize.height * newScale - containerSize.height) / 2f).coerceAtLeast(
-                                0f,
-                            )
+                            ((imageHeight * newScale - screenHeight) / 2f).coerceAtLeast(0f)
+
                         offset = if (newScale == 1f) {
                             Offset.Zero
                         } else {
@@ -86,17 +87,24 @@ fun TransformableImage(
                                 y = newOffsetY.coerceIn(-maxOffsetY, maxOffsetY),
                             )
                         }
+
                         return@detectTransformGestures
                     }
-                    val maxOffsetX = ((scaledWidth - containerSize.width) / 2f).absoluteValue
-                    val maxOffsetY =
-                        ((scaledHeight - containerSize.height) / 2f).absoluteValue
+
+                    val maxOffsetX = ((scaledWidth - screenWidth) / 2f).absoluteValue
+                    val maxOffsetY = ((scaledHeight - screenHeight) / 2f).absoluteValue
                     offset = if (scale == 1f) {
                         Offset.Zero
                     } else {
                         Offset(
-                            x = (offset.x + panChange.x).coerceIn(-maxOffsetX, maxOffsetX),
-                            y = (offset.y + panChange.y).coerceIn(-maxOffsetY, maxOffsetY),
+                            x = (offset.x + offsetChange.x).coerceIn(
+                                -maxOffsetX,
+                                maxOffsetX,
+                            ),
+                            y = (offset.y + offsetChange.y).coerceIn(
+                                -maxOffsetY,
+                                maxOffsetY,
+                            ),
                         )
                     }
                 }
@@ -104,17 +112,19 @@ fun TransformableImage(
     ) {
         AsyncImage(
             modifier = Modifier
-                .align(Alignment.Center)
                 .graphicsLayer(
                     scaleX = scale,
                     scaleY = scale,
                     translationX = offset.x,
                     translationY = offset.y,
                 )
-                .onGloballyPositioned { coord -> imageSize = coord.size },
+                .align(Alignment.Center)
+                .onGloballyPositioned { layoutCoordinates ->
+                    imageWidth = layoutCoordinates.size.width
+                    imageHeight = layoutCoordinates.size.height
+                },
             model = imageUrl,
-            contentDescription = null,
-            contentScale = ContentScale.Fit,
+            contentDescription = "",
         )
     }
 }

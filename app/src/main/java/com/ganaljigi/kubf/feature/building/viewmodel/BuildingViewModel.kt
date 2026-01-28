@@ -1,9 +1,12 @@
 package com.ganaljigi.kubf.feature.building.viewmodel
 
 import androidx.compose.ui.text.input.TextFieldValue
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.toRoute
 import com.ganaljigi.kubf.core.data.repository.BuildingInfoRepository
+import com.ganaljigi.kubf.core.navigation.Routes
+import com.ganaljigi.kubf.core.ui.viewmodel.BaseViewModel
 import com.ganaljigi.kubf.feature.building.model.Room
 import com.ganaljigi.kubf.feature.building.model.RoomSearchResult
 import kotlinx.collections.immutable.persistentListOf
@@ -16,17 +19,48 @@ import org.koin.android.annotation.KoinViewModel
 
 @KoinViewModel
 class BuildingViewModel(
-    private val repo: BuildingInfoRepository,
-) : ViewModel() {
-    private val _uiState: MutableStateFlow<BuildingUIState> = MutableStateFlow(BuildingUIState())
+    savedStateHandle: SavedStateHandle,
+    private val buildingInfoRepository: BuildingInfoRepository,
+) : BaseViewModel<BuildingUiEvent>() {
+
+    private val buildingId: Long = savedStateHandle.toRoute<Routes.BuildingInfo>().number
+
+    private val _uiState: MutableStateFlow<BuildingUiState> = MutableStateFlow(BuildingUiState())
     val uiState = _uiState.asStateFlow()
 
     private var sourceRoom: List<Room> = emptyList()
 
-    fun init(buildingId: Long) {
+    init {
+        loadBuildingInfo()
+    }
+
+    fun onBuildingUiAction(action: BuildingUiAction) {
+        when (action) {
+            is BuildingUiAction.OnQueryChange -> onQueryChange(action.value)
+            is BuildingUiAction.OnQueryClear -> clearQuery()
+            is BuildingUiAction.OnSearchPopupOpen -> openSearchPopup()
+            is BuildingUiAction.OnSearchPopupClose -> closeSearchPopup()
+            is BuildingUiAction.OnFloorSelect -> onFloorSelect(action.index)
+            is BuildingUiAction.OnRoomClick -> onRoomClick(action.room, action.buildingName)
+            is BuildingUiAction.OnSearchResultClick -> onSearchResultClick(action.result)
+            is BuildingUiAction.OnNoteImageClick -> onNoteImageClick(action.imageUrl)
+            is BuildingUiAction.OnImageDialogClose -> closeImageDialog()
+            is BuildingUiAction.OnBackClick -> onBackClick()
+        }
+    }
+
+    private fun loadBuildingInfo() {
         viewModelScope.launch {
-            _uiState.update { it.copy(isSearching = false) }
-            runCatching { repo.fetchBuildingSpaces(buildingId) }
+            _uiState.update {
+                it.copy(
+                    isLoading = true,
+                    isSearchPopupVisible = false,
+                    query = TextFieldValue(""),
+                    searchResults = persistentListOf(),
+                    selectedFloorIndex = 0,
+                )
+            }
+            runCatching { buildingInfoRepository.fetchBuildingSpaces(buildingId) }
                 .onSuccess { (info, total) ->
                     sourceRoom = total.floorList.flatMap { it.rooms }
                     _uiState.update {
@@ -35,19 +69,82 @@ class BuildingViewModel(
                             currentBuildingName = info.name,
                             buildingInfo = info,
                             totalFloor = total,
+                            isLoading = false,
                         )
                     }
+                }
+                .onFailure {
+                    _uiState.update { it.copy(isLoading = false) }
+                    sendEvent(BuildingUiEvent.ShowToast("건물 정보를 불러오는데 실패했습니다"))
                 }
         }
     }
 
-    fun onQueryChange(v: TextFieldValue) {
-        _uiState.update { it.copy(query = v) }
+    private fun onQueryChange(value: TextFieldValue) {
+        _uiState.update { it.copy(query = value) }
         refreshResults()
     }
 
-    fun clearQuery() {
-        _uiState.update { it.copy(query = TextFieldValue(), result = persistentListOf()) }
+    private fun clearQuery() {
+        _uiState.update { it.copy(query = TextFieldValue(), searchResults = persistentListOf()) }
+    }
+
+    private fun openSearchPopup() {
+        _uiState.update { it.copy(isSearchPopupVisible = true) }
+    }
+
+    private fun closeSearchPopup() {
+        _uiState.update {
+            it.copy(
+                isSearchPopupVisible = false,
+                query = TextFieldValue(""),
+                searchResults = persistentListOf(),
+            )
+        }
+    }
+
+    private fun onFloorSelect(index: Int) {
+        _uiState.update { it.copy(selectedFloorIndex = index) }
+        viewModelScope.launch { sendEvent(BuildingUiEvent.ScrollToFloorTab(index)) }
+    }
+
+    private fun onRoomClick(room: Room, buildingName: String) {
+        viewModelScope.launch { sendEvent(BuildingUiEvent.NavigateToRoomInfo(room, buildingName)) }
+    }
+
+    private fun onSearchResultClick(result: RoomSearchResult) {
+        result.room?.let { room ->
+            viewModelScope.launch {
+                sendEvent(
+                    BuildingUiEvent.NavigateToRoomInfo(
+                        room = room,
+                        buildingName = _uiState.value.currentBuildingName,
+                    ),
+                )
+            }
+        }
+    }
+
+    private fun onNoteImageClick(imageUrl: String) {
+        _uiState.update {
+            it.copy(
+                isImageDialogVisible = true,
+                selectedImageUrl = imageUrl,
+            )
+        }
+    }
+
+    private fun closeImageDialog() {
+        _uiState.update {
+            it.copy(
+                isImageDialogVisible = false,
+                selectedImageUrl = null,
+            )
+        }
+    }
+
+    private fun onBackClick() {
+        viewModelScope.launch { sendEvent(BuildingUiEvent.NavigateBack) }
     }
 
     private fun roomNumberKey(num: String?): Int {
@@ -58,10 +155,10 @@ class BuildingViewModel(
     private fun refreshResults() {
         val q = _uiState.value.query.text.trim()
         if (q.isBlank()) {
-            _uiState.update { it.copy(result = persistentListOf()) }
+            _uiState.update { it.copy(searchResults = persistentListOf()) }
             return
         }
-        val roomSearchResults: List<RoomSearchResult> =
+        val roomSearchResults =
             sourceRoom.asSequence()
                 .filter { r ->
                     val name = r.name.orEmpty()
@@ -87,6 +184,6 @@ class BuildingViewModel(
                 }
                 .take(50)
                 .toPersistentList()
-        _uiState.update { it.copy(result = roomSearchResults) }
+        _uiState.update { it.copy(searchResults = roomSearchResults) }
     }
 }

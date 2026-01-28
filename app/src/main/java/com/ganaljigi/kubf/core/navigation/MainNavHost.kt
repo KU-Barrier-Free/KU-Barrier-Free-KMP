@@ -61,17 +61,18 @@ fun MainNavHost(
         }
 
         composable<Routes.BuildingInfo> { navBackStackEntry ->
-            val buildingId = navBackStackEntry.toRoute<Routes.BuildingInfo>().number
+            val route = navBackStackEntry.toRoute<Routes.BuildingInfo>()
 
             BuildingInfoScreen(
-                buildingId = buildingId,
                 onRoomClick = { room, buildingName ->
-                    navController.navigate(Routes.RoomInfo(
-                        buildingId = buildingId,
-                        spaceId = room.id,
-                        type = if (room.isLecture) 1 else 0,
-                        buildingName = buildingName,
-                    ))
+                    navController.navigate(
+                        Routes.RoomInfo(
+                            buildingId = route.number,
+                            spaceId = room.id,
+                            type = if (room.isLecture) 1 else 0,
+                            buildingName = buildingName,
+                        ),
+                    )
                 },
                 onBack = { navController.popBackStack() },
             )

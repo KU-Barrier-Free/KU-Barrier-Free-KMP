@@ -1,9 +1,9 @@
 package com.ganaljigi.kubf.core.network.api
 
 import com.ganaljigi.kubf.core.network.response.BaseResponse
-import com.ganaljigi.kubf.feature.building.response.BuildingDto
-import com.ganaljigi.kubf.feature.building.response.SearchResponseDto
-import com.ganaljigi.kubf.feature.building.response.SpacesDto
+import com.ganaljigi.kubf.core.network.response.building.BuildingDto
+import com.ganaljigi.kubf.core.network.response.building.SearchResponseDto
+import com.ganaljigi.kubf.core.network.response.building.SpacesDto
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.get
