@@ -3,7 +3,7 @@ package com.ganaljigi.kubf.core.data.repositoryimpl
 import com.ganaljigi.kubf.core.data.repository.BuildingRepository
 import com.ganaljigi.kubf.core.network.api.BuildingApi
 import com.ganaljigi.kubf.core.network.response.handleBaseResponse
-import com.ganaljigi.kubf.feature.building.response.BuildingDto
+import com.ganaljigi.kubf.core.network.response.building.BuildingDto
 import org.koin.core.annotation.Single
 
 @Single
