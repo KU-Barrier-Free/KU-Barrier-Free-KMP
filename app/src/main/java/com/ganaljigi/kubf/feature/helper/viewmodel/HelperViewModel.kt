@@ -1,14 +1,11 @@
 package com.ganaljigi.kubf.feature.helper.viewmodel
 
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.ganaljigi.kubf.core.ui.viewmodel.BaseViewModel
 import com.ganaljigi.kubf.feature.helper.mapper.toUiState
 import com.ganaljigi.kubf.feature.helper.repository.HelperRepository
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.onStart
-import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.koin.android.annotation.KoinViewModel
@@ -19,31 +16,34 @@ import java.util.Locale
 @KoinViewModel
 class HelperViewModel(
     private val repository: HelperRepository,
-) : ViewModel() {
+) : BaseViewModel<HelperUiEvent>() {
 
     private val _uiState = MutableStateFlow(HelperUiState())
-    val uiState: StateFlow<HelperUiState> = _uiState
-        .onStart { loadNotices() }
-        .stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5_000),
-            initialValue = HelperUiState(),
-        )
+    val uiState = _uiState.asStateFlow()
 
     private val dateFmt = DateTimeFormatter.ofPattern("yyyy.MM.dd", Locale.KOREA)
-    private fun String.toLocalDateOrMin(): LocalDate =
-        runCatching { LocalDate.parse(this, dateFmt) }.getOrElse { LocalDate.MIN }
 
-    fun loadNotices() {
+    init {
+        loadNotices()
+    }
+
+    fun onHelperUiAction(action: HelperUiAction) {
+        when (action) {
+            is HelperUiAction.OnBackClick -> onBackClick()
+            is HelperUiAction.OnRetry -> loadNotices()
+            is HelperUiAction.OnNoticeClick -> onNoticeClick(action.url)
+            is HelperUiAction.OnDisableStudentHelperClick -> onDisableStudentHelperClick()
+            is HelperUiAction.OnSupportClick -> onSupportClick()
+            is HelperUiAction.OnJobInformationClick -> onJobInformationClick()
+        }
+    }
+
+    private fun loadNotices() {
         viewModelScope.launch {
             _uiState.update { it.copy(isLoading = true, error = null) }
             repository.fetchNotices().fold(
                 onSuccess = { dto ->
                     val mapped = dto.toUiState()
-
-                    val dateFmt = DateTimeFormatter.ofPattern("yyyy.MM.dd", Locale.KOREA)
-                    fun String.toLocalDateOrMin() =
-                        runCatching { LocalDate.parse(this, dateFmt) }.getOrElse { LocalDate.MIN }
 
                     val top3 = mapped.notices
                         .sortedByDescending { it.date.toLocalDateOrMin() }
@@ -56,10 +56,32 @@ class HelperViewModel(
                 },
                 onFailure = { e ->
                     _uiState.update { it.copy(isLoading = false, error = e.message ?: "") }
+                    sendEvent(HelperUiEvent.ShowToast("공지사항을 불러오는데 실패했습니다"))
                 },
             )
         }
     }
 
-    fun retry() = loadNotices()
+    private fun onBackClick() {
+        viewModelScope.launch { sendEvent(HelperUiEvent.NavigateBack) }
+    }
+
+    private fun onNoticeClick(url: String) {
+        viewModelScope.launch { sendEvent(HelperUiEvent.OpenUrl(url)) }
+    }
+
+    private fun onDisableStudentHelperClick() {
+        viewModelScope.launch { sendEvent(HelperUiEvent.NavigateToDisableStudentHelper) }
+    }
+
+    private fun onSupportClick() {
+        viewModelScope.launch { sendEvent(HelperUiEvent.NavigateToSupport) }
+    }
+
+    private fun onJobInformationClick() {
+        viewModelScope.launch { sendEvent(HelperUiEvent.NavigateToJobInformation) }
+    }
+
+    private fun String.toLocalDateOrMin(): LocalDate =
+        runCatching { LocalDate.parse(this, dateFmt) }.getOrElse { LocalDate.MIN }
 }
