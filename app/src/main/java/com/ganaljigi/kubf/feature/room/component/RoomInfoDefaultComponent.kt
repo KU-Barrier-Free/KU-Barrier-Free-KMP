@@ -1,11 +1,10 @@
 package com.ganaljigi.kubf.feature.room.component
 
-import android.content.ClipData
-import android.content.ClipboardManager
-import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.widget.Toast
+import com.ganaljigi.kubf.core.ui.util.copyToClipboard
+import com.ganaljigi.kubf.core.ui.util.normalizeForDial
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -471,22 +470,6 @@ fun DepartmentPhoneRow(
             }
         }
     }
-}
-
-/** 숫자/앞자리 + 허용. 나머지 제거해서 다이얼러가 확실히 인식하도록. */
-// 지피띠니가 해줌ㅋ
-private fun normalizeForDial(raw: String): String {
-    val t = raw.trim()
-    val out = StringBuilder()
-    t.forEachIndexed { i, c ->
-        if (c.isDigit() || (i == 0 && c == '+')) out.append(c)
-    }
-    return out.toString()
-}
-
-private fun copyToClipboard(ctx: Context, text: String) {
-    val cm = ctx.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-    cm.setPrimaryClip(ClipData.newPlainText("전화번호", text))
 }
 
 @Preview(showBackground = true)

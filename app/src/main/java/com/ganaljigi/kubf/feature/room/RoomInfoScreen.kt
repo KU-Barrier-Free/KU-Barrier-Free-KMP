@@ -21,8 +21,8 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import com.ganaljigi.kubf.core.ui.util.ObserveAsEvents
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -56,13 +56,11 @@ fun RoomInfoScreen(
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val context = LocalContext.current
 
-    LaunchedEffect(Unit) {
-        viewModel.uiEvent.collect { event ->
-            when (event) {
-                is RoomInfoUiEvent.NavigateBack -> onBackClick()
-                is RoomInfoUiEvent.ShowToast -> {
-                    Toast.makeText(context, event.message, Toast.LENGTH_SHORT).show()
-                }
+    ObserveAsEvents(viewModel.uiEvent) { event ->
+        when (event) {
+            is RoomInfoUiEvent.NavigateBack -> onBackClick()
+            is RoomInfoUiEvent.ShowToast -> {
+                Toast.makeText(context, event.message, Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -242,7 +240,7 @@ private fun RoomInfoScreenPreview() {
 @Preview(showBackground = true)
 @Composable
 private fun RoomInfoScreenNoPicPreview() {
-    RoomInfoScreen(
+    RoomInfoContent(
         uiState = RoomInfoUiState(
             buildingName = "과학관",
             roomPicUrls = emptyList(),
@@ -259,6 +257,6 @@ private fun RoomInfoScreenNoPicPreview() {
             departmentNumber = "02-450-1234",
             hasRoomInfo = true,
         ),
-        onBackClick = {},
+        onRoomInfoUiAction = {},
     )
 }

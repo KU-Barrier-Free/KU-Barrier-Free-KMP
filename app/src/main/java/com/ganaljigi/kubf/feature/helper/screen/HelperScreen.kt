@@ -12,8 +12,8 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import com.ganaljigi.kubf.core.ui.util.ObserveAsEvents
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -48,17 +48,15 @@ fun HelperScreen(
     val context = LocalContext.current
     val uriHandler = LocalUriHandler.current
 
-    LaunchedEffect(Unit) {
-        viewModel.uiEvent.collect { event ->
-            when (event) {
-                is HelperUiEvent.NavigateBack -> onBackClick()
-                is HelperUiEvent.NavigateToDisableStudentHelper -> navigateToDisableStudentHelper()
-                is HelperUiEvent.NavigateToSupport -> navigateToSupport()
-                is HelperUiEvent.NavigateToJobInformation -> navigateToJobInformation()
-                is HelperUiEvent.OpenUrl -> uriHandler.openUri(event.url)
-                is HelperUiEvent.ShowToast -> {
-                    Toast.makeText(context, event.message, Toast.LENGTH_SHORT).show()
-                }
+    ObserveAsEvents(viewModel.uiEvent) { event ->
+        when (event) {
+            is HelperUiEvent.NavigateBack -> onBackClick()
+            is HelperUiEvent.NavigateToDisableStudentHelper -> navigateToDisableStudentHelper()
+            is HelperUiEvent.NavigateToSupport -> navigateToSupport()
+            is HelperUiEvent.NavigateToJobInformation -> navigateToJobInformation()
+            is HelperUiEvent.OpenUrl -> uriHandler.openUri(event.url)
+            is HelperUiEvent.ShowToast -> {
+                Toast.makeText(context, event.message, Toast.LENGTH_SHORT).show()
             }
         }
     }

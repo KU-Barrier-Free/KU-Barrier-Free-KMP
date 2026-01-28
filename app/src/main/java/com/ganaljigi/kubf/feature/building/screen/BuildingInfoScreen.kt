@@ -1,5 +1,6 @@
 package com.ganaljigi.kubf.feature.building.screen
 
+import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
@@ -32,7 +33,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
@@ -41,7 +41,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import android.widget.Toast
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
@@ -59,6 +58,7 @@ import com.ganaljigi.kubf.core.designsystem.theme.Gray3
 import com.ganaljigi.kubf.core.designsystem.theme.Gray4
 import com.ganaljigi.kubf.core.designsystem.theme.KUBFAndroidTheme
 import com.ganaljigi.kubf.core.designsystem.theme.MainGreen
+import com.ganaljigi.kubf.core.ui.util.ObserveAsEvents
 import com.ganaljigi.kubf.feature.building.component.DoorComponent
 import com.ganaljigi.kubf.feature.building.component.FacilityComponent
 import com.ganaljigi.kubf.feature.building.component.FloorComponent
@@ -83,17 +83,15 @@ fun BuildingInfoScreen(
     val scope = rememberCoroutineScope()
     val context = LocalContext.current
 
-    LaunchedEffect(Unit) {
-        viewModel.uiEvent.collect { event ->
-            when (event) {
-                is BuildingUiEvent.NavigateBack -> onBack()
-                is BuildingUiEvent.NavigateToRoomInfo -> onRoomClick(event.room, event.buildingName)
-                is BuildingUiEvent.ShowToast -> {
-                    Toast.makeText(context, event.message, Toast.LENGTH_SHORT).show()
-                }
-                is BuildingUiEvent.ScrollToFloorTab -> {
-                    scope.launch { listState.animateScrollToItem(1) }
-                }
+    ObserveAsEvents(viewModel.uiEvent) { event ->
+        when (event) {
+            is BuildingUiEvent.NavigateBack -> onBack()
+            is BuildingUiEvent.NavigateToRoomInfo -> onRoomClick(event.room, event.buildingName)
+            is BuildingUiEvent.ShowToast -> {
+                Toast.makeText(context, event.message, Toast.LENGTH_SHORT).show()
+            }
+            is BuildingUiEvent.ScrollToFloorTab -> {
+                scope.launch { listState.animateScrollToItem(1) }
             }
         }
     }
