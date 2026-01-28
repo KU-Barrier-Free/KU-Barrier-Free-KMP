@@ -27,27 +27,27 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import org.koin.androidx.compose.koinViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ganaljigi.kubf.core.designsystem.component.KUBFSearchBar
 import com.ganaljigi.kubf.core.designsystem.theme.Gray3
 import com.ganaljigi.kubf.core.designsystem.theme.KUBFAndroidTheme
 import com.ganaljigi.kubf.core.designsystem.theme.MainGreen
-import com.ganaljigi.kubf.feature.building.model.RoomSearchResult
+import com.ganaljigi.kubf.feature.building.viewmodel.BuildingUiAction
 import com.ganaljigi.kubf.feature.building.viewmodel.BuildingViewModel
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun SearchPopup(
     viewModel: BuildingViewModel = koinViewModel(),
-    onRoomClick: (RoomSearchResult) -> Unit,
+    onBuildingUiAction: (BuildingUiAction) -> Unit,
 ) {
-    val ui by viewModel.uiState.collectAsStateWithLifecycle()
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     val interactionSource = remember { MutableInteractionSource() }
     val isFocused = interactionSource.collectIsFocusedAsState().value
 
-    val hasQuery = ui.query.text.isNotBlank()
-    val hasResult = ui.result.isNotEmpty()
+    val hasQuery = uiState.query.text.isNotBlank()
+    val hasResult = uiState.searchResults.isNotEmpty()
 
     val expanded = isFocused || hasQuery
 
@@ -75,12 +75,16 @@ fun SearchPopup(
             }
             KUBFSearchBar(
                 modifier = Modifier.padding(horizontal = 16.dp),
-                value = ui.query,
-                onValueChange = viewModel::onQueryChange,
+                value = uiState.query,
+                onValueChange = { value ->
+                    onBuildingUiAction(BuildingUiAction.OnQueryChange(value))
+                },
                 placeHolderText = "강의실명, 호실 검색",
                 interactionSource = interactionSource,
                 isFocused = isFocused,
-                onValueCleared = { viewModel.clearQuery() },
+                onValueCleared = {
+                    onBuildingUiAction(BuildingUiAction.OnQueryClear)
+                },
             )
 
             // 결과 개수: 0이면 숨김
@@ -89,7 +93,7 @@ fun SearchPopup(
                 Row(Modifier.padding(horizontal = 16.dp)) {
                     Text("결과 ", style = KUBFAndroidTheme.typography.regular13, color = Gray3)
                     Text(
-                        "${ui.result.size}",
+                        "${uiState.searchResults.size}",
                         style = KUBFAndroidTheme.typography.regular13,
                         color = MainGreen,
                     )
@@ -131,12 +135,12 @@ fun SearchPopup(
                             contentPadding = PaddingValues(bottom = 8.dp),
                         ) {
                             items(
-                                items = ui.result,
+                                items = uiState.searchResults,
                                 key = { it.id },
                             ) { item ->
                                 val room = item.room ?: return@items
                                 RoomComponent(room = room) {
-                                    onRoomClick(item)
+                                    onBuildingUiAction(BuildingUiAction.OnSearchResultClick(item))
                                 }
                             }
                         }

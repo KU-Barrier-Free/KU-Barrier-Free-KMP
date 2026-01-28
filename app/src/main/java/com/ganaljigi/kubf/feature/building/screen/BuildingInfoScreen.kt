@@ -1,7 +1,11 @@
 package com.ganaljigi.kubf.feature.building.screen
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -9,9 +13,11 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -28,63 +34,68 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
-import org.koin.androidx.compose.koinViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.AsyncImage
 import com.ganalijigi.kubf.R
+import com.ganaljigi.kubf.core.designsystem.component.TransformableImage
+import com.ganaljigi.kubf.core.designsystem.theme.Gray3
+import com.ganaljigi.kubf.core.designsystem.theme.Gray4
+import com.ganaljigi.kubf.core.designsystem.theme.KUBFAndroidTheme
+import com.ganaljigi.kubf.core.designsystem.theme.MainGreen
 import com.ganaljigi.kubf.feature.building.component.DoorComponent
 import com.ganaljigi.kubf.feature.building.component.FacilityComponent
 import com.ganaljigi.kubf.feature.building.component.FloorComponent
 import com.ganaljigi.kubf.feature.building.component.NoteComponent
 import com.ganaljigi.kubf.feature.building.component.SearchPopup
 import com.ganaljigi.kubf.feature.building.model.Room
-import com.ganaljigi.kubf.core.designsystem.component.TransformableImage
+import com.ganaljigi.kubf.feature.building.viewmodel.BuildingUiAction
+import com.ganaljigi.kubf.feature.building.viewmodel.BuildingUiEvent
 import com.ganaljigi.kubf.feature.building.viewmodel.BuildingViewModel
-import com.ganaljigi.kubf.core.designsystem.theme.Gray3
-import com.ganaljigi.kubf.core.designsystem.theme.Gray4
-import com.ganaljigi.kubf.core.designsystem.theme.KUBFAndroidTheme
-import com.ganaljigi.kubf.core.designsystem.theme.MainGreen
 import kotlinx.coroutines.launch
+import org.koin.androidx.compose.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
 fun BuildingInfoScreen(
-    buildingId: Long,
     onBack: () -> Unit,
     onRoomClick: (Room, String) -> Unit,
     viewModel: BuildingViewModel = koinViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-    LaunchedEffect(buildingId) {
-        viewModel.init(buildingId)
-        viewModel.clearQuery()
-    }
-    var selectedIndex by rememberSaveable { mutableIntStateOf(0) }
-    val floors = uiState.totalFloor.floorList
     val listState = rememberLazyListState()
     val scope = rememberCoroutineScope()
 
-    val safeIndex = selectedIndex.coerceIn(0, (floors.size - 1).coerceAtLeast(0))
-    val current = floors.getOrNull(safeIndex)
+    LaunchedEffect(Unit) {
+        viewModel.uiEvent.collect { event ->
+            when (event) {
+                is BuildingUiEvent.NavigateBack -> onBack()
+                is BuildingUiEvent.NavigateToRoomInfo -> onRoomClick(event.room, event.buildingName)
+                is BuildingUiEvent.ShowToast -> { /* Toast 표시 */ }
+                is BuildingUiEvent.ScrollToFloorTab -> {
+                    scope.launch { listState.animateScrollToItem(1) }
+                }
+            }
+        }
+    }
 
-    var showSearchPopup by remember { mutableStateOf(false) }
-    var selectedImageUrl by remember { mutableStateOf<String?>(null) }
+    val floors = uiState.totalFloor.floorList
+    val safeIndex = uiState.selectedFloorIndex.coerceIn(0, (floors.size - 1).coerceAtLeast(0))
+    val current = floors.getOrNull(safeIndex)
 
     if (floors.isEmpty()) {
         Scaffold(
@@ -92,7 +103,11 @@ fun BuildingInfoScreen(
             topBar = {
                 TopAppBar(
                     navigationIcon = {
-                        IconButton(onClick = onBack) {
+                        IconButton(
+                            onClick = {
+                                viewModel.onBuildingUiAction(BuildingUiAction.OnBackClick)
+                            },
+                        ) {
                             Icon(
                                 painter = painterResource(R.drawable.ic_backarrow),
                                 contentDescription = "뒤로가기",
@@ -110,9 +125,11 @@ fun BuildingInfoScreen(
                         )
                     },
                     actions = {
-                        IconButton(onClick = {
-                            showSearchPopup = true
-                        }) {
+                        IconButton(
+                            onClick = {
+                                viewModel.onBuildingUiAction(BuildingUiAction.OnSearchPopupOpen)
+                            },
+                        ) {
                             Icon(
                                 painter = painterResource(R.drawable.ic_search_bar_leading),
                                 contentDescription = "검색",
@@ -135,15 +152,14 @@ fun BuildingInfoScreen(
                 CircularProgressIndicator()
             }
 
-            if (showSearchPopup) {
+            if (uiState.isSearchPopupVisible) {
                 Dialog(
                     onDismissRequest = {
-                        showSearchPopup = false
-                        viewModel.clearQuery()
+                        viewModel.onBuildingUiAction(BuildingUiAction.OnSearchPopupClose)
                     },
                 ) {
                     SearchPopup(
-                        onRoomClick = {},
+                        onBuildingUiAction = viewModel::onBuildingUiAction,
                     )
                 }
             }
@@ -154,10 +170,14 @@ fun BuildingInfoScreen(
     Scaffold(
         containerColor = Color.White,
         topBar = {
-            if (selectedImageUrl == null) {
+            if (!uiState.isImageDialogVisible) {
                 TopAppBar(
                     navigationIcon = {
-                        IconButton(onClick = onBack) {
+                        IconButton(
+                            onClick = {
+                                viewModel.onBuildingUiAction(BuildingUiAction.OnBackClick)
+                            },
+                        ) {
                             Icon(
                                 painter = painterResource(R.drawable.ic_backarrow),
                                 contentDescription = "뒤로가기",
@@ -178,9 +198,11 @@ fun BuildingInfoScreen(
                         )
                     },
                     actions = {
-                        IconButton(onClick = {
-                            showSearchPopup = true
-                        }) {
+                        IconButton(
+                            onClick = {
+                                viewModel.onBuildingUiAction(BuildingUiAction.OnSearchPopupOpen)
+                            },
+                        ) {
                             Icon(
                                 painter = painterResource(R.drawable.ic_search_bar_leading),
                                 contentDescription = "검색",
@@ -203,7 +225,12 @@ fun BuildingInfoScreen(
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(200.dp),
+                        .height(200.dp)
+                        .clickable {
+                            uiState.buildingInfo.imageUrl?.takeIf { it.isNotBlank() }?.let { url ->
+                                viewModel.onBuildingUiAction(BuildingUiAction.OnNoteImageClick(url))
+                            }
+                        },
                 ) {
                     AsyncImage(
                         model = uiState.buildingInfo.imageUrl,
@@ -264,7 +291,12 @@ fun BuildingInfoScreen(
                     modifier = Modifier.padding(horizontal = 16.dp),
                 )
                 Spacer(modifier = Modifier.height(12.dp))
-                DoorComponent(doors = uiState.buildingInfo.doors)
+                DoorComponent(
+                    doors = uiState.buildingInfo.doors,
+                    onImageClick = { imageUrl ->
+                        viewModel.onBuildingUiAction(BuildingUiAction.OnNoteImageClick(imageUrl))
+                    },
+                )
                 Spacer(Modifier.height(20.dp))
                 if (uiState.buildingInfo.notes.isNotEmpty()) {
                     Text(
@@ -277,7 +309,9 @@ fun BuildingInfoScreen(
                         NoteComponent(
                             note = note,
                             onImageClick = { imageUrl ->
-                                selectedImageUrl = imageUrl
+                                viewModel.onBuildingUiAction(
+                                    BuildingUiAction.OnNoteImageClick(imageUrl),
+                                )
                             },
                         )
                         if (idx < uiState.buildingInfo.notes.lastIndex)
@@ -296,11 +330,11 @@ fun BuildingInfoScreen(
             stickyHeader {
                 if (uiState.totalFloor.num < 7) {
                     TabRow(
-                        selectedTabIndex = selectedIndex,
+                        selectedTabIndex = safeIndex,
                         indicator = { position ->
                             TabRowDefaults.Indicator(
                                 Modifier
-                                    .tabIndicatorOffset(position[selectedIndex])
+                                    .tabIndicatorOffset(position[safeIndex])
                                     .height(2.dp),
                                 color = MainGreen,
                             )
@@ -309,19 +343,18 @@ fun BuildingInfoScreen(
                     ) {
                         floors.forEachIndexed { idx, floorInfo ->
                             Tab(
-                                selected = idx == selectedIndex,
+                                selected = idx == safeIndex,
                                 onClick = {
-                                    selectedIndex = idx
-                                    scope.launch {
-                                        listState.scrollToItem(1)
-                                    }
+                                    viewModel.onBuildingUiAction(
+                                        BuildingUiAction.OnFloorSelect(idx),
+                                    )
                                 },
                                 text = {
                                     Text(
                                         text = "${floorInfo.floorLabel}층",
                                         textAlign = TextAlign.Center,
-                                        style = if (idx == selectedIndex) KUBFAndroidTheme.typography.regular14 else KUBFAndroidTheme.typography.medium14,
-                                        color = if (idx == selectedIndex) MainGreen else Gray4,
+                                        style = if (idx == safeIndex) KUBFAndroidTheme.typography.regular14 else KUBFAndroidTheme.typography.medium14,
+                                        color = if (idx == safeIndex) MainGreen else Gray4,
                                     )
                                 },
                             )
@@ -329,11 +362,11 @@ fun BuildingInfoScreen(
                     }
                 } else {
                     ScrollableTabRow(
-                        selectedTabIndex = selectedIndex,
+                        selectedTabIndex = safeIndex,
                         indicator = { position ->
                             TabRowDefaults.Indicator(
                                 Modifier
-                                    .tabIndicatorOffset(position[selectedIndex])
+                                    .tabIndicatorOffset(position[safeIndex])
                                     .height(2.dp),
                                 color = MainGreen,
                             )
@@ -344,19 +377,18 @@ fun BuildingInfoScreen(
                     ) {
                         floors.forEachIndexed { idx, floorInfo ->
                             Tab(
-                                selected = idx == selectedIndex,
+                                selected = idx == safeIndex,
                                 onClick = {
-                                    selectedIndex = idx
-                                    scope.launch {
-                                        listState.animateScrollToItem(1)
-                                    }
+                                    viewModel.onBuildingUiAction(
+                                        BuildingUiAction.OnFloorSelect(idx),
+                                    )
                                 },
                                 text = {
                                     Text(
                                         text = "${floorInfo.floorLabel}층",
                                         textAlign = TextAlign.Center,
-                                        style = if (idx == selectedIndex) KUBFAndroidTheme.typography.regular14 else KUBFAndroidTheme.typography.medium14,
-                                        color = if (idx == selectedIndex) MainGreen else Gray4,
+                                        style = if (idx == safeIndex) KUBFAndroidTheme.typography.regular14 else KUBFAndroidTheme.typography.medium14,
+                                        color = if (idx == safeIndex) MainGreen else Gray4,
                                     )
                                 },
                             )
@@ -370,53 +402,73 @@ fun BuildingInfoScreen(
                     FloorComponent(
                         current = floor,
                         onRoomClick = { room ->
-                            onRoomClick(room, uiState.buildingInfo.name)
+                            viewModel.onBuildingUiAction(
+                                BuildingUiAction.OnRoomClick(room, uiState.buildingInfo.name),
+                            )
+                        },
+                        onImageClick = { imageUrl ->
+                            viewModel.onBuildingUiAction(
+                                BuildingUiAction.OnNoteImageClick(imageUrl),
+                            )
                         },
                         buildingName = uiState.buildingInfo.name,
                     )
                 }
             }
         }
-        if (showSearchPopup) {
+        if (uiState.isSearchPopupVisible) {
             Dialog(
                 onDismissRequest = {
-                    showSearchPopup = false
-                    viewModel.clearQuery()
+                    viewModel.onBuildingUiAction(BuildingUiAction.OnSearchPopupClose)
                 },
             ) {
                 SearchPopup(
-                    onRoomClick = { result ->
-                        result.room?.let { room ->
-                            onRoomClick(room, uiState.buildingInfo.name)
-                        }
-                    },
+                    onBuildingUiAction = viewModel::onBuildingUiAction,
                 )
             }
         }
+    }
 
-        selectedImageUrl?.let { imageUrl ->
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(Color.Black),
-            ) {
+    val configuration = LocalConfiguration.current
+    val density = LocalDensity.current
+    val screenWidth = with(density) { configuration.screenWidthDp.dp.roundToPx() }
+    val screenHeight = with(density) { configuration.screenHeightDp.dp.roundToPx() }
+
+    AnimatedVisibility(
+        visible = uiState.isImageDialogVisible && uiState.selectedImageUrl != null,
+        enter = slideInVertically(initialOffsetY = { it }),
+        exit = slideOutVertically(targetOffsetY = { it }),
+    ) {
+        Box(
+            modifier = Modifier
+                .background(Color.Black)
+                .systemBarsPadding()
+                .fillMaxSize(),
+        ) {
+            uiState.selectedImageUrl?.let { imageUrl ->
                 TransformableImage(
-                    modifier = Modifier.fillMaxSize(),
-                    imageUrl = imageUrl,
-                )
-                IconButton(
-                    onClick = { selectedImageUrl = null },
                     modifier = Modifier
-                        .align(Alignment.TopEnd)
-                        .padding(16.dp),
-                ) {
-                    Icon(
-                        painter = painterResource(R.drawable.ic_searchbar_close),
-                        contentDescription = "닫기",
-                        tint = Color.White,
-                    )
-                }
+                        .fillMaxSize()
+                        .clipToBounds(),
+                    imageUrl = imageUrl,
+                    screenWidth = screenWidth,
+                    screenHeight = screenHeight,
+                )
             }
+            Icon(
+                modifier = Modifier
+                    .padding(10.dp)
+                    .clip(CircleShape)
+                    .background(Color.Black)
+                    .align(Alignment.TopEnd)
+                    .clickable {
+                        viewModel.onBuildingUiAction(BuildingUiAction.OnImageDialogClose)
+                    }
+                    .padding(16.dp),
+                painter = painterResource(R.drawable.ic_searchbar_close),
+                contentDescription = "닫기",
+                tint = Color.Unspecified,
+            )
         }
     }
 }
@@ -426,7 +478,6 @@ fun BuildingInfoScreen(
 private fun PreviewBuilding() {
     KUBFAndroidTheme {
         BuildingInfoScreen(
-            buildingId = 1,
             onBack = {},
             onRoomClick = { _, _ -> },
         )
