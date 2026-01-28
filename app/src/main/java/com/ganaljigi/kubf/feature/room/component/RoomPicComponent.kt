@@ -284,11 +284,21 @@ private fun PagerCounter(
 
 @Preview(showBackground = true)
 @Composable
-fun RoomPicPreview() {
+private fun RoomPicPreview() {
     RoomPic(
         roomPicUrls = listOf(
             "https://i.pinimg.com/1200x/10/dc/2e/10dc2ece8b542854d0e276a1114d6190.jpg",
             "https://i.pinimg.com/1200x/d9/5e/3f/d95e3f592893bd3df9e62df37c831638.jpg",
+        ),
+    )
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun RoomPicSinglePreview() {
+    RoomPic(
+        roomPicUrls = listOf(
+            "https://i.pinimg.com/1200x/10/dc/2e/10dc2ece8b542854d0e276a1114d6190.jpg",
         ),
     )
 }

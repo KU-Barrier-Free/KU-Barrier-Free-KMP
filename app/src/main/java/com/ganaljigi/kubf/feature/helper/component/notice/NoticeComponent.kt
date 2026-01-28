@@ -97,6 +97,30 @@ fun NoticeItem(
 
 @Preview(showBackground = true)
 @Composable
-fun NoticeBoxPreview() {
+private fun NoticeTitlePreview() {
     NoticeTitle()
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun NoticeItemPreview() {
+    NoticeItem(
+        title = "[KIRD] 포용성장사업_이공계 장애 대학(원)생 경력개발 멘토링 모집 홍보",
+        date = "2025.05.13",
+        number = 47,
+        index = 0,
+        onClick = {},
+    )
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun NoticeItemOddPreview() {
+    NoticeItem(
+        title = "스텝업탐방캠프 2기 참여자 모집",
+        date = "2025.05.13",
+        number = 46,
+        index = 1,
+        onClick = {},
+    )
 }

@@ -18,6 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalUriHandler
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ganalijigi.kubf.R
@@ -32,6 +33,7 @@ import com.ganaljigi.kubf.feature.helper.viewmodel.HelperUiAction
 import com.ganaljigi.kubf.feature.helper.viewmodel.HelperUiEvent
 import com.ganaljigi.kubf.feature.helper.viewmodel.HelperUiState
 import com.ganaljigi.kubf.feature.helper.viewmodel.HelperViewModel
+import com.ganaljigi.kubf.feature.helper.viewmodel.NoticeUi
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -140,4 +142,52 @@ private fun HelperContent(
             Spacer(modifier = Modifier.height(16.dp))
         }
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun HelperContentPreview() {
+    HelperContent(
+        uiState = HelperUiState(
+            notices = listOf(
+                NoticeUi(
+                    title = "[KIRD] 포용성장사업_이공계 장애 대학(원)생 경력개발 멘토링 모집 홍보",
+                    date = "2025.05.13",
+                    url = "",
+                    displayNumber = 47,
+                ),
+                NoticeUi(
+                    title = "스텝업탐방캠프 2기 참여자 모집",
+                    date = "2025.05.13",
+                    url = "",
+                    displayNumber = 46,
+                ),
+                NoticeUi(
+                    title = "2025 동행, 국가유산 '빛나는 우리를 만나다' 역사 기행 참여 안내",
+                    date = "2025.05.13",
+                    url = "",
+                    displayNumber = 45,
+                ),
+            ),
+        ),
+        onHelperUiAction = {},
+    )
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun HelperContentLoadingPreview() {
+    HelperContent(
+        uiState = HelperUiState(isLoading = true),
+        onHelperUiAction = {},
+    )
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun HelperContentErrorPreview() {
+    HelperContent(
+        uiState = HelperUiState(error = "공지사항을 불러오는데 실패했습니다."),
+        onHelperUiAction = {},
+    )
 }
