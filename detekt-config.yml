@@ -1,17 +1,10 @@
-build:
-  excludes: '**/build.gradle.kts'
-
 complexity:
   LongMethod:
     threshold: 100
     ignoreAnnotated: [ 'Composable' ]
-    excludes: [ '**/feature/mypage/**/MyPageNavigation.kt' ]
   CyclomaticComplexMethod:
     threshold: 40
     ignoreAnnotated: [ 'Composable' ]
-    excludes: [ '**/feature/home/**/HomeViewModel.kt' ]
-  LargeClass:
-    excludes: [ '**/feature/home/**/HomeViewModel.kt', '**/feature/mypage/**/MyFeedViewModel.kt', '**/feature/home_detail/**/HomeDetailViewModel.kt' ]
   LongParameterList:
     active: false
   TooManyFunctions:
@@ -86,11 +79,3 @@ naming:
     active: false
   PackageNaming:
     packagePattern: '[a-z]+(\._?[_?A-Za-z0-9]*)*'
-  MemberNameEqualsClassName:
-    excludes: [ '**/core/ui/**/LocalHazeState.kt' ]
-
-exceptions:
-  TooGenericExceptionCaught:
-    excludes: [ '**/feature/mypage/**/MyPageViewModel.kt', '**/core/network/**/ErrorTrackingInterceptor.kt', '**/messaging/RoomiFirebaseMessagingService.kt', '**/core/datastore/**/TokenPreferences.kt' ]
-  SwallowedException:
-    excludes: [ '**/core/datastore/**/TokenPreferences.kt' ]

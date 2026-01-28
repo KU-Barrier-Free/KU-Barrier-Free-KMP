@@ -11,19 +11,14 @@ import com.ganaljigi.kubf.feature.helper.screen.DisableStudentHelperScreen
 import com.ganaljigi.kubf.feature.helper.screen.HelperScreen
 import com.ganaljigi.kubf.feature.helper.screen.JobInformationScreen
 import com.ganaljigi.kubf.feature.helper.screen.SupportScreen
-import com.ganaljigi.kubf.feature.home.screen.HomeScreen
-import com.ganaljigi.kubf.feature.home.screen.HomeSearchScreen
-import com.ganaljigi.kubf.feature.home.viewmodel.HomeViewModel
+import com.ganaljigi.kubf.feature.home.screen.HomeRoute
 import com.ganaljigi.kubf.feature.room.RoomInfoScreen
-import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun MainNavHost(
     padding: PaddingValues,
     navController: NavHostController,
 ) {
-    val homeViewModel = koinViewModel<HomeViewModel>()
-
     NavHost(
         navController = navController,
         startDestination = Routes.Home,
@@ -39,26 +34,11 @@ fun MainNavHost(
 //            )
         }
 
-        composable<Routes.Home> { navBackStackEntry ->
-            HomeScreen(
+        composable<Routes.Home> {
+            HomeRoute(
                 padding = padding,
                 navigateToHelper = { navController.navigate(Routes.Helper) },
-                navigateToBuildingInfo = { navController.navigate(Routes.BuildingInfo(it.toLong())) },
-                navigateToSearch = { title ->
-                    navController.navigate(Routes.HomeSearch(title))
-                },
-                viewModel = homeViewModel,
-            )
-        }
-
-        composable<Routes.HomeSearch> { navBackStackEntry ->
-            val searchMode = navBackStackEntry.toRoute<Routes.HomeSearch>().title
-
-            HomeSearchScreen(
-                padding = padding,
-                searchMode = searchMode,
-                navigateUp = { navController.popBackStack() },
-                viewModel = homeViewModel,
+                navigateToBuildingInfo = { navController.navigate(Routes.BuildingInfo(it)) },
             )
         }
 

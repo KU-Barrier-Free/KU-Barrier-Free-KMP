@@ -1,4 +1,4 @@
-package com.ganaljigi.kubf.feature.home.component.map
+package com.ganaljigi.kubf.feature.home.component.map.infowindow
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -23,22 +23,23 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ganaljigi.kubf.core.designsystem.theme.Gray2
 import com.ganaljigi.kubf.core.designsystem.theme.KUBFAndroidTheme
 
 @Composable
-fun MapGateInfo(
+fun MapSpecialInfo(
     description: String,
     modifier: Modifier = Modifier,
     painters: List<Painter>,
     scale: Float = 1f,
 ) {
     val cornerRadius by remember(scale) { mutableStateOf(20.dp * scale) }
-    val imageSize by remember(scale) { mutableStateOf(160.dp * scale) }
-    val fontSize by remember(scale) { mutableFloatStateOf((21 * scale).coerceAtLeast(10f)) }
-    val lineHeight by remember(scale) { mutableFloatStateOf((33 * scale).coerceAtLeast(14f)) }
+    val imageSize by remember(scale) { mutableStateOf(80.dp * scale) }
+    val fontSize by remember(scale) { mutableFloatStateOf((14 * scale).coerceAtLeast(10f)) }
+    val lineHeight by remember(scale) { mutableFloatStateOf((22 * scale).coerceAtLeast(14f)) }
 
     Column(
         modifier = modifier
@@ -49,7 +50,7 @@ fun MapGateInfo(
                 shape = RoundedCornerShape(cornerRadius),
             )
             .padding(12.dp * scale)
-            .widthIn(max = 320.dp * scale),
+            .widthIn(max = 214.dp * scale),
         verticalArrangement = Arrangement.spacedBy(16.dp * scale),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
@@ -76,4 +77,13 @@ fun MapGateInfo(
             textAlign = TextAlign.Center,
         )
     }
+}
+
+@Preview
+@Composable
+private fun MapSpecialInfoPreview() {
+    MapSpecialInfo(
+        painters = listOf(),
+        description = "특별한 장소",
+    )
 }

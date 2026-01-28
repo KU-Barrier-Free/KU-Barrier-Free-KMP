@@ -1,38 +1,30 @@
 package com.ganaljigi.kubf.core.mapper
 
 import com.ganalijigi.kubf.R
-import com.ganaljigi.kubf.core.network.response.home.HomeGateResponseDto
 import com.ganaljigi.kubf.core.network.response.home.HomeResponseDto
 import com.ganaljigi.kubf.core.network.response.home.HomeSearchResponseDto
-import com.ganaljigi.kubf.core.network.response.home.HomeSignificantResponseDto
 import com.ganaljigi.kubf.core.model.getIconResByName
-import com.ganaljigi.kubf.feature.home.model.BuildingMarker
 import com.ganaljigi.kubf.feature.home.model.MapToggle
 import com.ganaljigi.kubf.feature.home.model.SearchResult
-import com.ganaljigi.kubf.feature.home.model.ToggleMarker
+import com.ganaljigi.kubf.feature.home.viewmodel.BuildingMarker
+import com.ganaljigi.kubf.feature.home.viewmodel.GateMarker
 import com.ganaljigi.kubf.feature.home.viewmodel.HomeUiState
-import com.ganaljigi.kubf.feature.home.viewmodel.SpecialMarkerInfo
-import kotlinx.collections.immutable.persistentListOf
+import com.ganaljigi.kubf.feature.home.viewmodel.ToggleMarker
 import kotlinx.collections.immutable.toImmutableList
 
-fun HomeResponseDto.toUiState() = HomeUiState(
-    showingBuildingMarkers = this.buildings.toBuildingMarkers(),
-    buildingMarkers = this.buildings.toBuildingMarkers(),
-    curbMarkers = this.curbs.toToggleMarkers(MapToggle.CURB),
-    slopeMarkers = this.ramps.toToggleMarkers(MapToggle.SLOPE),
-    stairsMarkers = this.stairs.toToggleMarkers(MapToggle.STAIRS),
-    specialMarkers = this.significants.toToggleMarkers(MapToggle.SPECIAL_MARK),
-    gateMarkers = this.gates.toGateMarkers(),
-    showingToggleMarkers = persistentListOf(
-        this.significants.toToggleMarkers(MapToggle.SPECIAL_MARK),
-        this.gates.toGateMarkers(),
-    ),
-)
-
-fun HomeSignificantResponseDto.toSpecialMarkerInfo() = SpecialMarkerInfo(
-    description = this.description,
-    imageUrls = this.imageUrls,
-)
+fun HomeResponseDto.toHomeUiState(): HomeUiState {
+    val buildingMarkers = this.buildings.toBuildingMarkers()
+    val specialMarkers = this.significants.toToggleMarkers(MapToggle.SPECIAL_MARK)
+    return HomeUiState(
+        buildingMarkers = buildingMarkers,
+        curbMarkers = this.curbs.toToggleMarkers(MapToggle.CURB),
+        slopeMarkers = this.ramps.toToggleMarkers(MapToggle.SLOPE),
+        stairsMarkers = this.stairs.toToggleMarkers(MapToggle.STAIRS),
+        specialMarkers = specialMarkers,
+        gateMarkers = this.gates.toGateMarkers(),
+        showingToggleMarkers = specialMarkers,
+    )
+}
 
 fun List<HomeResponseDto.BuildingPin>.toBuildingMarkers() = this.map {
     BuildingMarker(
@@ -50,26 +42,20 @@ fun List<HomeResponseDto.HomePin>.toToggleMarkers(
         id = it.id,
         latitude = it.latitude,
         longitude = it.longitude,
-        mapToggle = mapToggle,
+        toggleType = mapToggle,
     )
 }.toImmutableList()
 
 fun List<HomeResponseDto.GatePin>.toGateMarkers() = this.map {
-    ToggleMarker(
+    GateMarker(
         id = it.id,
-        name = it.name,
+        name = it.name.orEmpty(),
         latitude = it.latitude,
         longitude = it.longitude,
-        mapToggle = MapToggle.GATE,
     )
 }.toImmutableList()
 
-fun HomeGateResponseDto.toGateMarkerInfo() = SpecialMarkerInfo(
-    description = this.description,
-    imageUrls = listOf(this.imageUrl),
-)
-
-fun HomeSearchResponseDto.toUiState(matchKeyword: String): List<SearchResult> =
+fun HomeSearchResponseDto.toSearchResults(matchKeyword: String): List<SearchResult> =
     this.buildings.map {
         SearchResult(
             id = it.id,

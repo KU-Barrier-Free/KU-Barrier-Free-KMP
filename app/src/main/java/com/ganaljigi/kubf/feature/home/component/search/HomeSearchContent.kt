@@ -33,8 +33,10 @@ import com.ganaljigi.kubf.core.ui.util.toAnnotatedString
 @Composable
 fun HomeSearchContent(
     modifier: Modifier = Modifier,
-    onItemClick: (SearchResult) -> Unit = {},
     searchResults: List<SearchResult> = emptyList(),
+    popularKeywords: List<String> = emptyList(),
+    onItemClick: (SearchResult) -> Unit = {},
+    onPopularKeywordClick: (String) -> Unit = {},
 ) {
     Column(
         modifier = modifier
@@ -42,29 +44,29 @@ fun HomeSearchContent(
             .verticalScroll(rememberScrollState())
             .padding(horizontal = 16.dp),
     ) {
-//        Row(
-//            Modifier
-//                .fillMaxWidth()
-//                .padding(vertical = 12.dp),
-//            verticalAlignment = Alignment.CenterVertically,
-//            horizontalArrangement = Arrangement.spacedBy(8.dp)
-//        ) {
-//            Text(
-//                modifier = Modifier.padding(start = 12.dp, end = 4.dp),
-//                text = "인기 검색어",
-//                style = KUBFAndroidTheme.typography.regular12.copy(
-//                    color = Gray3,
-//                )
-//            )
-//
-//            popularKeywords.take(4).forEach { toggle ->
-//                ToggleChip(
-//                    modifier = Modifier.padding(horizontal = 4.dp),
-//                    searchKeyword = toggle,
-//                    onChipClick = onKeywordClick
-//                )
-//            }
-//        }
+        Row(
+            Modifier
+                .fillMaxWidth()
+                .padding(vertical = 12.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+        ) {
+            Text(
+                modifier = Modifier.padding(start = 12.dp, end = 4.dp),
+                text = "인기 검색어",
+                style = KUBFAndroidTheme.typography.regular12.copy(
+                    color = Gray3,
+                ),
+            )
+
+            popularKeywords.take(4).forEach { toggle ->
+                ToggleChip(
+                    modifier = Modifier.padding(horizontal = 4.dp),
+                    searchKeyword = toggle,
+                    onChipClick = onPopularKeywordClick,
+                )
+            }
+        }
 
         if (searchResults.isEmpty()) {
             Spacer(modifier = Modifier.height(80.dp))

@@ -93,11 +93,6 @@ fun HomeToggleChip(
 @Composable
 private fun HomeTogglePreview() {
     HomeToggle(
-        toggleUiStates = MapToggle.entries.map {
-            ToggleUiState(
-                toggle = it,
-                isSelected = it == MapToggle.CURB,
-            )
-        },
+        toggleUiStates = ToggleUiState.defaults,
     )
 }

@@ -2,24 +2,22 @@ package com.ganaljigi.kubf.feature.home.component.search
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.interaction.collectIsFocusedAsState
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.input.TextFieldState
+import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.TextRange
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.ganaljigi.kubf.core.designsystem.component.KUBFSearchBar
@@ -27,17 +25,34 @@ import com.ganaljigi.kubf.core.designsystem.theme.Gray1
 import com.ganaljigi.kubf.core.designsystem.theme.KUBFAndroidTheme
 import com.ganaljigi.kubf.core.designsystem.theme.MainGreen
 import com.ganaljigi.kubf.core.ui.util.noRippleClickable
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.debounce
 
 @Composable
 fun HomeSearchBar(
     modifier: Modifier = Modifier,
-    onValueChange: (TextFieldValue) -> Unit = {},
-    onValueCleared: () -> Unit = {},
-    onSearchKeyboardEntered: () -> Unit = {},
-    value: TextFieldValue,
+    textFieldState: TextFieldState = rememberTextFieldState(),
+    focusRequester: FocusRequester = remember { FocusRequester() },
+    requestFocus: Boolean = false,
+    onTextChanged: (String) -> Unit = {},
+    onCleared: () -> Unit = {},
+    onSearchKeyboardEntered: (String) -> Unit = {},
 ) {
-    val interactionSource = remember { MutableInteractionSource() }
-    val isFocused by interactionSource.collectIsFocusedAsState()
+    // 텍스트 변경 감지
+    LaunchedEffect(textFieldState) {
+        snapshotFlow { textFieldState.text.toString() }
+            .debounce(300)
+            .collectLatest { text ->
+                onTextChanged(text)
+            }
+    }
+
+    // 자동 포커스
+    LaunchedEffect(requestFocus) {
+        if (requestFocus) {
+            focusRequester.requestFocus()
+        }
+    }
 
     Column(
         modifier = modifier
@@ -48,15 +63,17 @@ fun HomeSearchBar(
             ),
     ) {
         KUBFSearchBar(
-            modifier = Modifier
-                .fillMaxWidth(),
-            value = value,
-            onValueChange = onValueChange,
-            onValueCleared = onValueCleared,
-            onSearchKeyboardClick = onSearchKeyboardEntered,
+            modifier = Modifier.fillMaxWidth(),
+            state = textFieldState,
+            onSearchKeyboardClick = {
+                onSearchKeyboardEntered(textFieldState.text.toString())
+            },
+            onCleared = {
+                textFieldState.edit { replace(0, length, "") }
+                onCleared()
+            },
             placeHolderText = "건물, 편의시설 검색",
-            interactionSource = interactionSource,
-            isFocused = isFocused,
+            focusRequester = focusRequester,
         )
     }
 }
@@ -90,17 +107,7 @@ fun ToggleChip(
 @Preview(showBackground = false, widthDp = 360, heightDp = 400)
 @Composable
 private fun HomeSearchBarPreview() {
-    var value by remember {
-        mutableStateOf(
-            TextFieldValue(
-                text = "",
-                selection = TextRange.Zero,
-            ),
-        )
-    }
     HomeSearchBar(
-        onValueChange = {},
-        onValueCleared = { value = TextFieldValue("") },
-        value = value,
+        onTextChanged = {},
     )
 }
