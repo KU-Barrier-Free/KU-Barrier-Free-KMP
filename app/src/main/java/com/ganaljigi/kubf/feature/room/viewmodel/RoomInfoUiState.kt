@@ -37,4 +37,8 @@ data class RoomInfoUiState(
 
     // API RoomInfo null 여부
     val hasRoomInfo: Boolean = true,
+
+    // 이미지 다이얼로그
+    val isImageDialogVisible: Boolean = false,
+    val selectedImageUrl: String? = null,
 )

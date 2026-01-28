@@ -1,6 +1,11 @@
 package com.ganaljigi.kubf.feature.room
 
+import android.widget.Toast
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -8,44 +13,83 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import org.koin.androidx.compose.koinViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.ganalijigi.kubf.R
+import com.ganaljigi.kubf.core.designsystem.component.TransformableImage
 import com.ganaljigi.kubf.feature.room.component.DeskAndChairComponent
 import com.ganaljigi.kubf.feature.room.component.DoorComponent
 import com.ganaljigi.kubf.feature.room.component.RoomInfoDefaultComponent
 import com.ganaljigi.kubf.feature.room.component.RoomInfoTopAppBar
 import com.ganaljigi.kubf.feature.room.component.RoomPic
+import com.ganaljigi.kubf.feature.room.viewmodel.RoomInfoUiAction
+import com.ganaljigi.kubf.feature.room.viewmodel.RoomInfoUiEvent
 import com.ganaljigi.kubf.feature.room.viewmodel.RoomInfoUiState
 import com.ganaljigi.kubf.feature.room.viewmodel.RoomInfoViewModel
+import org.koin.androidx.compose.koinViewModel
 
-// 2-1) uiState를 직접 받는 버전 (프리뷰/에뮬에 더미 주입용)
 @Composable
 fun RoomInfoScreen(
-    uiState: RoomInfoUiState,
     onBackClick: () -> Unit,
+    viewModel: RoomInfoViewModel = koinViewModel(),
+) {
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val context = LocalContext.current
+
+    LaunchedEffect(Unit) {
+        viewModel.uiEvent.collect { event ->
+            when (event) {
+                is RoomInfoUiEvent.NavigateBack -> onBackClick()
+                is RoomInfoUiEvent.ShowToast -> {
+                    Toast.makeText(context, event.message, Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+    }
+
+    RoomInfoContent(
+        uiState = uiState,
+        onRoomInfoUiAction = viewModel::onRoomInfoUiAction,
+    )
+}
+
+@Composable
+private fun RoomInfoContent(
+    uiState: RoomInfoUiState,
+    onRoomInfoUiAction: (RoomInfoUiAction) -> Unit,
 ) {
     val scrollState = rememberScrollState()
-
     val showDeskAndChair = uiState.hasRoomInfo
     val showDoor = uiState.hasRoomInfo
 
     Scaffold(
         topBar = {
-            RoomInfoTopAppBar(
-                buildingName = uiState.buildingName,
-                onBackClick = onBackClick,
-            )
+            if (!uiState.isImageDialogVisible) {
+                RoomInfoTopAppBar(
+                    buildingName = uiState.buildingName,
+                    onBackClick = { onRoomInfoUiAction(RoomInfoUiAction.OnBackClick) },
+                )
+            }
         },
         containerColor = Color.White,
     ) { innerPadding ->
@@ -56,7 +100,12 @@ fun RoomInfoScreen(
                 .verticalScroll(scrollState),
         ) {
             if (uiState.roomPicUrls.isNotEmpty()) {
-                RoomPic(roomPicUrls = uiState.roomPicUrls)
+                RoomPic(
+                    roomPicUrls = uiState.roomPicUrls,
+                    onImageClick = { imageUrl ->
+                        onRoomInfoUiAction(RoomInfoUiAction.OnImageClick(imageUrl))
+                    },
+                )
             } else {
                 Box(
                     modifier = Modifier
@@ -111,30 +160,53 @@ fun RoomInfoScreen(
             Spacer(modifier = Modifier.height(30.dp))
         }
     }
-}
 
-// 2-2) 기존 뷰모델 버전은 위로 위임 (그대로 두고 수정)
-@Composable
-fun RoomInfoScreen(
-    onBackClick: () -> Unit,
-    viewModel: RoomInfoViewModel = koinViewModel(),
-) {
-    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-    RoomInfoScreen(uiState = uiState, onBackClick = onBackClick)
-}
+    val configuration = LocalConfiguration.current
+    val density = LocalDensity.current
+    val screenWidth = with(density) { configuration.screenWidthDp.dp.roundToPx() }
+    val screenHeight = with(density) { configuration.screenHeightDp.dp.roundToPx() }
 
-@Composable
-fun RoomInfoScreenDummy(
-    uiState: RoomInfoUiState,
-    onBackClick: () -> Unit,
-) {
-    RoomInfoScreen(uiState = uiState, onBackClick = onBackClick)
+    AnimatedVisibility(
+        visible = uiState.isImageDialogVisible && uiState.selectedImageUrl != null,
+        enter = slideInVertically(initialOffsetY = { it }),
+        exit = slideOutVertically(targetOffsetY = { it }),
+    ) {
+        Box(
+            modifier = Modifier
+                .background(Color.Black)
+                .systemBarsPadding()
+                .fillMaxSize(),
+        ) {
+            uiState.selectedImageUrl?.let { imageUrl ->
+                TransformableImage(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .clipToBounds(),
+                    imageUrl = imageUrl,
+                    screenWidth = screenWidth,
+                    screenHeight = screenHeight,
+                )
+            }
+            Icon(
+                modifier = Modifier
+                    .padding(10.dp)
+                    .clip(CircleShape)
+                    .background(Color.Black)
+                    .align(Alignment.TopEnd)
+                    .clickable { onRoomInfoUiAction(RoomInfoUiAction.OnImageDialogClose) }
+                    .padding(16.dp),
+                painter = painterResource(R.drawable.ic_searchbar_close),
+                contentDescription = "닫기",
+                tint = Color.Unspecified,
+            )
+        }
+    }
 }
 
 @Preview(showBackground = true)
 @Composable
-fun RoomInfoScreenPreview() {
-    RoomInfoScreen(
+private fun RoomInfoScreenPreview() {
+    RoomInfoContent(
         uiState = RoomInfoUiState(
             buildingName = "경영관",
             roomPicUrls = listOf(
@@ -163,6 +235,6 @@ fun RoomInfoScreenPreview() {
             wheelchairTable = false,
             computerTable = false,
         ),
-        onBackClick = {},
+        onRoomInfoUiAction = {},
     )
 }
