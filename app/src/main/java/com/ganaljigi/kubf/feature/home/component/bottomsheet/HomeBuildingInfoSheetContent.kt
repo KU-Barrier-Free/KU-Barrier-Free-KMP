@@ -135,10 +135,10 @@ fun HomeBuildingInfoSheetContent(
                                 .width(80.dp),
                             doorInfo = doorInfo,
                             onClick = {
-                                selectedDoorImages = doorInfo.imageUrls.ifEmpty {
-                                    listOfNotNull(doorInfo.imageUrl.takeIf { it.isNotEmpty() })
-                                }
-                                showDoorImageDialog = true
+                                val firstImage = doorInfo.imageUrls.firstOrNull()
+                                    ?: doorInfo.imageUrl.takeIf { it.isNotEmpty() }
+                                selectedDoorImages = listOfNotNull(firstImage)
+                                showDoorImageDialog = selectedDoorImages.isNotEmpty()
                             },
                         )
                     }

@@ -32,7 +32,10 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.ganaljigi.kubf.core.designsystem.theme.KUBFAndroidTheme
@@ -60,6 +63,11 @@ fun ImageViewerDialog(
         }
         return
     }
+    val configuration = LocalConfiguration.current
+    val density = LocalDensity.current
+    val screenWidth = with(density) { configuration.screenWidthDp.dp.roundToPx() }
+    val screenHeight = with(density) { configuration.screenHeightDp.dp.roundToPx() }
+
     AnimatedVisibility(
         visible = visible,
         enter = slideInVertically(initialOffsetY = { it }) + fadeIn(),
@@ -88,10 +96,16 @@ fun ImageViewerDialog(
                     .align(Alignment.Center)
                     .fillMaxWidth(),
             ) { page ->
-                TransformableImage(
-                    modifier = Modifier.fillMaxWidth(),
-                    imageUrl = images.getOrNull(page),
-                )
+                images.getOrNull(page)?.let { imageUrl ->
+                    TransformableImage(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clipToBounds(),
+                        imageUrl = imageUrl,
+                        screenWidth = screenWidth,
+                        screenHeight = screenHeight,
+                    )
+                }
             }
             IconButton(
                 onClick = onDismiss,
