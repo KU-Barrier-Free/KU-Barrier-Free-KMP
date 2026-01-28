@@ -97,7 +97,6 @@ fun HomeSearchScreen(
             },
             onPopularKeywordClick = { keyword ->
                 textFieldState.edit { replace(0, length, keyword) }
-                onAction(HomeUiAction.OnPopularKeywordClick(keyword))
             },
         )
     }

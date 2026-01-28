@@ -58,7 +58,6 @@ import com.ganaljigi.kubf.feature.home.component.MyLocationButton
 import com.ganaljigi.kubf.feature.home.component.NoticeButton
 import com.ganaljigi.kubf.feature.home.component.bottomsheet.HomeBuildingInfoSheetContent
 import com.ganaljigi.kubf.feature.home.component.bottomsheet.HomeSearchBottomSheet
-import com.ganaljigi.kubf.feature.home.component.bottomsheet.HomeSearchBottomSheetSingleItem
 import com.ganaljigi.kubf.feature.home.component.find.HomeFindTopLocationComponent
 import com.ganaljigi.kubf.feature.home.component.find.HomeRouteInfo
 import com.ganaljigi.kubf.feature.home.component.map.MapComponent
@@ -267,24 +266,16 @@ fun HomeScreen(
                 }
 
                 HomeBottomSheetType.CONVENIENCE_INFO -> {
-                    uiState.searchResults.firstOrNull()?.let { result ->
-                        HomeSearchBottomSheetSingleItem(
-                            searchResult = result,
-                            onFromClick = { onAction(HomeUiAction.OnFromClick(it)) },
-                            onToClick = { onAction(HomeUiAction.OnToClick(it)) },
-                            onShowBuildingClick = {
-                                onAction(HomeUiAction.OnBuildingViewClick(it.getBuildingIdByType()))
-                            },
-                        )
-                        HomeSearchBottomSheet(
-                            searchKeyword = uiState.searchText,
-                            searchResults = uiState.searchResults,
-                            onInquireClick = { onAction(HomeUiAction.OnInquiryClick) },
-                            onFromClick = { onAction(HomeUiAction.OnFromClick(it)) },
-                            onToClick = { onAction(HomeUiAction.OnToClick(it)) },
-                            onItemClick = { onAction(HomeUiAction.OnSearchResultClick(it)) },
-                        )
-                    }
+                    HomeSearchBottomSheet(
+                        searchKeyword = uiState.searchText,
+                        searchResults = uiState.searchResults,
+                        onInquireClick = { onAction(HomeUiAction.OnInquiryClick) },
+                        onFromClick = { onAction(HomeUiAction.OnFromClick(it)) },
+                        onToClick = { onAction(HomeUiAction.OnToClick(it)) },
+                        onItemClick = {
+                            onAction(HomeUiAction.OnBuildingViewClick(it.getBuildingIdByType()))
+                        },
+                    )
                 }
 
                 HomeBottomSheetType.NONE -> {}
