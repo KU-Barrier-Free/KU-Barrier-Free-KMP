@@ -103,7 +103,7 @@ fun DeskAndChairItem(
 
 @Preview(showBackground = true)
 @Composable
-fun DeskAndChairComponentPreview() {
+private fun DeskAndChairComponentPreview() {
     KUBFAndroidTheme {
         DeskAndChairComponent(
             allInOne = false,
@@ -117,5 +117,21 @@ fun DeskAndChairComponentPreview() {
             wheelchairTable = false,
             computerTable = false,
         )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun DeskAndChairItemExistsPreview() {
+    KUBFAndroidTheme {
+        DeskAndChairItem(label = "1인용", exists = true)
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun DeskAndChairItemNotExistsPreview() {
+    KUBFAndroidTheme {
+        DeskAndChairItem(label = "1인용", exists = false)
     }
 }

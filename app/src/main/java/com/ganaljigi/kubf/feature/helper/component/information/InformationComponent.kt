@@ -356,19 +356,19 @@ private fun PhoneActionText(
 
 @Preview(showBackground = true)
 @Composable
-fun InformationTitlePreview() {
+private fun InformationTitlePreview() {
     InformationTitle()
 }
 
 @Preview(showBackground = true)
 @Composable
-fun MapBoxPreview() {
+private fun MapBoxPreview() {
     MapBox()
 }
 
 @Preview(showBackground = true)
 @Composable
-fun InfoItemBoxPreview() {
+private fun InfoItemBoxPreview() {
     InfoItemBox(
         iconResId = R.drawable.ic_helper_phone,
         label = "전화번호",
@@ -384,6 +384,6 @@ fun InfoItemBoxPreview() {
 
 @Preview(showBackground = true)
 @Composable
-fun InfoBoxPreview() {
+private fun InfoBoxPreview() {
     InfoBox()
 }

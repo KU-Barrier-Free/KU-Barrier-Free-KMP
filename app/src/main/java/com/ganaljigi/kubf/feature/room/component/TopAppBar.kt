@@ -62,7 +62,7 @@ fun RoomInfoTopAppBar(
 
 @Preview(showBackground = true)
 @Composable
-fun RoomInfoTopAppBarPreview() {
+private fun RoomInfoTopAppBarPreview() {
     KUBFAndroidTheme {
         RoomInfoTopAppBar(
             buildingName = "경영관",

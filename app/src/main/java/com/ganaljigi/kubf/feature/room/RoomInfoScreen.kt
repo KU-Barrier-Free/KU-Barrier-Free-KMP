@@ -238,3 +238,27 @@ private fun RoomInfoScreenPreview() {
         onRoomInfoUiAction = {},
     )
 }
+
+@Preview(showBackground = true)
+@Composable
+private fun RoomInfoScreenNoPicPreview() {
+    RoomInfoScreen(
+        uiState = RoomInfoUiState(
+            buildingName = "과학관",
+            roomPicUrls = emptyList(),
+            frontDoor = true,
+            backDoor = true,
+            roomNumber = "301호",
+            roomName = "실험실",
+            lecture = false,
+            capacity = 20,
+            area = 45.0,
+            floorSpace = 13.6,
+            roomType = "평탄식",
+            department = "자연과학대학",
+            departmentNumber = "02-450-1234",
+            hasRoomInfo = true,
+        ),
+        onBackClick = {},
+    )
+}

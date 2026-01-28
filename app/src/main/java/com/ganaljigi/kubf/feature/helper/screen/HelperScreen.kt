@@ -1,5 +1,6 @@
 package com.ganaljigi.kubf.feature.helper.screen
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -7,16 +8,18 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.runtime.getValue
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalUriHandler
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import org.koin.androidx.compose.koinViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ganalijigi.kubf.R
 import com.ganaljigi.kubf.feature.helper.component.information.InfoBox
@@ -26,21 +29,57 @@ import com.ganaljigi.kubf.feature.helper.component.notice.NoticeTitle
 import com.ganaljigi.kubf.feature.helper.component.shortcut.ShortCutItem
 import com.ganaljigi.kubf.feature.helper.component.shortcut.ShortCutTitle
 import com.ganaljigi.kubf.feature.helper.component.topappbar.HelperTopAppBar
+import com.ganaljigi.kubf.feature.helper.viewmodel.HelperUiAction
+import com.ganaljigi.kubf.feature.helper.viewmodel.HelperUiEvent
+import com.ganaljigi.kubf.feature.helper.viewmodel.HelperUiState
 import com.ganaljigi.kubf.feature.helper.viewmodel.HelperViewModel
+import com.ganaljigi.kubf.feature.helper.viewmodel.NoticeUi
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun HelperScreen(
     onBackClick: () -> Unit,
-    navigateToDisableStudentHelper: () -> Unit = {},
-    navigateToSupport: () -> Unit = {},
-    navigateToJobInformation: () -> Unit = {},
-    vm: HelperViewModel = koinViewModel(),
+    navigateToDisableStudentHelper: () -> Unit,
+    navigateToSupport: () -> Unit,
+    navigateToJobInformation: () -> Unit,
+    viewModel: HelperViewModel = koinViewModel(),
 ) {
-    val state by vm.uiState.collectAsStateWithLifecycle()
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val context = LocalContext.current
     val uriHandler = LocalUriHandler.current
 
+    LaunchedEffect(Unit) {
+        viewModel.uiEvent.collect { event ->
+            when (event) {
+                is HelperUiEvent.NavigateBack -> onBackClick()
+                is HelperUiEvent.NavigateToDisableStudentHelper -> navigateToDisableStudentHelper()
+                is HelperUiEvent.NavigateToSupport -> navigateToSupport()
+                is HelperUiEvent.NavigateToJobInformation -> navigateToJobInformation()
+                is HelperUiEvent.OpenUrl -> uriHandler.openUri(event.url)
+                is HelperUiEvent.ShowToast -> {
+                    Toast.makeText(context, event.message, Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+    }
+
+    HelperContent(
+        uiState = uiState,
+        onHelperUiAction = viewModel::onHelperUiAction,
+    )
+}
+
+@Composable
+private fun HelperContent(
+    uiState: HelperUiState,
+    onHelperUiAction: (HelperUiAction) -> Unit,
+) {
     Scaffold(
-        topBar = { HelperTopAppBar(onBackClick = onBackClick) },
+        topBar = {
+            HelperTopAppBar(
+                onBackClick = { onHelperUiAction(HelperUiAction.OnBackClick) },
+            )
+        },
         containerColor = Color.White,
     ) { paddingValues ->
         Column(
@@ -48,45 +87,25 @@ fun HelperScreen(
                 .padding(paddingValues)
                 .verticalScroll(rememberScrollState()),
         ) {
-            // 공지사항
-
             NoticeTitle()
-//            NoticeItem(
-//                title = "[KIRD] 포용성장사업_이공계 장애 대학(원)생 경력개발 멘토링 모집 홍보 새글",
-//                date = "2025.05.13",
-//                number = 47,
-//                index = 0
-//            )
-//            NoticeItem(
-//                title = "스텝업탐방캠프 2기 참여자 모집",
-//                date = "2025.05.13",
-//                number = 46,
-//                index = 1
-//            )
-//            NoticeItem(
-//                title = "2025 동행, 국가유산 ‘빛나는 우리를 만나다’「마음으로 듣는 국가유산」 역사 기행 참여 안내 새글",
-//                date = "2025.05.13",
-//                number = 45,
-//                index = 2
-//            )
 
             when {
-                state.isLoading -> {
+                uiState.isLoading -> {
                     CircularProgressIndicator(Modifier.padding(16.dp))
                 }
-                state.error != null -> {
+                uiState.error != null -> {
                     Column(Modifier.padding(16.dp)) {
-                        Text(text = state.error ?: "공지사항을 찾을 수 없습니다.")
+                        Text(text = uiState.error ?: "공지사항을 찾을 수 없습니다.")
                     }
                 }
                 else -> {
-                    state.notices.forEachIndexed { index, n ->
+                    uiState.notices.forEachIndexed { index, notice ->
                         NoticeItem(
-                            title = n.title,
-                            date = n.date,
-                            number = n.displayNumber,
+                            title = notice.title,
+                            date = notice.date,
+                            number = notice.displayNumber,
                             index = index,
-                            onClick = { uriHandler.openUri(n.url) },
+                            onClick = { onHelperUiAction(HelperUiAction.OnNoticeClick(notice.url)) },
                         )
                     }
                 }
@@ -94,32 +113,29 @@ fun HelperScreen(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // 바로가기
             ShortCutTitle()
             Column(
                 verticalArrangement = Arrangement.spacedBy(12.dp),
-                modifier = Modifier,
             ) {
                 ShortCutItem(
                     text = "장애학생 도우미",
                     iconResId = R.drawable.ic_helper_disablestudenthelper,
-                    onClick = navigateToDisableStudentHelper,
+                    onClick = { onHelperUiAction(HelperUiAction.OnDisableStudentHelperClick) },
                 )
                 ShortCutItem(
                     text = "지원 업무",
                     iconResId = R.drawable.ic_helper_support,
-                    onClick = navigateToSupport,
+                    onClick = { onHelperUiAction(HelperUiAction.OnSupportClick) },
                 )
                 ShortCutItem(
                     text = "채용 정보",
                     iconResId = R.drawable.ic_helper_jobinformation,
-                    onClick = navigateToJobInformation,
+                    onClick = { onHelperUiAction(HelperUiAction.OnJobInformationClick) },
                 )
             }
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // 정보
             InformationTitle()
             InfoBox()
 
@@ -128,8 +144,50 @@ fun HelperScreen(
     }
 }
 
-// @Preview (showBackground = true)
-// @Composable
-// fun HelperScreenPreview() {
-//    HelperScreen {  }
-// }
+@Preview(showBackground = true)
+@Composable
+private fun HelperContentPreview() {
+    HelperContent(
+        uiState = HelperUiState(
+            notices = listOf(
+                NoticeUi(
+                    title = "[KIRD] 포용성장사업_이공계 장애 대학(원)생 경력개발 멘토링 모집 홍보",
+                    date = "2025.05.13",
+                    url = "",
+                    displayNumber = 47,
+                ),
+                NoticeUi(
+                    title = "스텝업탐방캠프 2기 참여자 모집",
+                    date = "2025.05.13",
+                    url = "",
+                    displayNumber = 46,
+                ),
+                NoticeUi(
+                    title = "2025 동행, 국가유산 '빛나는 우리를 만나다' 역사 기행 참여 안내",
+                    date = "2025.05.13",
+                    url = "",
+                    displayNumber = 45,
+                ),
+            ),
+        ),
+        onHelperUiAction = {},
+    )
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun HelperContentLoadingPreview() {
+    HelperContent(
+        uiState = HelperUiState(isLoading = true),
+        onHelperUiAction = {},
+    )
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun HelperContentErrorPreview() {
+    HelperContent(
+        uiState = HelperUiState(error = "공지사항을 불러오는데 실패했습니다."),
+        onHelperUiAction = {},
+    )
+}

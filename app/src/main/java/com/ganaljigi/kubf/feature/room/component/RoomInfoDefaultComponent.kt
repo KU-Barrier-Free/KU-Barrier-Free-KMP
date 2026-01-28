@@ -491,7 +491,7 @@ private fun copyToClipboard(ctx: Context, text: String) {
 
 @Preview(showBackground = true)
 @Composable
-fun RoomInfoDefaultComponentPreview() {
+private fun RoomInfoDefaultComponentPreview() {
     KUBFAndroidTheme {
         RoomInfoDefaultComponent(
             roomNumber = "102호",
@@ -510,26 +510,31 @@ fun RoomInfoDefaultComponentPreview() {
 
 @Preview(showBackground = true)
 @Composable
-fun LectureChipPreview() {
+private fun RoomInfoDefaultComponentWithCommentPreview() {
+    KUBFAndroidTheme {
+        RoomInfoDefaultComponent(
+            roomNumber = "201호",
+            roomName = "대강의실",
+            lecture = false,
+            capacity = 100,
+            area = 120.5,
+            roomComment = "휠체어 진입 가능",
+            floorSpace = 36.5,
+            roomType = "계단식",
+            department = "교무처",
+            departmentNumber = "02-450-3968",
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun LectureChipPreview() {
     LectureChip()
 }
 
 @Preview(showBackground = true)
 @Composable
-private fun _IconDebugPreview() {
-    Box(
-        Modifier
-            .size(80.dp)
-            .background(Color.Yellow) // 뒤 배경 확실히
-            .padding(8.dp),
-    ) {
-        Icon(
-            painter = painterResource(R.drawable.ic_roominfo_capacity),
-            contentDescription = null,
-            tint = Color.Magenta, // 눈에 띄는 색
-            modifier = Modifier
-                .size(48.dp) // 크게
-                .align(Alignment.Center),
-        )
-    }
+private fun DepartmentPhoneRowPreview() {
+    DepartmentPhoneRow(departmentNumber = "02-450-3968")
 }

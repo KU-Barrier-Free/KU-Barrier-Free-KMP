@@ -130,6 +130,26 @@ fun ShortCutItem(
 
 @Preview(showBackground = true)
 @Composable
-fun PreviewShortCutTitle() {
+private fun ShortCutTitlePreview() {
     ShortCutTitle()
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun ShortCutItemPreview() {
+    ShortCutItem(
+        text = "장애학생 도우미",
+        iconResId = R.drawable.ic_helper_disablestudenthelper,
+        onClick = {},
+    )
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun ShortCutItemNoIconPreview() {
+    ShortCutItem(
+        text = "기본 아이콘 항목",
+        iconResId = null,
+        onClick = {},
+    )
 }

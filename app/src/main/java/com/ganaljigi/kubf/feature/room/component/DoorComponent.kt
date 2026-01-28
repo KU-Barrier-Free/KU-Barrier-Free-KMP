@@ -73,8 +73,24 @@ fun DoorItem(
 
 @Preview(showBackground = true)
 @Composable
-fun DoorComponentPreview() {
+private fun DoorComponentPreview() {
     KUBFAndroidTheme {
         DoorComponent(frontDoor = true, backDoor = false)
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun DoorItemExistsPreview() {
+    KUBFAndroidTheme {
+        DoorItem(label = "앞문", exists = true)
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun DoorItemNotExistsPreview() {
+    KUBFAndroidTheme {
+        DoorItem(label = "뒷문", exists = false)
     }
 }

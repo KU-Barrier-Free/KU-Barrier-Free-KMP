@@ -113,3 +113,13 @@ private fun RoomPicPreview() {
         ),
     )
 }
+
+@Preview(showBackground = true)
+@Composable
+private fun RoomPicSinglePreview() {
+    RoomPic(
+        roomPicUrls = listOf(
+            "https://i.pinimg.com/1200x/10/dc/2e/10dc2ece8b542854d0e276a1114d6190.jpg",
+        ),
+    )
+}
