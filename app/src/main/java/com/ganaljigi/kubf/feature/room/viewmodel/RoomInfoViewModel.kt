@@ -1,42 +1,50 @@
 package com.ganaljigi.kubf.feature.room.viewmodel
 
 import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.toRoute
+import com.ganaljigi.kubf.core.navigation.Routes
+import com.ganaljigi.kubf.core.ui.viewmodel.BaseViewModel
 import com.ganaljigi.kubf.feature.room.mapper.toUiState
 import com.ganaljigi.kubf.feature.room.repository.RoomInfoRepository
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.onStart
-import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.koin.android.annotation.KoinViewModel
 
 @KoinViewModel
 class RoomInfoViewModel(
+    savedStateHandle: SavedStateHandle,
     private val repository: RoomInfoRepository,
-    private val savedStateHandle: SavedStateHandle,
-) : ViewModel() {
+) : BaseViewModel<RoomInfoUiEvent>() {
+
+    private val route: Routes.RoomInfo = savedStateHandle.toRoute()
 
     private val _uiState = MutableStateFlow(RoomInfoUiState())
-    val uiState: StateFlow<RoomInfoUiState> = _uiState
-        .onStart { loadRoomInfo() }
-        .stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5_000),
-            initialValue = RoomInfoUiState(),
-        )
+    val uiState = _uiState.asStateFlow()
 
-    fun loadRoomInfo(
-        buildingId: Long = savedStateHandle.get<Long>("buildingId") ?: -1L,
-        spaceId: Long = savedStateHandle.get<Long>("spaceId") ?: -1L,
-        type: Int? = savedStateHandle.get<Int>("type") /*?: 1*/,
-        buildingNameArg: String? = savedStateHandle.get<String>("buildingName"),
-    ) {
+    init {
+        loadRoomInfo()
+    }
+
+    fun onRoomInfoUiAction(action: RoomInfoUiAction) {
+        when (action) {
+            is RoomInfoUiAction.OnBackClick -> onBackClick()
+            is RoomInfoUiAction.OnRetry -> loadRoomInfo()
+            is RoomInfoUiAction.OnImageClick -> onImageClick(action.imageUrl)
+            is RoomInfoUiAction.OnImageDialogClose -> closeImageDialog()
+        }
+    }
+
+    private fun loadRoomInfo() {
+        val buildingId = route.buildingId
+        val spaceId = route.spaceId
+        val type = route.type
+        val buildingNameArg = route.buildingName
+
         if (buildingId <= 0 || spaceId <= 0) return
 
         viewModelScope.launch {
@@ -53,6 +61,7 @@ class RoomInfoViewModel(
                     },
                     onFailure = { e ->
                         _uiState.update { it.copy(isLoading = false, error = e.message ?: "오류") }
+                        sendEvent(RoomInfoUiEvent.ShowToast("방 정보를 불러오는데 실패했습니다"))
                     },
                 )
             } else {
@@ -90,10 +99,32 @@ class RoomInfoViewModel(
                     },
                     onFailure = { e ->
                         _uiState.update { it.copy(isLoading = false, error = e.message ?: "오류") }
+                        sendEvent(RoomInfoUiEvent.ShowToast("방 정보를 불러오는데 실패했습니다"))
                     },
                 )
             }
         }
     }
-    fun retry() = loadRoomInfo()
+
+    private fun onBackClick() {
+        viewModelScope.launch { sendEvent(RoomInfoUiEvent.NavigateBack) }
+    }
+
+    private fun onImageClick(imageUrl: String) {
+        _uiState.update {
+            it.copy(
+                isImageDialogVisible = true,
+                selectedImageUrl = imageUrl,
+            )
+        }
+    }
+
+    private fun closeImageDialog() {
+        _uiState.update {
+            it.copy(
+                isImageDialogVisible = false,
+                selectedImageUrl = null,
+            )
+        }
+    }
 }
