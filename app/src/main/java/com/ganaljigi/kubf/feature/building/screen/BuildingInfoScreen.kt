@@ -41,7 +41,9 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import android.widget.Toast
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
@@ -79,13 +81,16 @@ fun BuildingInfoScreen(
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val listState = rememberLazyListState()
     val scope = rememberCoroutineScope()
+    val context = LocalContext.current
 
     LaunchedEffect(Unit) {
         viewModel.uiEvent.collect { event ->
             when (event) {
                 is BuildingUiEvent.NavigateBack -> onBack()
                 is BuildingUiEvent.NavigateToRoomInfo -> onRoomClick(event.room, event.buildingName)
-                is BuildingUiEvent.ShowToast -> { /* Toast 표시 */ }
+                is BuildingUiEvent.ShowToast -> {
+                    Toast.makeText(context, event.message, Toast.LENGTH_SHORT).show()
+                }
                 is BuildingUiEvent.ScrollToFloorTab -> {
                     scope.launch { listState.animateScrollToItem(1) }
                 }

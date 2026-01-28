@@ -62,7 +62,6 @@ private val facilityMap: Map<String, Facility> = mapOf(
     "K-Cube" to Facility.KCUBE,
     "IT-서비스센터" to Facility.SERVICE,
     "주차장" to Facility.PARK,
-    "은행" to Facility.BANK,
     "엘리베이터" to Facility.ELEV,
     "우체국" to Facility.POST,
     "장애인화장실" to Facility.TOILET,

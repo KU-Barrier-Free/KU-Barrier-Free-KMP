@@ -49,10 +49,6 @@ class BuildingViewModel(
         }
     }
 
-    private fun sendEventAsync(event: BuildingUiEvent) {
-        viewModelScope.launch { sendEvent(event) }
-    }
-
     private fun loadBuildingInfo() {
         viewModelScope.launch {
             _uiState.update {
@@ -79,6 +75,7 @@ class BuildingViewModel(
                 }
                 .onFailure {
                     _uiState.update { it.copy(isLoading = false) }
+                    sendEvent(BuildingUiEvent.ShowToast("건물 정보를 불러오는데 실패했습니다"))
                 }
         }
     }
@@ -108,21 +105,23 @@ class BuildingViewModel(
 
     private fun onFloorSelect(index: Int) {
         _uiState.update { it.copy(selectedFloorIndex = index) }
-        sendEventAsync(BuildingUiEvent.ScrollToFloorTab(index))
+        viewModelScope.launch { sendEvent(BuildingUiEvent.ScrollToFloorTab(index)) }
     }
 
     private fun onRoomClick(room: Room, buildingName: String) {
-        sendEventAsync(BuildingUiEvent.NavigateToRoomInfo(room, buildingName))
+        viewModelScope.launch { sendEvent(BuildingUiEvent.NavigateToRoomInfo(room, buildingName)) }
     }
 
     private fun onSearchResultClick(result: RoomSearchResult) {
         result.room?.let { room ->
-            sendEventAsync(
-                BuildingUiEvent.NavigateToRoomInfo(
-                    room = room,
-                    buildingName = _uiState.value.currentBuildingName,
-                ),
-            )
+            viewModelScope.launch {
+                sendEvent(
+                    BuildingUiEvent.NavigateToRoomInfo(
+                        room = room,
+                        buildingName = _uiState.value.currentBuildingName,
+                    ),
+                )
+            }
         }
     }
 
@@ -145,7 +144,7 @@ class BuildingViewModel(
     }
 
     private fun onBackClick() {
-        sendEventAsync(BuildingUiEvent.NavigateBack)
+        viewModelScope.launch { sendEvent(BuildingUiEvent.NavigateBack) }
     }
 
     private fun roomNumberKey(num: String?): Int {
