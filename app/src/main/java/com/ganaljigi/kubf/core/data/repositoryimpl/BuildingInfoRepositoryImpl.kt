@@ -2,10 +2,10 @@ package com.ganaljigi.kubf.core.data.repositoryimpl
 
 import com.ganaljigi.kubf.core.data.repository.BuildingInfoRepository
 import com.ganaljigi.kubf.core.network.api.BuildingApi
-import com.ganaljigi.kubf.feature.building.mapper.toFacilityOrNull
-import com.ganaljigi.kubf.feature.building.mapper.toRoomUi
-import com.ganaljigi.kubf.feature.building.mapper.toUi
-import com.ganaljigi.kubf.feature.building.mapper.toUiPair
+import com.ganaljigi.kubf.core.mapper.toFacilityOrNull
+import com.ganaljigi.kubf.core.mapper.toRoomUi
+import com.ganaljigi.kubf.core.mapper.toUi
+import com.ganaljigi.kubf.core.mapper.toUiPair
 import com.ganaljigi.kubf.feature.building.model.BuildingInfo
 import com.ganaljigi.kubf.feature.building.model.RoomSearchResult
 import com.ganaljigi.kubf.feature.building.model.TotalFloor
