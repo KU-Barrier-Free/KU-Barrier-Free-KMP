@@ -1,4 +1,4 @@
-package com.ganaljigi.kubf.feature.room.response
+package com.ganaljigi.kubf.core.network.response.room
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable

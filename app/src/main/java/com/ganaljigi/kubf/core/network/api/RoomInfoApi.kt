@@ -1,6 +1,6 @@
 package com.ganaljigi.kubf.core.network.api
 
-import com.ganaljigi.kubf.feature.room.response.RoomInfoResponseDto
+import com.ganaljigi.kubf.core.network.response.room.RoomInfoResponseDto
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.get

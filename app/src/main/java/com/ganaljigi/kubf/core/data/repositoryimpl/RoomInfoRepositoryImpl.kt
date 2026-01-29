@@ -1,8 +1,8 @@
-package com.ganaljigi.kubf.feature.room.repositoryimpl
+package com.ganaljigi.kubf.core.data.repositoryimpl
 
+import com.ganaljigi.kubf.core.data.repository.RoomInfoRepository
 import com.ganaljigi.kubf.core.network.api.RoomInfoApi
-import com.ganaljigi.kubf.feature.room.repository.RoomInfoRepository
-import com.ganaljigi.kubf.feature.room.response.RoomInfoResponseDto
+import com.ganaljigi.kubf.core.network.response.room.RoomInfoResponseDto
 import org.koin.core.annotation.Single
 
 @Single(binds = [RoomInfoRepository::class])

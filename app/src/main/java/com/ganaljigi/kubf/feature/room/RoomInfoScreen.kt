@@ -1,42 +1,29 @@
 package com.ganaljigi.kubf.feature.room
 
 import android.widget.Toast
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.slideInVertically
-import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Icon
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import com.ganaljigi.kubf.core.ui.util.ObserveAsEvents
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.ganalijigi.kubf.R
-import com.ganaljigi.kubf.core.designsystem.component.TransformableImage
+import com.ganaljigi.kubf.core.ui.util.ObserveAsEvents
+import com.ganaljigi.kubf.feature.building.component.ImageViewerDialog
 import com.ganaljigi.kubf.feature.room.component.DeskAndChairComponent
 import com.ganaljigi.kubf.feature.room.component.DoorComponent
 import com.ganaljigi.kubf.feature.room.component.RoomInfoDefaultComponent
@@ -50,6 +37,7 @@ import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun RoomInfoScreen(
+    padding: PaddingValues = PaddingValues(),
     onBackClick: () -> Unit,
     viewModel: RoomInfoViewModel = koinViewModel(),
 ) {
@@ -66,6 +54,7 @@ fun RoomInfoScreen(
     }
 
     RoomInfoContent(
+        padding = padding,
         uiState = uiState,
         onRoomInfoUiAction = viewModel::onRoomInfoUiAction,
     )
@@ -73,6 +62,7 @@ fun RoomInfoScreen(
 
 @Composable
 private fun RoomInfoContent(
+    padding: PaddingValues = PaddingValues(),
     uiState: RoomInfoUiState,
     onRoomInfoUiAction: (RoomInfoUiAction) -> Unit,
 ) {
@@ -80,20 +70,20 @@ private fun RoomInfoContent(
     val showDeskAndChair = uiState.hasRoomInfo
     val showDoor = uiState.hasRoomInfo
 
-    Scaffold(
-        topBar = {
-            if (!uiState.isImageDialogVisible) {
-                RoomInfoTopAppBar(
-                    buildingName = uiState.buildingName,
-                    onBackClick = { onRoomInfoUiAction(RoomInfoUiAction.OnBackClick) },
-                )
-            }
-        },
-        containerColor = Color.White,
-    ) { innerPadding ->
+    Column(
+        modifier = Modifier
+            .padding(padding)
+            .fillMaxSize(),
+    ) {
+        if (!uiState.isImageDialogVisible) {
+            RoomInfoTopAppBar(
+                buildingName = uiState.buildingName,
+                onBackClick = { onRoomInfoUiAction(RoomInfoUiAction.OnBackClick) },
+            )
+        }
+
         Column(
             modifier = Modifier
-                .padding(innerPadding)
                 .fillMaxSize()
                 .verticalScroll(scrollState),
         ) {
@@ -159,46 +149,11 @@ private fun RoomInfoContent(
         }
     }
 
-    val configuration = LocalConfiguration.current
-    val density = LocalDensity.current
-    val screenWidth = with(density) { configuration.screenWidthDp.dp.roundToPx() }
-    val screenHeight = with(density) { configuration.screenHeightDp.dp.roundToPx() }
-
-    AnimatedVisibility(
-        visible = uiState.isImageDialogVisible && uiState.selectedImageUrl != null,
-        enter = slideInVertically(initialOffsetY = { it }),
-        exit = slideOutVertically(targetOffsetY = { it }),
-    ) {
-        Box(
-            modifier = Modifier
-                .background(Color.Black)
-                .systemBarsPadding()
-                .fillMaxSize(),
-        ) {
-            uiState.selectedImageUrl?.let { imageUrl ->
-                TransformableImage(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .clipToBounds(),
-                    imageUrl = imageUrl,
-                    screenWidth = screenWidth,
-                    screenHeight = screenHeight,
-                )
-            }
-            Icon(
-                modifier = Modifier
-                    .padding(10.dp)
-                    .clip(CircleShape)
-                    .background(Color.Black)
-                    .align(Alignment.TopEnd)
-                    .clickable { onRoomInfoUiAction(RoomInfoUiAction.OnImageDialogClose) }
-                    .padding(16.dp),
-                painter = painterResource(R.drawable.ic_searchbar_close),
-                contentDescription = "닫기",
-                tint = Color.Unspecified,
-            )
-        }
-    }
+    ImageViewerDialog(
+        visible = uiState.isImageDialogVisible,
+        imageUrl = uiState.selectedImageUrl,
+        onDismiss = { onRoomInfoUiAction(RoomInfoUiAction.OnImageDialogClose) },
+    )
 }
 
 @Preview(showBackground = true)

@@ -5,8 +5,8 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import com.ganaljigi.kubf.core.navigation.Routes
 import com.ganaljigi.kubf.core.ui.viewmodel.BaseViewModel
-import com.ganaljigi.kubf.feature.room.mapper.toUiState
-import com.ganaljigi.kubf.feature.room.repository.RoomInfoRepository
+import com.ganaljigi.kubf.core.mapper.toUiState
+import com.ganaljigi.kubf.core.data.repository.RoomInfoRepository
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
