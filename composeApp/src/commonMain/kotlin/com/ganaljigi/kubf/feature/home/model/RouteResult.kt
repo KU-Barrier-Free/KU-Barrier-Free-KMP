@@ -1,7 +1,7 @@
 package com.ganaljigi.kubf.feature.home.model
 
+import com.ganaljigi.kubf.core.model.LatLng
 import com.ganaljigi.kubf.core.model.RouteMode
-import com.google.android.gms.maps.model.LatLng
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 

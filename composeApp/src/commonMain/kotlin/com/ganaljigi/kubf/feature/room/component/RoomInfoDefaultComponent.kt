@@ -1,10 +1,10 @@
 package com.ganaljigi.kubf.feature.room.component
 
-import android.content.Intent
-import android.net.Uri
-import android.widget.Toast
 import com.ganaljigi.kubf.core.ui.util.copyToClipboard
+import com.ganaljigi.kubf.core.ui.util.getPlatformContext
 import com.ganaljigi.kubf.core.ui.util.normalizeForDial
+import com.ganaljigi.kubf.core.ui.util.openPhoneDialer
+import com.ganaljigi.kubf.core.ui.util.showToast
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -34,7 +34,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
@@ -411,7 +410,7 @@ fun DepartmentPhoneRow(
     departmentNumber: String,
     modifier: Modifier = Modifier,
 ) {
-    val ctx = LocalContext.current
+    val platformContext = getPlatformContext()
     var showMenu by remember { mutableStateOf(false) }
 
     Row(
@@ -445,24 +444,21 @@ fun DepartmentPhoneRow(
                 DropdownMenuItem(
                     text = { Text("복사") },
                     onClick = {
-                        copyToClipboard(ctx, departmentNumber)
-                        Toast.makeText(ctx, "전화번호가 복사되었습니다.", Toast.LENGTH_SHORT).show()
+                        platformContext.copyToClipboard(departmentNumber)
+                        platformContext.showToast("전화번호가 복사되었습니다.")
                         showMenu = false
                     },
                 )
                 DropdownMenuItem(
                     text = { Text("전화하기") },
                     onClick = {
-                        copyToClipboard(ctx, departmentNumber)
+                        platformContext.copyToClipboard(departmentNumber)
 
                         val dial = normalizeForDial(departmentNumber)
                         if (dial.isBlank()) {
-                            Toast.makeText(ctx, "유효한 전화번호가 없습니다.", Toast.LENGTH_SHORT).show()
+                            platformContext.showToast("유효한 전화번호가 없습니다.")
                         } else {
-                            val intent = Intent(Intent.ACTION_DIAL).apply {
-                                data = Uri.fromParts("tel", dial, null)
-                            }
-                            ctx.startActivity(intent)
+                            platformContext.openPhoneDialer(dial)
                         }
                         showMenu = false
                     },

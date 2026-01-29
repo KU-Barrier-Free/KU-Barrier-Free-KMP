@@ -14,6 +14,7 @@ import com.ganaljigi.kubf.feature.home.component.map.marker.DoorMarkerComposable
 import com.ganaljigi.kubf.feature.home.component.map.marker.GateMarkerComposable
 import com.ganaljigi.kubf.feature.home.component.map.marker.SpecialMarkerComposable
 import com.ganaljigi.kubf.feature.home.component.map.marker.ToggleMarkerComposable
+import com.ganaljigi.kubf.core.model.toGoogleLatLng
 import com.ganaljigi.kubf.feature.home.model.MapToggle
 import com.ganaljigi.kubf.feature.home.model.RouteResult
 import com.ganaljigi.kubf.feature.home.viewmodel.BuildingMarker
@@ -76,7 +77,7 @@ fun MapComponent(
         routeResult?.let { route ->
             if (route.pathPoints.isNotEmpty()) {
                 Polyline(
-                    points = route.pathPoints,
+                    points = route.pathPoints.map { it.toGoogleLatLng() },
                     color = MainGreen,
                     width = 10f,
                     zIndex = 2f,
