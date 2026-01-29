@@ -4,6 +4,7 @@ import androidx.compose.foundation.text.input.TextFieldState
 import androidx.lifecycle.viewModelScope
 import com.ganaljigi.kubf.core.data.repository.BuildingRepository
 import com.ganaljigi.kubf.core.data.repository.HomeRepository
+import com.ganaljigi.kubf.core.data.repository.InquiryRepository
 import com.ganaljigi.kubf.core.data.repository.RouteRepository
 import com.ganaljigi.kubf.core.mapper.toDoorMarkers
 import com.ganaljigi.kubf.core.mapper.toHomeBuildingSheetInfo
@@ -29,6 +30,7 @@ class HomeViewModel(
     private val homeRepository: HomeRepository,
     private val buildingRepository: BuildingRepository,
     private val routeRepository: RouteRepository,
+    private val inquiryRepository: InquiryRepository,
 ) : BaseViewModel<HomeUiEvent>() {
 
     private val _uiState = MutableStateFlow(HomeUiState())
@@ -207,8 +209,24 @@ class HomeViewModel(
     }
 
     private fun submitInquiry() {
-        sendEventAsync(HomeUiEvent.ShowToast("문의가 등록되었습니다."))
-        hideInquiryDialog()
+        val content = _uiState.value.inquiryTextField.text.toString()
+        if (content.isBlank()) {
+            sendEventAsync(HomeUiEvent.ShowToast("문의 내용을 입력해주세요."))
+            return
+        }
+
+        viewModelScope.launch {
+            inquiryRepository.postInquiry(content).fold(
+                onSuccess = {
+                    sendEvent(HomeUiEvent.ShowToast("문의가 등록되었습니다."))
+                    hideInquiryDialog()
+                },
+                onFailure = { error ->
+                    Napier.e("submitInquiry error", error)
+                    sendEvent(HomeUiEvent.ShowToast("문의 등록에 실패했습니다."))
+                },
+            )
+        }
     }
 
     private fun hideInquiryDialog() {
