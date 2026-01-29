@@ -3,6 +3,7 @@ package com.ganaljigi.kubf.feature.helper.screen
 import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -38,6 +39,7 @@ import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun HelperScreen(
+    padding: PaddingValues = PaddingValues(),
     onBackClick: () -> Unit,
     navigateToDisableStudentHelper: () -> Unit,
     navigateToSupport: () -> Unit,
@@ -62,6 +64,7 @@ fun HelperScreen(
     }
 
     HelperContent(
+        padding = padding,
         uiState = uiState,
         onHelperUiAction = viewModel::onHelperUiAction,
     )
@@ -69,10 +72,12 @@ fun HelperScreen(
 
 @Composable
 private fun HelperContent(
+    padding: PaddingValues = PaddingValues(),
     uiState: HelperUiState,
     onHelperUiAction: (HelperUiAction) -> Unit,
 ) {
     Scaffold(
+        modifier = Modifier.padding(padding),
         topBar = {
             HelperTopAppBar(
                 onBackClick = { onHelperUiAction(HelperUiAction.OnBackClick) },

@@ -23,17 +23,6 @@ fun MainNavHost(
         navController = navController,
         startDestination = Routes.Home,
     ) {
-        composable<Routes.Splash> {
-//            SplashScreen(
-//                padding = padding,
-//                navigateToHome = {
-//                    navController.navigate(Routes.Home) {
-//                        popUpTo(Routes.Splash) { inclusive = true }
-//                    }
-//                },
-//            )
-        }
-
         composable<Routes.Home> {
             HomeRoute(
                 padding = padding,
@@ -44,8 +33,7 @@ fun MainNavHost(
 
         composable<Routes.Helper> {
             HelperScreen(
-//                padding = padding,
-//                navigateToNotice = { navController.navigate(Routes.Notice) },
+                padding = padding,
                 onBackClick = { navController.popBackStack() },
                 navigateToDisableStudentHelper = { navController.navigate(Routes.DisableStudentHelper) },
                 navigateToSupport = { navController.navigate(Routes.Support) },
@@ -64,6 +52,7 @@ fun MainNavHost(
             val route = navBackStackEntry.toRoute<Routes.BuildingInfo>()
 
             BuildingInfoScreen(
+                padding = padding,
                 onRoomClick = { room, buildingName ->
                     navController.navigate(
                         Routes.RoomInfo(
@@ -78,22 +67,32 @@ fun MainNavHost(
             )
         }
 
-        composable<Routes.RoomInfo> { navBackStackEntry ->
+        composable<Routes.RoomInfo> {
             RoomInfoScreen(
+                padding = padding,
                 onBackClick = { navController.popBackStack() },
             )
         }
 
         composable<Routes.DisableStudentHelper> {
-            DisableStudentHelperScreen(onBackClick = { navController.popBackStack() })
+            DisableStudentHelperScreen(
+                padding = padding,
+                onBackClick = { navController.popBackStack() },
+            )
         }
 
         composable<Routes.Support> {
-            SupportScreen(onBackClick = { navController.popBackStack() })
+            SupportScreen(
+                padding = padding,
+                onBackClick = { navController.popBackStack() },
+            )
         }
 
         composable<Routes.JobInformation> {
-            JobInformationScreen(onBackClick = { navController.popBackStack() })
+            JobInformationScreen(
+                padding = padding,
+                onBackClick = { navController.popBackStack() },
+            )
         }
     }
 }

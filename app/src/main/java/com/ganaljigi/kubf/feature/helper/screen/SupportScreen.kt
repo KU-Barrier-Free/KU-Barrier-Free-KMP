@@ -2,9 +2,11 @@ package com.ganaljigi.kubf.feature.helper.screen
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.TabRowDefaults
@@ -25,6 +27,7 @@ import com.ganaljigi.kubf.feature.helper.component.WebViewTopAppBar
 
 @Composable
 fun SupportScreen(
+    padding: PaddingValues = PaddingValues(),
     onBackClick: () -> Unit,
 ) {
     var tabIndex by remember { mutableIntStateOf(0) }
@@ -38,7 +41,7 @@ fun SupportScreen(
 
     val tabs = listOf("교수/학습", "기자재", "장학 제도", "시설 현황")
 
-    Column(modifier = Modifier.fillMaxSize()) {
+    Column(modifier = Modifier.padding(padding).fillMaxSize()) {
         WebViewTopAppBar(
             textTitle = "지원 업무",
             onBackClick = onBackClick,

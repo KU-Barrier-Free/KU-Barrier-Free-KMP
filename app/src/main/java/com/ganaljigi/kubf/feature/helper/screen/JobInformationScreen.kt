@@ -1,5 +1,6 @@
 package com.ganaljigi.kubf.feature.helper.screen
 
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
@@ -10,9 +11,11 @@ import com.ganaljigi.kubf.feature.helper.component.WebViewTopAppBar
 
 @Composable
 fun JobInformationScreen(
+    padding: PaddingValues = PaddingValues(),
     onBackClick: () -> Unit,
 ) {
     Scaffold(
+        modifier = Modifier.padding(padding),
         topBar = {
             WebViewTopAppBar(
                 textTitle = "채용 정보",
