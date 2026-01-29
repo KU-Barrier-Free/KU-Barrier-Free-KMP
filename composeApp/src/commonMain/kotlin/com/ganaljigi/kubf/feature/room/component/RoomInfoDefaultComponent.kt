@@ -43,7 +43,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.withStyle
-import androidx.compose.ui.tooling.preview.Preview
+import org.jetbrains.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.em
@@ -472,7 +472,7 @@ fun DepartmentPhoneRow(
     }
 }
 
-@Preview(showBackground = true)
+@Preview
 @Composable
 private fun RoomInfoDefaultComponentPreview() {
     KUBFAndroidTheme {
@@ -491,7 +491,7 @@ private fun RoomInfoDefaultComponentPreview() {
     }
 }
 
-@Preview(showBackground = true)
+@Preview
 @Composable
 private fun RoomInfoDefaultComponentWithCommentPreview() {
     KUBFAndroidTheme {
@@ -510,13 +510,13 @@ private fun RoomInfoDefaultComponentWithCommentPreview() {
     }
 }
 
-@Preview(showBackground = true)
+@Preview
 @Composable
 private fun LectureChipPreview() {
     LectureChip()
 }
 
-@Preview(showBackground = true)
+@Preview
 @Composable
 private fun DepartmentPhoneRowPreview() {
     DepartmentPhoneRow(departmentNumber = "02-450-3968")

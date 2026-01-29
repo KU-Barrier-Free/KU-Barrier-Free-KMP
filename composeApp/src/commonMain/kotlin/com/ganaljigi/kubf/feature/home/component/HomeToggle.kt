@@ -14,7 +14,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
+import org.jetbrains.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.ganaljigi.kubf.feature.home.model.MapToggle
 import com.ganaljigi.kubf.feature.home.viewmodel.ToggleUiState
@@ -89,7 +89,7 @@ fun HomeToggleChip(
     }
 }
 
-@Preview(showBackground = true)
+@Preview
 @Composable
 private fun HomeTogglePreview() {
     HomeToggle(

@@ -14,7 +14,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.withStyle
-import androidx.compose.ui.tooling.preview.Preview
+import org.jetbrains.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ganaljigi.kubf.core.designsystem.theme.Black
@@ -74,7 +74,7 @@ fun BarrierFreeInfoItem(
     }
 }
 
-@Preview(showBackground = true)
+@Preview
 @Composable
 private fun BarrierFreeInfoItemPreview() {
     BarrierFreeInfoItem(

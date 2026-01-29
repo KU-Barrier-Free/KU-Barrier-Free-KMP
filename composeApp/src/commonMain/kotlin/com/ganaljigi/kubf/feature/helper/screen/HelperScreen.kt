@@ -1,6 +1,5 @@
 package com.ganaljigi.kubf.feature.helper.screen
 
-import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -17,9 +16,10 @@ import androidx.compose.runtime.getValue
 import com.ganaljigi.kubf.core.ui.util.ObserveAsEvents
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalUriHandler
-import androidx.compose.ui.tooling.preview.Preview
+import com.ganaljigi.kubf.core.ui.util.getPlatformContext
+import com.ganaljigi.kubf.core.ui.util.showToast
+import org.jetbrains.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ganalijigi.kubf.R
@@ -47,7 +47,7 @@ fun HelperScreen(
     viewModel: HelperViewModel = koinViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-    val context = LocalContext.current
+    val platformContext = getPlatformContext()
     val uriHandler = LocalUriHandler.current
 
     ObserveAsEvents(viewModel.uiEvent) { event ->
@@ -58,7 +58,7 @@ fun HelperScreen(
             is HelperUiEvent.NavigateToJobInformation -> navigateToJobInformation()
             is HelperUiEvent.OpenUrl -> uriHandler.openUri(event.url)
             is HelperUiEvent.ShowToast -> {
-                Toast.makeText(context, event.message, Toast.LENGTH_SHORT).show()
+                platformContext.showToast(event.message)
             }
         }
     }
@@ -147,7 +147,7 @@ private fun HelperContent(
     }
 }
 
-@Preview(showBackground = true)
+@Preview
 @Composable
 private fun HelperContentPreview() {
     HelperContent(
@@ -177,7 +177,7 @@ private fun HelperContentPreview() {
     )
 }
 
-@Preview(showBackground = true)
+@Preview
 @Composable
 private fun HelperContentLoadingPreview() {
     HelperContent(
@@ -186,7 +186,7 @@ private fun HelperContentLoadingPreview() {
     )
 }
 
-@Preview(showBackground = true)
+@Preview
 @Composable
 private fun HelperContentErrorPreview() {
     HelperContent(

@@ -11,7 +11,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import org.jetbrains.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.ganaljigi.kubf.core.designsystem.theme.Gray1
 import com.ganaljigi.kubf.core.designsystem.theme.Gray3
@@ -71,7 +71,7 @@ fun DoorItem(
     }
 }
 
-@Preview(showBackground = true)
+@Preview
 @Composable
 private fun DoorComponentPreview() {
     KUBFAndroidTheme {
@@ -79,7 +79,7 @@ private fun DoorComponentPreview() {
     }
 }
 
-@Preview(showBackground = true)
+@Preview
 @Composable
 private fun DoorItemExistsPreview() {
     KUBFAndroidTheme {
@@ -87,7 +87,7 @@ private fun DoorItemExistsPreview() {
     }
 }
 
-@Preview(showBackground = true)
+@Preview
 @Composable
 private fun DoorItemNotExistsPreview() {
     KUBFAndroidTheme {

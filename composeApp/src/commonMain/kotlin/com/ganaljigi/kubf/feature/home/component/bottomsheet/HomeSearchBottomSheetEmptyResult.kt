@@ -14,7 +14,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
+import org.jetbrains.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.ganaljigi.kubf.core.designsystem.theme.Gray4
 import com.ganaljigi.kubf.core.designsystem.theme.KUBFAndroidTheme
@@ -75,7 +75,7 @@ fun HomeSearchBottomSheetEmptyResult(
     }
 }
 
-@Preview(showBackground = true)
+@Preview
 @Composable
 private fun HomeSearchBottomSheetEmptyResultPreview() {
     HomeSearchBottomSheetEmptyResult(

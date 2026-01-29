@@ -29,7 +29,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.TextFieldValue
-import androidx.compose.ui.tooling.preview.Preview
+import org.jetbrains.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import com.ganalijigi.kubf.R
@@ -200,7 +200,7 @@ private fun InquiryTextField(
     }
 }
 
-@Preview(showBackground = true)
+@Preview
 @Composable
 private fun HomeInquiryDialogPreview() {
     HomeInquiryDialog(

@@ -33,7 +33,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
-import androidx.compose.ui.tooling.preview.Preview
+import org.jetbrains.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.ganalijigi.kubf.R
 import com.ganaljigi.kubf.core.designsystem.theme.Gray2
@@ -205,7 +205,7 @@ fun KUBFSearchBar(
     }
 }
 
-@Preview(widthDp = 360, heightDp = 100)
+@Preview
 @Composable
 private fun KUBFSearchBarPreview() {
     var value by remember { mutableStateOf(TextFieldValue()) }

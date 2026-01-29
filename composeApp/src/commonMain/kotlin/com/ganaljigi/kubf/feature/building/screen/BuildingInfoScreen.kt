@@ -1,6 +1,5 @@
 package com.ganaljigi.kubf.feature.building.screen
 
-import android.widget.Toast
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
@@ -16,13 +15,14 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.tooling.preview.Preview
+import org.jetbrains.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ganaljigi.kubf.core.designsystem.theme.KUBFAndroidTheme
 import com.ganaljigi.kubf.core.ui.util.ObserveAsEvents
+import com.ganaljigi.kubf.core.ui.util.getPlatformContext
+import com.ganaljigi.kubf.core.ui.util.showToast
 import com.ganaljigi.kubf.feature.building.component.BuildingHeaderComponent
 import com.ganaljigi.kubf.feature.building.component.BuildingTopAppBar
 import com.ganaljigi.kubf.feature.building.component.FloorComponent
@@ -47,14 +47,14 @@ fun BuildingInfoScreen(
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val listState = rememberLazyListState()
     val scope = rememberCoroutineScope()
-    val context = LocalContext.current
+    val platformContext = getPlatformContext()
 
     ObserveAsEvents(viewModel.uiEvent) { event ->
         when (event) {
             is BuildingUiEvent.NavigateBack -> onBack()
             is BuildingUiEvent.NavigateToRoomInfo -> onRoomClick(event.room, event.buildingName)
             is BuildingUiEvent.ShowToast -> {
-                Toast.makeText(context, event.message, Toast.LENGTH_SHORT).show()
+                platformContext.showToast(event.message)
             }
 
             is BuildingUiEvent.ScrollToFloorTab -> {
