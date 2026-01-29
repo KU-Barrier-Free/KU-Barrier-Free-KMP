@@ -9,9 +9,9 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.viewinterop.AndroidView
 
 @Composable
-fun NoticeWebView(
+actual fun NoticeWebView(
     url: String,
-    modifier: Modifier = Modifier,
+    modifier: Modifier,
 ) {
     val context = LocalContext.current
 

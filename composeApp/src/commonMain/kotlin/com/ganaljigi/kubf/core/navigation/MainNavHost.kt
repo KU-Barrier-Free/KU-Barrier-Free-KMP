@@ -13,6 +13,7 @@ import com.ganaljigi.kubf.feature.helper.screen.JobInformationScreen
 import com.ganaljigi.kubf.feature.helper.screen.SupportScreen
 import com.ganaljigi.kubf.feature.home.screen.HomeRoute
 import com.ganaljigi.kubf.feature.room.RoomInfoScreen
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun MainNavHost(
@@ -28,6 +29,7 @@ fun MainNavHost(
                 padding = padding,
                 navigateToHelper = { navController.navigate(Routes.Helper) },
                 navigateToBuildingInfo = { navController.navigate(Routes.BuildingInfo(it)) },
+                viewModel = koinViewModel(),
             )
         }
 

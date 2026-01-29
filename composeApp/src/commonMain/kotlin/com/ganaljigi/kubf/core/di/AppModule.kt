@@ -53,9 +53,13 @@ val repositoryModule = module {
 
 val viewModelModule = module {
     viewModel { HomeViewModel(get(), get(), get(), get()) }
-    viewModel { BuildingViewModel(get(), get()) }
+    viewModel { (savedStateHandle: androidx.lifecycle.SavedStateHandle) ->
+        BuildingViewModel(savedStateHandle, get())
+    }
     viewModel { HelperViewModel(get()) }
-    viewModel { RoomInfoViewModel(get()) }
+    viewModel { (savedStateHandle: androidx.lifecycle.SavedStateHandle) ->
+        RoomInfoViewModel(savedStateHandle, get())
+    }
 }
 
 val appModules = listOf(

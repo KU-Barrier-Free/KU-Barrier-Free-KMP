@@ -38,7 +38,7 @@ suspend fun PermissionsController.hasLocationPermission(): Boolean {
  * 위치 권한을 확인하고, 없으면 요청합니다.
  * @return 권한이 부여되었으면 true, 거부되었으면 false
  */
-suspend fun PermissionsController.ensureLocationPermission(): Boolean {
+actual suspend fun PermissionsController.ensureLocationPermission(): Boolean {
     return if (hasLocationPermission()) {
         true
     } else {
@@ -74,9 +74,8 @@ suspend fun getCurrentLocation(context: Context): LatLng? {
 
 /**
  * 위치 권한을 확인하고 현재 위치를 가져옵니다.
- * @param context Android Context
- * @param permissionsController Moko PermissionsController
- * @return 현재 위치의 LatLng, 권한 거부 또는 실패 시 null
+ * - Android: Context 필요, LatLng 반환
+ * - Common: Pair<Double, Double> 반환
  */
 suspend fun getLocationWithPermission(
     context: Context,
@@ -87,4 +86,15 @@ suspend fun getLocationWithPermission(
     } else {
         null
     }
+}
+
+/**
+ * Common expect 구현
+ */
+actual suspend fun getLocationWithPermission(
+    permissionsController: PermissionsController,
+): Pair<Double, Double>? {
+    // Android에서는 Context가 필요하므로 null 반환
+    // 실제 사용 시에는 Context 포함 오버로드 사용
+    return null
 }
