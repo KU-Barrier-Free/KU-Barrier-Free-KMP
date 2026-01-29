@@ -1,3 +1,6 @@
+rootProject.name = "KUBFAndroid"
+enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
+
 pluginManagement {
     repositories {
         google {
@@ -11,6 +14,7 @@ pluginManagement {
         gradlePluginPortal()
     }
 }
+
 dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {
@@ -19,6 +23,4 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "KUBFAndroid"
-include(":app")
- 
+include(":composeApp")
