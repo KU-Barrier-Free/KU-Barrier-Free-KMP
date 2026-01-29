@@ -4,7 +4,6 @@
 
 [![Kotlin](https://img.shields.io/badge/kotlin-2.2.20-blue.svg?logo=kotlin)](http://kotlinlang.org)
 [![Android](https://img.shields.io/badge/platform-Android-green.svg?logo=android)](https://www.android.com)
-[![License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 ## 📱 쿠맵이란?
 
@@ -68,9 +67,11 @@ app/src/main/java/com/ganaljigi/kubf/
 ### 필수 요구사항
 
 - Android Studio Ladybug | 2024.2.1 이상
-- JDK 17 이상
+- JDK 11 이상
 - Android SDK 30 이상 (minSdk: 30, targetSdk: 35)
 - Google Maps API Key
+- Google Maps ID
+- Backend API Base URL
 
 ### 설치 및 실행
 
@@ -80,9 +81,11 @@ git clone https://github.com/KU-Barrier-Free/KU-Barrier-Free-KMP.git
 cd KU-Barrier-Free-KMP
 ```
 
-2. `local.properties` 파일 생성 및 Google Maps API Key 추가
+2. `local.properties` 파일 생성 및 필수 설정값 추가
 ```properties
 GOOGLE_MAPS_API_KEY=your_google_maps_api_key_here
+GOOGLE_MAPS_ID="your_google_maps_id_here"
+BASE_URL="your_backend_api_base_url_here"
 ```
 
 3. Android Studio에서 프로젝트 열기
@@ -127,7 +130,7 @@ GOOGLE_MAPS_API_KEY=your_google_maps_api_key_here
 
 ## 📝 라이선스
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details
+프로젝트 라이선스에 대한 정보는 프로젝트 관리자에게 문의하세요.
 
 ## 👥 팀
 
