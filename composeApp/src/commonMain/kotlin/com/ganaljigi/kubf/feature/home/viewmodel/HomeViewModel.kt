@@ -177,6 +177,7 @@ class HomeViewModel(
                 selectedMarkerInfo = null,
             )
         }
+        sendEventAsync(HomeUiEvent.MoveCamera(marker.latitude, marker.longitude))
         fetchBuildingInfo(marker.id)
     }
 
@@ -423,6 +424,7 @@ class HomeViewModel(
     }
 
     private fun fetchGateMarkerInfo(marker: GateMarker) {
+        sendEventAsync(HomeUiEvent.MoveCamera(marker.latitude, marker.longitude))
         viewModelScope.launch {
             homeRepository.getGateInfo(marker.id)
                 .onSuccess { response ->
@@ -447,6 +449,7 @@ class HomeViewModel(
     }
 
     private fun fetchSpecialMarkerInfo(marker: ToggleMarker) {
+        sendEventAsync(HomeUiEvent.MoveCamera(marker.latitude, marker.longitude))
         viewModelScope.launch {
             homeRepository.getSpecialInfo(marker.id).fold(
                 onSuccess = { response ->

@@ -88,7 +88,11 @@ fun String.toDistanceString(): String {
     return when {
         distanceInt == null -> this
         distanceInt < 1000 -> "${distanceInt}m"
-        else -> "%.1fkm".format(distanceInt / 1000.0)
+        else -> {
+            val km = distanceInt / 1000.0
+            val formatted = ((km * 10).toInt() / 10.0).toString()
+            "${formatted}km"
+        }
     }
 }
 

@@ -7,22 +7,19 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.rememberNavController
 import com.ganaljigi.kubf.core.designsystem.theme.KUBFAndroidTheme
 import com.ganaljigi.kubf.core.navigation.MainNavHost
-import org.koin.compose.KoinContext
 
 @Composable
 fun App() {
-    KoinContext {
-        KUBFAndroidTheme {
-            val navController = rememberNavController()
+    KUBFAndroidTheme {
+        val navController = rememberNavController()
 
-            Scaffold(
-                modifier = Modifier.fillMaxSize(),
-            ) { innerPadding ->
-                MainNavHost(
-                    padding = innerPadding,
-                    navController = navController,
-                )
-            }
+        Scaffold(
+            modifier = Modifier.fillMaxSize(),
+        ) { innerPadding ->
+            MainNavHost(
+                padding = innerPadding,
+                navController = navController,
+            )
         }
     }
 }

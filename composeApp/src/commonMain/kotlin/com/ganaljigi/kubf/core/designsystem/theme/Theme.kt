@@ -28,7 +28,7 @@ fun KUBFAndroidTheme(
     val colorScheme = LightColorScheme
 
     CompositionLocalProvider(
-        LocalTypography provides Typography,
+        LocalTypography provides createTypography(),
     ) {
         MaterialTheme(
             colorScheme = colorScheme,
