@@ -4,6 +4,8 @@ import dev.icerock.moko.permissions.DeniedAlwaysException
 import dev.icerock.moko.permissions.DeniedException
 import dev.icerock.moko.permissions.Permission
 import dev.icerock.moko.permissions.PermissionsController
+import kotlinx.cinterop.ExperimentalForeignApi
+import kotlinx.cinterop.useContents
 import platform.CoreLocation.CLLocationManager
 import platform.CoreLocation.kCLLocationAccuracyBest
 import kotlin.coroutines.resume
@@ -34,6 +36,7 @@ actual suspend fun getLocationWithPermission(
     }
 }
 
+@OptIn(ExperimentalForeignApi::class)
 private suspend fun getCurrentLocationIOS(): Pair<Double, Double>? {
     return suspendCoroutine { continuation ->
         val locationManager = CLLocationManager()
@@ -41,7 +44,9 @@ private suspend fun getCurrentLocationIOS(): Pair<Double, Double>? {
 
         val location = locationManager.location
         if (location != null) {
-            continuation.resume(Pair(location.coordinate.latitude, location.coordinate.longitude))
+            location.coordinate.useContents {
+                continuation.resume(Pair(latitude, longitude))
+            }
         } else {
             continuation.resume(null)
         }

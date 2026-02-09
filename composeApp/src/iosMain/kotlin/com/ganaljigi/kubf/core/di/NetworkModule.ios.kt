@@ -1,15 +1,13 @@
 package com.ganaljigi.kubf.core.di
 
+import com.ganaljigi.kubf.core.config.AppConfig
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.darwin.Darwin
-import platform.Foundation.NSBundle
+import kotlin.experimental.ExperimentalNativeApi
 
 actual fun createPlatformHttpClient(): HttpClient = HttpClient(Darwin)
 
-actual fun getBaseUrl(): String {
-    return NSBundle.mainBundle.objectForInfoDictionaryKey("BASE_URL") as? String ?: ""
-}
+actual fun getBaseUrl(): String = AppConfig.BASE_URL
 
-actual fun isDebug(): Boolean {
-    return Platform.isDebugBinary
-}
+@OptIn(ExperimentalNativeApi::class)
+actual fun isDebug(): Boolean = Platform.isDebugBinary
