@@ -42,12 +42,14 @@ fun GateMarkerComposable(
             onError = { isImageLoaded[index] = true },
         )
     }
-    val allImagesLoaded by remember { derivedStateOf { isImageLoaded.all { it } } }
+    val allImagesLoaded by remember(imageUrls, isSelected) { derivedStateOf { isImageLoaded.all { it } } }
 
-    LaunchedEffect(gateMarkerInfo, allImagesLoaded) {
-        if (isSelected && allImagesLoaded) {
+    LaunchedEffect(isSelected, gateMarkerInfo, allImagesLoaded) {
+        if (isSelected) {
+            // InfoWindow는 정적 비트맵이므로 hide+show로 갱신
+            markerState.hideInfoWindow()
             markerState.showInfoWindow()
-        } else if (!isSelected) {
+        } else {
             markerState.hideInfoWindow()
         }
     }

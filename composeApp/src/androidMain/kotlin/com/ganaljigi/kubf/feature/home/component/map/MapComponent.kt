@@ -1,10 +1,12 @@
 package com.ganaljigi.kubf.feature.home.component.map
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
 import com.ganalijigi.kubf.BuildConfig
 import com.ganalijigi.kubf.R
@@ -27,34 +29,52 @@ import com.ganaljigi.kubf.feature.home.viewmodel.SelectableMarker
 import com.ganaljigi.kubf.feature.home.viewmodel.SpecialMarkerInfo
 import com.ganaljigi.kubf.feature.home.viewmodel.ToggleMarker
 import com.google.android.gms.maps.GoogleMapOptions
+import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.LatLngBounds
+import kotlinx.coroutines.flow.collect
 import com.google.maps.android.compose.CameraPositionState
 import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.MapProperties
 import com.google.maps.android.compose.MapType
 import com.google.maps.android.compose.MapUiSettings
 import com.google.maps.android.compose.Polyline
+import com.google.maps.android.compose.rememberCameraPositionState
 import com.google.maps.android.compose.rememberMarkerState
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 
 @Composable
-fun MapComponent(
-    modifier: Modifier = Modifier,
-    cameraPositionState: CameraPositionState,
-    selectedMarker: SelectableMarker? = null,
-    selectedMarkerInfo: MarkerInfo? = null,
-    showingMarkers: ImmutableList<MapMarker> = persistentListOf(),
-    showingToggleMarkers: ImmutableList<ToggleMarker> = persistentListOf(),
-    routeResult: RouteResult? = null,
-    onBuildingMarkerClick: (BuildingMarker) -> Unit = {},
-    onGateMarkerClick: (GateMarker) -> Unit = {},
-    onSpecialMarkerClick: (ToggleMarker) -> Unit = {},
-    onSpecialImageClick: (List<String>) -> Unit = {},
-    onGateImageClick: (List<String>) -> Unit = {},
-    onMapClick: () -> Unit = {},
+actual fun MapComponent(
+    modifier: Modifier,
+    cameraLatitude: Double,
+    cameraLongitude: Double,
+    cameraZoom: Float,
+    selectedMarker: SelectableMarker?,
+    selectedMarkerInfo: MarkerInfo?,
+    showingMarkers: ImmutableList<MapMarker>,
+    showingToggleMarkers: ImmutableList<ToggleMarker>,
+    routeResult: RouteResult?,
+    onCameraMove: (latitude: Double, longitude: Double, zoom: Float) -> Unit,
+    onBuildingMarkerClick: (BuildingMarker) -> Unit,
+    onGateMarkerClick: (GateMarker) -> Unit,
+    onSpecialMarkerClick: (ToggleMarker) -> Unit,
+    onSpecialImageClick: (List<String>) -> Unit,
+    onGateImageClick: (List<String>) -> Unit,
+    onMapClick: () -> Unit,
 ) {
+    val cameraPositionState = rememberCameraPositionState {
+        position = CameraPosition.fromLatLngZoom(LatLng(cameraLatitude, cameraLongitude), cameraZoom)
+    }
+
+    // 카메라 이동 감지
+    LaunchedEffect(cameraPositionState) {
+        snapshotFlow { cameraPositionState.position }
+            .collect { position ->
+                onCameraMove(position.target.latitude, position.target.longitude, position.zoom)
+            }
+    }
+
     val markerScale by remember {
         derivedStateOf {
             calculateMarkerScale(
@@ -140,7 +160,7 @@ fun MapComponent(
             when (marker) {
                 is BuildingMarker -> {
                     key("building_${marker.id}") {
-                        val isSelected = selectedMarker?.id == marker.id
+                        val isSelected = selectedMarker?.id == marker.id && selectedMarker is BuildingMarker
                         BuildingMarkerComposable(
                             buildingMarker = marker,
                             isSelected = isSelected,
@@ -162,7 +182,7 @@ fun MapComponent(
                     val markerState = rememberMarkerState(
                         position = LatLng(marker.latitude, marker.longitude),
                     )
-                    val isSelected = selectedMarker?.id == marker.id
+                    val isSelected = selectedMarker?.id == marker.id && selectedMarker is GateMarker
                     val gateInfo = if (isSelected && selectedMarkerInfo is GateMarkerInfo) {
                         selectedMarkerInfo
                     } else {
