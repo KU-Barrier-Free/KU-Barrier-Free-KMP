@@ -278,3 +278,7 @@ Package.resolved
 ### Compose Multiplatform ###
 # Generated Compose Resources
 **/generated/
+
+### iOS Secrets ###
+iosApp/Config/Secrets.xcconfig
+iosApp/Configuration/Config.local.xcconfig

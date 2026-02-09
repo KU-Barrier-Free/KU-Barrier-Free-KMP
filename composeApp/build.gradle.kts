@@ -6,6 +6,7 @@ plugins {
     alias(libs.plugins.kotlin.multiplatform)
     alias(libs.plugins.android.application)
     alias(libs.plugins.compose.multiplatform)
+    alias(libs.plugins.kotlin.cocoapods)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.google.services)
@@ -27,14 +28,23 @@ kotlin {
         }
     }
 
-    listOf(
-        iosX64(),
-        iosArm64(),
-        iosSimulatorArm64()
-    ).forEach { iosTarget ->
-        iosTarget.binaries.framework {
+    iosX64()
+    iosArm64()
+    iosSimulatorArm64()
+
+    cocoapods {
+        summary = "KU Barrier Free KMP"
+        homepage = "https://github.com/ganaljigi/KU-Barrier-Free-KMP"
+        version = "1.1.0"
+        ios.deploymentTarget = "15.0"
+
+        framework {
             baseName = "ComposeApp"
             isStatic = true
+        }
+
+        pod("GoogleMaps") {
+            version = "~> 8.4"
         }
     }
 
@@ -43,7 +53,9 @@ kotlin {
             // Compose Multiplatform
             implementation(compose.runtime)
             implementation(compose.foundation)
+            implementation(compose.animation)
             implementation(compose.material3)
+            implementation(compose.materialIconsExtended)
             implementation(compose.ui)
             implementation(compose.components.resources)
             implementation(compose.components.uiToolingPreview)
@@ -130,7 +142,11 @@ android {
 
         val mapsApiKey: String = localProperties.getProperty("GOOGLE_MAPS_API_KEY") ?: ""
         manifestPlaceholders["GOOGLE_MAPS_API_KEY"] = mapsApiKey
-        buildConfigField("String", "GOOGLE_MAPS_ID", localProperties["GOOGLE_MAPS_ID"]?.toString() ?: "\"\"")
+        buildConfigField(
+            "String",
+            "GOOGLE_MAPS_ID",
+            localProperties["GOOGLE_MAPS_ID"]?.toString() ?: "\"\""
+        )
         buildConfigField("String", "BASE_URL", localProperties["BASE_URL"]?.toString() ?: "\"\"")
     }
 

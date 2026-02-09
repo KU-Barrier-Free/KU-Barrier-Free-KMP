@@ -27,9 +27,9 @@ detekt = "1.23.7"
 napier = "2.7.1"
 
 # Compose Multiplatform
-composeMultiplatform = "1.7.3"
-navigationCompose = "2.8.0-alpha12"
-lifecycleViewmodel = "2.8.7"
+composeMultiplatform = "1.10.0"
+navigationCompose = "2.9.1"
+lifecycleViewmodel = "2.10.0-alpha06"
 
 [libraries]
 moko-permissions = { module = "dev.icerock.moko:permissions", version.ref = "mokoPermissions" }
@@ -93,7 +93,8 @@ kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref 
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 compose-multiplatform = { id = "org.jetbrains.compose", version.ref = "composeMultiplatform" }
-ksp = {id = "com.google.devtools.ksp", version.ref = "ksp"}
+ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 firebase-crashlytics = { id = "com.google.firebase.crashlytics", version.ref = "crashlytics" }
 google-services = { id = "com.google.gms.google-services", version.ref = "googleServices" }
 detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
+kotlin-cocoapods = { id = "org.jetbrains.kotlin.native.cocoapods", version.ref = "kotlin" }
