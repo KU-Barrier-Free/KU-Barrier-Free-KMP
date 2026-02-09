@@ -26,7 +26,9 @@ fun FloorTabRow(
     onFloorSelect: (Int) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val safeIndex = selectedIndex.coerceIn(0, (floors.size - 1).coerceAtLeast(0))
+    if (floors.isEmpty()) return
+
+    val safeIndex = selectedIndex.coerceIn(0, floors.size - 1)
 
     if (floors.size < 7) {
         TabRow(

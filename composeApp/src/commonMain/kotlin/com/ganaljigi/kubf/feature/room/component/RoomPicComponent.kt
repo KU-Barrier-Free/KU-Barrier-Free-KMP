@@ -48,7 +48,7 @@ fun RoomPic(
             AsyncImage(
                 model = imageUrl,
                 contentDescription = "강의실 사진",
-                contentScale = ContentScale.FillWidth,
+                contentScale = ContentScale.Fit,
                 modifier = Modifier
                     .fillMaxWidth()
                     .clickable { onImageClick(imageUrl) },

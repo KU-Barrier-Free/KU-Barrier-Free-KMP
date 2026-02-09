@@ -24,12 +24,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.res.painterResource
+import org.jetbrains.compose.resources.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
-import com.ganalijigi.kubf.R
+import kubfandroid.composeapp.generated.resources.Res
+import kubfandroid.composeapp.generated.resources.ic_chevron_right
 import com.ganaljigi.kubf.feature.building.model.Room
 import com.ganaljigi.kubf.core.designsystem.theme.Black
 import com.ganaljigi.kubf.core.designsystem.theme.Gray3
@@ -70,7 +71,7 @@ fun RoomComponent(
             contentAlignment = Alignment.TopEnd,
         ) {
             Icon(
-                painter = painterResource(R.drawable.ic_chevron_right),
+                painter = painterResource(Res.drawable.ic_chevron_right),
                 contentDescription = "이동",
             )
         }

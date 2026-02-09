@@ -4,12 +4,13 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.background
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -22,7 +23,10 @@ import com.ganaljigi.kubf.core.ui.util.showToast
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.ganalijigi.kubf.R
+import kubfandroid.composeapp.generated.resources.Res
+import kubfandroid.composeapp.generated.resources.ic_helper_disablestudenthelper
+import kubfandroid.composeapp.generated.resources.ic_helper_support
+import kubfandroid.composeapp.generated.resources.ic_helper_jobinformation
 import com.ganaljigi.kubf.feature.helper.component.information.InfoBox
 import com.ganaljigi.kubf.feature.helper.component.information.InformationTitle
 import com.ganaljigi.kubf.feature.helper.component.notice.NoticeItem
@@ -76,18 +80,18 @@ private fun HelperContent(
     uiState: HelperUiState,
     onHelperUiAction: (HelperUiAction) -> Unit,
 ) {
-    Scaffold(
-        modifier = Modifier.padding(padding),
-        topBar = {
-            HelperTopAppBar(
-                onBackClick = { onHelperUiAction(HelperUiAction.OnBackClick) },
-            )
-        },
-        containerColor = Color.White,
-    ) { paddingValues ->
+    Column(
+        modifier = Modifier
+            .padding(padding)
+            .fillMaxSize()
+            .background(Color.White),
+    ) {
+        HelperTopAppBar(
+            onBackClick = { onHelperUiAction(HelperUiAction.OnBackClick) },
+        )
         Column(
             modifier = Modifier
-                .padding(paddingValues)
+                .fillMaxSize()
                 .verticalScroll(rememberScrollState()),
         ) {
             NoticeTitle()
@@ -122,17 +126,17 @@ private fun HelperContent(
             ) {
                 ShortCutItem(
                     text = "장애학생 도우미",
-                    iconResId = R.drawable.ic_helper_disablestudenthelper,
+                    iconResId = Res.drawable.ic_helper_disablestudenthelper,
                     onClick = { onHelperUiAction(HelperUiAction.OnDisableStudentHelperClick) },
                 )
                 ShortCutItem(
                     text = "지원 업무",
-                    iconResId = R.drawable.ic_helper_support,
+                    iconResId = Res.drawable.ic_helper_support,
                     onClick = { onHelperUiAction(HelperUiAction.OnSupportClick) },
                 )
                 ShortCutItem(
                     text = "채용 정보",
-                    iconResId = R.drawable.ic_helper_jobinformation,
+                    iconResId = Res.drawable.ic_helper_jobinformation,
                     onClick = { onHelperUiAction(HelperUiAction.OnJobInformationClick) },
                 )
             }

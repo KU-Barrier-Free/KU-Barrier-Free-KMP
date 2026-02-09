@@ -35,7 +35,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
@@ -49,7 +48,15 @@ import androidx.compose.ui.unit.em
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Popup
 import androidx.compose.ui.window.PopupProperties
-import com.ganalijigi.kubf.R
+import org.jetbrains.compose.resources.painterResource
+import kubfandroid.composeapp.generated.resources.Res
+import kubfandroid.composeapp.generated.resources.ic_roominfo_capacity
+import kubfandroid.composeapp.generated.resources.ic_roominfo_area
+import kubfandroid.composeapp.generated.resources.ic_roominfo_roomcomment
+import kubfandroid.composeapp.generated.resources.ic_roominfo_roomtype
+import kubfandroid.composeapp.generated.resources.ic_roominfo_roomtypequestion
+import kubfandroid.composeapp.generated.resources.ic_roominfo_department
+import kubfandroid.composeapp.generated.resources.ic_roominfo_departmentnumber
 import com.ganaljigi.kubf.core.designsystem.theme.Gray3
 import com.ganaljigi.kubf.core.designsystem.theme.Gray4
 import com.ganaljigi.kubf.core.designsystem.theme.KUBFAndroidTheme
@@ -105,7 +112,7 @@ fun RoomInfoDefaultComponent(
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Icon(
-                painter = painterResource(R.drawable.ic_roominfo_capacity),
+                painter = painterResource(Res.drawable.ic_roominfo_capacity),
                 contentDescription = "수용 인원",
                 tint = Color.Unspecified,
                 modifier = Modifier
@@ -145,7 +152,7 @@ fun RoomInfoDefaultComponent(
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Icon(
-                painter = painterResource(R.drawable.ic_roominfo_area),
+                painter = painterResource(Res.drawable.ic_roominfo_area),
                 contentDescription = "면적",
                 tint = Gray4,
                 modifier = Modifier
@@ -202,7 +209,7 @@ fun RoomInfoDefaultComponent(
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Icon(
-                painter = painterResource(R.drawable.ic_roominfo_roomcomment),
+                painter = painterResource(Res.drawable.ic_roominfo_roomcomment),
                 contentDescription = "특이사항",
                 tint = Gray4,
                 modifier = Modifier
@@ -244,7 +251,7 @@ fun RoomInfoDefaultComponent(
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 Icon(
-                    painter = painterResource(R.drawable.ic_roominfo_roomtype), // TODO
+                    painter = painterResource(Res.drawable.ic_roominfo_roomtype),
                     contentDescription = "호실 형태 설명",
                     tint = Gray4,
                     modifier = Modifier
@@ -262,7 +269,7 @@ fun RoomInfoDefaultComponent(
 
                 Spacer(modifier = Modifier.width(4.dp))
                 Icon(
-                    painter = painterResource(R.drawable.ic_roominfo_roomtypequestion),
+                    painter = painterResource(Res.drawable.ic_roominfo_roomtypequestion),
                     contentDescription = "도움말",
                     modifier = Modifier
                         .size(18.dp)
@@ -292,28 +299,6 @@ fun RoomInfoDefaultComponent(
                     properties = PopupProperties(focusable = true),
                     onDismissRequest = { showTooltip = false },
                 ) {
-//                    Box(
-//                        modifier = Modifier
-//                            .size(width = 248.dp, height = 82.dp)
-//                            .shadow(elevation = 4.dp, shape = RoundedCornerShape(8.dp))
-//                            .clip(RoundedCornerShape(8.dp))
-//                            .background(Color.White)
-//                            .padding(12.dp),
-//                        contentAlignment = Alignment.CenterStart
-//                    ) {
-//                        Text(
-//                            text = buildAnnotatedString {
-//                                withStyle(SpanStyle(color = MainGreen)) { append("평탄식") }
-//                                append("은 바닥이 전부 평평한 호실, \n")
-//                                withStyle(SpanStyle(color = MainGreen)) { append("계단식") }
-//                                append("은 바닥에 단차가 있는 호실입니다.")
-//                            },
-//                            style = KUBFAndroidTheme.typography.regular14.copy(
-//                                lineHeight = 25.sp,
-//                                letterSpacing = (-0.025).em
-//                            )
-//                        )
-//                    }
                     Surface(
                         shape = RoundedCornerShape(20.dp),
                         color = Color.White.copy(alpha = 0.9f),
@@ -347,7 +332,7 @@ fun RoomInfoDefaultComponent(
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 Icon(
-                    painter = painterResource(id = R.drawable.ic_roominfo_department),
+                    painter = painterResource(Res.drawable.ic_roominfo_department),
                     contentDescription = "관리 부서",
                     modifier = Modifier
                         .size(20.dp),
@@ -418,7 +403,7 @@ fun DepartmentPhoneRow(
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Icon(
-            painter = painterResource(id = R.drawable.ic_roominfo_departmentnumber),
+            painter = painterResource(Res.drawable.ic_roominfo_departmentnumber),
             contentDescription = "관리 부서 전화번호",
             modifier = Modifier.size(20.dp),
             tint = Gray3,

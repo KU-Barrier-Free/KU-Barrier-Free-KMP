@@ -73,7 +73,8 @@ private fun RoomInfoContent(
     Column(
         modifier = Modifier
             .padding(padding)
-            .fillMaxSize(),
+            .fillMaxSize()
+            .background(Color.White),
     ) {
         if (!uiState.isImageDialogVisible) {
             RoomInfoTopAppBar(
@@ -89,6 +90,7 @@ private fun RoomInfoContent(
         ) {
             if (uiState.roomPicUrls.isNotEmpty()) {
                 RoomPic(
+                    modifier = Modifier.height(200.dp),
                     roomPicUrls = uiState.roomPicUrls,
                     onImageClick = { imageUrl ->
                         onRoomInfoUiAction(RoomInfoUiAction.OnImageClick(imageUrl))

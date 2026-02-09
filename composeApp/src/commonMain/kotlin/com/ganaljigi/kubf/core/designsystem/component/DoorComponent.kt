@@ -19,12 +19,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
+import org.jetbrains.compose.resources.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
-import com.ganalijigi.kubf.R
+import kubfandroid.composeapp.generated.resources.Res
+import kubfandroid.composeapp.generated.resources.ic_circle_green
+import kubfandroid.composeapp.generated.resources.ic_searchbar_close
 import com.ganaljigi.kubf.core.model.DoorInfo
 import com.ganaljigi.kubf.core.designsystem.theme.Gray3
 import com.ganaljigi.kubf.core.designsystem.theme.Gray4
@@ -92,7 +94,7 @@ fun DoorComponent(
                     ),
                 )
                 Icon(
-                    painter = painterResource(R.drawable.ic_circle_green),
+                    painter = painterResource(Res.drawable.ic_circle_green),
                     contentDescription = null,
                     tint = Color.Unspecified,
                 )
@@ -111,7 +113,7 @@ fun DoorComponent(
                 )
                 Icon(
                     modifier = Modifier.size(20.dp),
-                    painter = painterResource(R.drawable.ic_searchbar_close),
+                    painter = painterResource(Res.drawable.ic_searchbar_close),
                     contentDescription = null,
                     tint = Gray3,
                 )

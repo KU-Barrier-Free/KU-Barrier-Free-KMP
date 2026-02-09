@@ -1,5 +1,6 @@
 package com.ganaljigi.kubf.feature.building.component
 
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -10,11 +11,14 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.unit.dp
+import org.jetbrains.compose.resources.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
-import com.ganalijigi.kubf.R
+import kubfandroid.composeapp.generated.resources.Res
+import kubfandroid.composeapp.generated.resources.ic_backarrow
+import kubfandroid.composeapp.generated.resources.ic_search_bar_leading
 import com.ganaljigi.kubf.core.designsystem.theme.KUBFAndroidTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -27,10 +31,11 @@ fun BuildingTopAppBar(
 ) {
     TopAppBar(
         modifier = modifier,
+        windowInsets = WindowInsets(0.dp, 0.dp, 0.dp, 0.dp),
         navigationIcon = {
             IconButton(onClick = onBackClick) {
                 Icon(
-                    painter = painterResource(R.drawable.ic_backarrow),
+                    painter = painterResource(Res.drawable.ic_backarrow),
                     contentDescription = "뒤로가기",
                 )
             }
@@ -51,7 +56,7 @@ fun BuildingTopAppBar(
         actions = {
             IconButton(onClick = onSearchClick) {
                 Icon(
-                    painter = painterResource(R.drawable.ic_search_bar_leading),
+                    painter = painterResource(Res.drawable.ic_search_bar_leading),
                     contentDescription = "검색",
                 )
             }

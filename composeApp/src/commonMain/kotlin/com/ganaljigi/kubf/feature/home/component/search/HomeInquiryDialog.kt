@@ -27,12 +27,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
-import androidx.compose.ui.res.painterResource
+import org.jetbrains.compose.resources.painterResource
 import androidx.compose.ui.text.input.TextFieldValue
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
-import com.ganalijigi.kubf.R
+import kubfandroid.composeapp.generated.resources.Res
+import kubfandroid.composeapp.generated.resources.ic_inquiry_warning
 import com.ganaljigi.kubf.core.designsystem.theme.Gray2
 import com.ganaljigi.kubf.core.designsystem.theme.Gray3
 import com.ganaljigi.kubf.core.designsystem.theme.Gray4
@@ -88,7 +89,7 @@ fun HomeInquiryDialog(
                 horizontalArrangement = Arrangement.spacedBy(4.dp),
             ) {
                 Icon(
-                    painter = painterResource(id = R.drawable.ic_inquiry_warning),
+                    painter = painterResource(Res.drawable.ic_inquiry_warning),
                     contentDescription = "Warning Icon",
                     tint = Color.Unspecified,
                 )

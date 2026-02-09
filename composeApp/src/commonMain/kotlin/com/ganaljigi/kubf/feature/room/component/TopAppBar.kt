@@ -16,11 +16,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
+import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.ganalijigi.kubf.R
+import kubfandroid.composeapp.generated.resources.Res
+import kubfandroid.composeapp.generated.resources.ic_backarrow
 import com.ganaljigi.kubf.core.designsystem.theme.KUBFAndroidTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -34,7 +35,6 @@ fun RoomInfoTopAppBar(
     ) {
         Box(
             modifier = Modifier
-                .windowInsetsPadding(WindowInsets.statusBars)
                 .fillMaxWidth()
                 .height(48.dp),
         ) {
@@ -44,7 +44,7 @@ fun RoomInfoTopAppBar(
                     .align(Alignment.CenterStart),
             ) {
                 Icon(
-                    painter = painterResource(id = R.drawable.ic_backarrow),
+                    painter = painterResource(Res.drawable.ic_backarrow),
                     contentDescription = "뒤로가기",
                     modifier = Modifier.size(24.dp),
                 )

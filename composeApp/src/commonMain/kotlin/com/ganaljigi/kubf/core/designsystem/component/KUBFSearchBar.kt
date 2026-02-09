@@ -29,13 +29,15 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
-import androidx.compose.ui.res.painterResource
+import org.jetbrains.compose.resources.painterResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.ganalijigi.kubf.R
+import kubfandroid.composeapp.generated.resources.Res
+import kubfandroid.composeapp.generated.resources.ic_search_bar_leading
+import kubfandroid.composeapp.generated.resources.ic_searchbar_close
 import com.ganaljigi.kubf.core.designsystem.theme.Gray2
 import com.ganaljigi.kubf.core.designsystem.theme.Gray4
 import com.ganaljigi.kubf.core.designsystem.theme.MainGreen
@@ -75,7 +77,7 @@ fun KUBFSearchBar(
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Icon(
-            painter = painterResource(R.drawable.ic_search_bar_leading),
+            painter = painterResource(Res.drawable.ic_search_bar_leading),
             contentDescription = "검색 아이콘",
             tint = if (isFocused) MainGreen else Color.Unspecified,
         )
@@ -118,7 +120,7 @@ fun KUBFSearchBar(
         if (value.text.isNotEmpty()) {
             Icon(
                 modifier = Modifier.noRippleClickable { onValueCleared() },
-                painter = painterResource(R.drawable.ic_searchbar_close),
+                painter = painterResource(Res.drawable.ic_searchbar_close),
                 contentDescription = "검색어 비우기",
                 tint = Color.Unspecified,
             )
@@ -158,7 +160,7 @@ fun KUBFSearchBar(
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Icon(
-            painter = painterResource(R.drawable.ic_search_bar_leading),
+            painter = painterResource(Res.drawable.ic_search_bar_leading),
             contentDescription = "검색 아이콘",
             tint = if (isFocused) MainGreen else Color.Unspecified,
         )
@@ -197,7 +199,7 @@ fun KUBFSearchBar(
         if (state.text.isNotEmpty()) {
             Icon(
                 modifier = Modifier.noRippleClickable { onCleared() },
-                painter = painterResource(R.drawable.ic_searchbar_close),
+                painter = painterResource(Res.drawable.ic_searchbar_close),
                 contentDescription = "검색어 비우기",
                 tint = Color.Unspecified,
             )

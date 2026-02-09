@@ -1,6 +1,7 @@
 package com.ganaljigi.kubf.core.mapper
 
-import com.ganalijigi.kubf.R
+import kubfandroid.composeapp.generated.resources.Res
+import kubfandroid.composeapp.generated.resources.ic_building
 import com.ganaljigi.kubf.core.network.response.home.HomeResponseDto
 import com.ganaljigi.kubf.core.network.response.home.HomeSearchResponseDto
 import com.ganaljigi.kubf.core.model.getIconResByName
@@ -65,7 +66,7 @@ fun HomeSearchResponseDto.toSearchResults(matchKeyword: String): List<SearchResu
             latitude = it.latitude,
             longitude = it.longitude,
             isBuilding = true,
-            icon = R.drawable.ic_building,
+            icon = Res.drawable.ic_building,
         )
     } + this.facilities.map {
         SearchResult(

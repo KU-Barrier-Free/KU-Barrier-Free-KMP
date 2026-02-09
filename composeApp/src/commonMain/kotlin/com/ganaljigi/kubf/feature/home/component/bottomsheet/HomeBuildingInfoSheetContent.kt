@@ -27,10 +27,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
+import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.ganalijigi.kubf.R
+import kubfandroid.composeapp.generated.resources.Res
+import kubfandroid.composeapp.generated.resources.ic_chevron_right
 import com.ganaljigi.kubf.core.designsystem.component.ConvenienceChip
 import com.ganaljigi.kubf.core.designsystem.component.DoorComponent
 import com.ganaljigi.kubf.core.designsystem.component.ImageViewerDialog
@@ -100,7 +101,7 @@ fun HomeBuildingInfoSheetContent(
                         )
                     }
                     Icon(
-                        painter = painterResource(R.drawable.ic_chevron_right),
+                        painter = painterResource(Res.drawable.ic_chevron_right),
                         contentDescription = null,
                         tint = Color.Unspecified,
                     )

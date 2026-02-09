@@ -23,13 +23,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
+import org.jetbrains.compose.resources.DrawableResource
+import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ganaljigi.kubf.core.designsystem.theme.MainGreen
 import com.ganaljigi.kubf.core.designsystem.theme.KUBFAndroidTheme
-import com.ganalijigi.kubf.R
+import kubfandroid.composeapp.generated.resources.Res
+import kubfandroid.composeapp.generated.resources.ic_helper_arrowleft_lightgray
+import kubfandroid.composeapp.generated.resources.ic_helper_disablestudenthelper
 import com.ganaljigi.kubf.core.designsystem.theme.Gray1
 import com.ganaljigi.kubf.core.designsystem.theme.Gray2
 
@@ -56,7 +59,7 @@ fun ShortCutTitle() {
 fun ShortCutItem(
     modifier: Modifier = Modifier,
     text: String,
-    iconResId: Int? = null,
+    iconResId: DrawableResource? = null,
     onClick: () -> Unit,
 ) {
     val shape = RoundedCornerShape(8.dp)
@@ -92,7 +95,7 @@ fun ShortCutItem(
             ) {
                 if (iconResId != null) {
                     Image(
-                        painter = painterResource(id = iconResId),
+                        painter = painterResource(iconResId),
                         contentDescription = "바로가기 아이콘",
                         modifier = Modifier.size(20.dp),
                     )
@@ -116,7 +119,7 @@ fun ShortCutItem(
                 Spacer(modifier = Modifier.weight(1f))
 
                 Icon(
-                    painter = painterResource(id = R.drawable.ic_helper_arrowleft_lightgray),
+                    painter = painterResource(Res.drawable.ic_helper_arrowleft_lightgray),
                     contentDescription = null,
                     tint = Gray2,
                     modifier = Modifier
@@ -139,7 +142,7 @@ private fun ShortCutTitlePreview() {
 private fun ShortCutItemPreview() {
     ShortCutItem(
         text = "장애학생 도우미",
-        iconResId = R.drawable.ic_helper_disablestudenthelper,
+        iconResId = Res.drawable.ic_helper_disablestudenthelper,
         onClick = {},
     )
 }

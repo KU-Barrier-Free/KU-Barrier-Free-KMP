@@ -31,10 +31,10 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -63,10 +63,6 @@ fun ImageViewerDialog(
         }
         return
     }
-    val configuration = LocalConfiguration.current
-    val density = LocalDensity.current
-    val screenWidth = with(density) { configuration.screenWidthDp.dp.roundToPx() }
-    val screenHeight = with(density) { configuration.screenHeightDp.dp.roundToPx() }
 
     AnimatedVisibility(
         visible = visible,
@@ -74,11 +70,14 @@ fun ImageViewerDialog(
         exit = slideOutVertically(targetOffsetY = { it }) + fadeOut(),
         modifier = Modifier.fillMaxSize(),
     ) {
-        Box(
+        BoxWithConstraints(
             modifier = Modifier
                 .fillMaxSize()
                 .background(Color.Black),
         ) {
+            val density = LocalDensity.current
+            val screenWidth = with(density) { maxWidth.roundToPx() }
+            val screenHeight = with(density) { maxHeight.roundToPx() }
             val pagerState = rememberPagerState(
                 initialPage = selectedIndex.coerceIn(0, images.lastIndex),
                 pageCount = { images.size },

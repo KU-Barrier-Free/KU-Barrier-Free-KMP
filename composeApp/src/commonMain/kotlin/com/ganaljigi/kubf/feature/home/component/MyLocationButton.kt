@@ -8,10 +8,11 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
+import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.ganalijigi.kubf.R
+import kubfandroid.composeapp.generated.resources.Res
+import kubfandroid.composeapp.generated.resources.ic_my_location
 import com.ganaljigi.kubf.core.designsystem.theme.MainGreen
 import com.ganaljigi.kubf.core.ui.util.noRippleClickable
 
@@ -31,7 +32,7 @@ fun MyLocationButton(
         Icon(
             modifier = Modifier
                 .padding(12.dp),
-            painter = painterResource(R.drawable.ic_my_location),
+            painter = painterResource(Res.drawable.ic_my_location),
             contentDescription = "현재 위치로 이동",
             tint = Color.White,
         )

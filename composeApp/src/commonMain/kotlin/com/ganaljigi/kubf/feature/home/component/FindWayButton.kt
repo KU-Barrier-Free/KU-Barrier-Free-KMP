@@ -13,10 +13,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
+import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.ganalijigi.kubf.R
+import kubfandroid.composeapp.generated.resources.Res
+import kubfandroid.composeapp.generated.resources.ic_find_way_button
 import com.ganaljigi.kubf.core.designsystem.theme.KUBFAndroidTheme
 
 @Composable
@@ -33,7 +34,7 @@ fun FindWayButton(
         Icon(
             modifier = Modifier
                 .align(Alignment.Center),
-            painter = painterResource(R.drawable.ic_find_way_button),
+            painter = painterResource(Res.drawable.ic_find_way_button),
             contentDescription = null,
             tint = Color.Unspecified,
         )

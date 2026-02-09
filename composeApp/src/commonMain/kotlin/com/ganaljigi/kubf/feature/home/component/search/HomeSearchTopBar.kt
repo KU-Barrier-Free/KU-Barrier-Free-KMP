@@ -11,10 +11,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
+import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.ganalijigi.kubf.R
+import kubfandroid.composeapp.generated.resources.Res
+import kubfandroid.composeapp.generated.resources.ic_chevron_left
 import com.ganaljigi.kubf.core.designsystem.theme.KUBFAndroidTheme
 
 @Composable
@@ -34,7 +35,7 @@ fun HomeSearchTopBar(
             onClick = onClick,
         ) {
             Icon(
-                painter = painterResource(R.drawable.ic_chevron_left),
+                painter = painterResource(Res.drawable.ic_chevron_left),
                 contentDescription = "Back",
                 tint = Color.Unspecified,
             )

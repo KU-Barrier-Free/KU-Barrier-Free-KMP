@@ -1,7 +1,8 @@
 package com.ganaljigi.kubf.feature.home.model
 
-import androidx.annotation.DrawableRes
-import com.ganalijigi.kubf.R
+import org.jetbrains.compose.resources.DrawableResource
+import kubfandroid.composeapp.generated.resources.Res
+import kubfandroid.composeapp.generated.resources.ic_toggle_curb
 
 data class SearchResult(
     val id: Long = 0L,
@@ -12,7 +13,7 @@ data class SearchResult(
     val isBuilding: Boolean = false,
     val latitude: Double = 0.0,
     val longitude: Double = 0.0,
-    @DrawableRes val icon: Int = R.drawable.ic_toggle_curb, // TODO: Response 형식에 맞춰 수정
+    val icon: DrawableResource = Res.drawable.ic_toggle_curb, // TODO: Response 형식에 맞춰 수정
 ) {
     fun getBuildingIdByType() = if (isBuilding) this.id else this.buildingId
 }

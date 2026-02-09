@@ -1,16 +1,24 @@
 package com.ganaljigi.kubf.feature.home.model
 
-import androidx.annotation.DrawableRes
-import com.ganalijigi.kubf.R
+import org.jetbrains.compose.resources.DrawableResource
+import kubfandroid.composeapp.generated.resources.Res
+import kubfandroid.composeapp.generated.resources.ic_toggle_curb
+import kubfandroid.composeapp.generated.resources.ic_toggle_slope
+import kubfandroid.composeapp.generated.resources.ic_toggle_stairs
+import kubfandroid.composeapp.generated.resources.ic_toggle_special
+import kubfandroid.composeapp.generated.resources.ic_curb_marker
+import kubfandroid.composeapp.generated.resources.ic_slope_marker
+import kubfandroid.composeapp.generated.resources.ic_stairs_marker
+import kubfandroid.composeapp.generated.resources.ic_special_marker
 
 enum class MapToggle(
     val label: String,
-    @DrawableRes val toggleIconRes: Int,
-    @DrawableRes val markerIconRes: Int,
+    val toggleIconRes: DrawableResource,
+    val markerIconRes: DrawableResource,
 ) {
     // 연석, 경사로, 계단, 특이사항
-    CURB("연석", R.drawable.ic_toggle_curb, R.drawable.ic_curb_marker),
-    SLOPE("경사로", R.drawable.ic_toggle_slope, R.drawable.ic_slope_marker),
-    STAIRS("계단", R.drawable.ic_toggle_stairs, R.drawable.ic_stairs_marker),
-    SPECIAL_MARK("특이사항", R.drawable.ic_toggle_special, R.drawable.ic_special_marker),
+    CURB("연석", Res.drawable.ic_toggle_curb, Res.drawable.ic_curb_marker),
+    SLOPE("경사로", Res.drawable.ic_toggle_slope, Res.drawable.ic_slope_marker),
+    STAIRS("계단", Res.drawable.ic_toggle_stairs, Res.drawable.ic_stairs_marker),
+    SPECIAL_MARK("특이사항", Res.drawable.ic_toggle_special, Res.drawable.ic_special_marker),
 }

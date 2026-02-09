@@ -17,10 +17,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
+import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.ganalijigi.kubf.R
+import kubfandroid.composeapp.generated.resources.Res
+import kubfandroid.composeapp.generated.resources.ic_building
 import com.ganaljigi.kubf.feature.home.model.SearchResult
 import com.ganaljigi.kubf.core.designsystem.theme.Gray1
 import com.ganaljigi.kubf.core.designsystem.theme.Gray3
@@ -121,7 +122,7 @@ private fun HomeSearchBuildingItem(
             horizontalArrangement = Arrangement.spacedBy(8.dp),
         ) {
             Icon(
-                painter = painterResource(R.drawable.ic_building),
+                painter = painterResource(Res.drawable.ic_building),
                 contentDescription = "건물 아이콘",
                 tint = Color.Unspecified,
             )

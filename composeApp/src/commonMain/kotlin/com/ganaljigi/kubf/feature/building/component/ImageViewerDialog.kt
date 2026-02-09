@@ -6,6 +6,7 @@ import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBarsPadding
@@ -17,12 +18,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.res.painterResource
+import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.ganalijigi.kubf.R
+import kubfandroid.composeapp.generated.resources.Res
+import kubfandroid.composeapp.generated.resources.ic_searchbar_close
 import com.ganaljigi.kubf.core.designsystem.component.TransformableImage
 import com.ganaljigi.kubf.core.designsystem.theme.KUBFAndroidTheme
 
@@ -33,23 +34,22 @@ fun ImageViewerDialog(
     onDismiss: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val configuration = LocalConfiguration.current
-    val density = LocalDensity.current
-    val screenWidth = with(density) { configuration.screenWidthDp.dp.roundToPx() }
-    val screenHeight = with(density) { configuration.screenHeightDp.dp.roundToPx() }
-
     AnimatedVisibility(
         visible = visible && imageUrl != null,
         enter = slideInVertically(initialOffsetY = { it }),
         exit = slideOutVertically(targetOffsetY = { it }),
         modifier = modifier,
     ) {
-        Box(
+        BoxWithConstraints(
             modifier = Modifier
                 .background(Color.Black)
                 .systemBarsPadding()
                 .fillMaxSize(),
         ) {
+            val density = LocalDensity.current
+            val screenWidth = with(density) { maxWidth.roundToPx() }
+            val screenHeight = with(density) { maxHeight.roundToPx() }
+
             imageUrl?.let { url ->
                 TransformableImage(
                     modifier = Modifier
@@ -68,7 +68,7 @@ fun ImageViewerDialog(
                     .align(Alignment.TopEnd)
                     .clickable { onDismiss() }
                     .padding(16.dp),
-                painter = painterResource(R.drawable.ic_searchbar_close),
+                painter = painterResource(Res.drawable.ic_searchbar_close),
                 contentDescription = "닫기",
                 tint = Color.Unspecified,
             )
