@@ -9,9 +9,11 @@ interface MultipleEventsCutter {
 fun MultipleEventsCutter.Companion.get(): MultipleEventsCutter =
     MultipleEventsCutterImpl()
 
+internal expect fun currentTimeMillis(): Long
+
 private class MultipleEventsCutterImpl : MultipleEventsCutter {
     private val now: Long
-        get() = System.currentTimeMillis()
+        get() = currentTimeMillis()
 
     private var lastEventTimeMs: Long = 0
 
