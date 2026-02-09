@@ -5,6 +5,7 @@ import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
+import androidx.activity.SystemBarStyle
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.navigationBarsPadding
@@ -17,7 +18,6 @@ import androidx.navigation.compose.rememberNavController
 import com.ganaljigi.kubf.core.designsystem.theme.KUBFAndroidTheme
 import com.ganaljigi.kubf.core.navigation.MainNavHost
 import com.ganaljigi.kubf.core.navigation.Routes
-import org.koin.compose.KoinContext
 
 class MainActivity : ComponentActivity() {
 
@@ -25,34 +25,37 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
+        enableEdgeToEdge(
+            statusBarStyle = SystemBarStyle.light(
+                android.graphics.Color.WHITE,
+                android.graphics.Color.WHITE,
+            ),
+        )
         setContent {
-            KoinContext {
-                KUBFAndroidTheme {
-                    val navController = rememberNavController()
-                    val navBackStackEntry by navController.currentBackStackEntryAsState()
-                    val currentRoute = navBackStackEntry?.destination?.route
-                    val context = LocalContext.current
+            KUBFAndroidTheme {
+                val navController = rememberNavController()
+                val navBackStackEntry by navController.currentBackStackEntryAsState()
+                val currentRoute = navBackStackEntry?.destination?.route
+                val context = LocalContext.current
 
-                    BackHandler(enabled = currentRoute == Routes.Home::class.qualifiedName) {
-                        if (System.currentTimeMillis() - backPressedTime <= 2000) {
-                            finish()
-                        } else {
-                            backPressedTime = System.currentTimeMillis()
-                            Toast.makeText(context, "한 번 더 누르면 종료됩니다.", Toast.LENGTH_SHORT).show()
-                        }
+                BackHandler(enabled = currentRoute == Routes.Home::class.qualifiedName) {
+                    if (System.currentTimeMillis() - backPressedTime <= 2000) {
+                        finish()
+                    } else {
+                        backPressedTime = System.currentTimeMillis()
+                        Toast.makeText(context, "한 번 더 누르면 종료됩니다.", Toast.LENGTH_SHORT).show()
                     }
+                }
 
-                    Scaffold(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .navigationBarsPadding(),
-                    ) { innerPadding ->
-                        MainNavHost(
-                            padding = innerPadding,
-                            navController = navController,
-                        )
-                    }
+                Scaffold(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .navigationBarsPadding(),
+                ) { innerPadding ->
+                    MainNavHost(
+                        padding = innerPadding,
+                        navController = navController,
+                    )
                 }
             }
         }

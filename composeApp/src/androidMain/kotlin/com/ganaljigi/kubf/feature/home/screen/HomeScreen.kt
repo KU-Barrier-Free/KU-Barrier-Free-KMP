@@ -318,12 +318,15 @@ fun HomeScreen(
         }
         MapComponent(
             modifier = Modifier.fillMaxSize(),
-            cameraPositionState = cameraPositionState,
+            cameraLatitude = cameraPositionState.position.target.latitude,
+            cameraLongitude = cameraPositionState.position.target.longitude,
+            cameraZoom = cameraPositionState.position.zoom,
             selectedMarker = uiState.selectedMarker,
             selectedMarkerInfo = uiState.selectedMarkerInfo,
             showingMarkers = if (isRouteMode) findWayMarkers else uiState.showingMarkers,
             showingToggleMarkers = if (isRouteMode) persistentListOf() else uiState.showingToggleMarkers,
             routeResult = uiState.selectedRoute,
+            onCameraMove = { _, _, _ -> }, // Android는 cameraPositionState가 직접 관리
             onBuildingMarkerClick = { onAction(HomeUiAction.OnBuildingMarkerClick(it)) },
             onGateMarkerClick = { onAction(HomeUiAction.OnGateMarkerClick(it)) },
             onSpecialMarkerClick = { onAction(HomeUiAction.OnSpecialMarkerClick(it)) },
