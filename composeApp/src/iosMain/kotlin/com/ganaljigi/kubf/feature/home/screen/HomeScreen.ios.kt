@@ -179,6 +179,11 @@ fun HomeScreen(
         cameraLongitude = cameraLongitude,
         cameraZoom = cameraZoom,
         onAction = viewModel::onHomeUiAction,
+        onCameraMove = { lat, lng, zoom ->
+            cameraLatitude = lat
+            cameraLongitude = lng
+            cameraZoom = zoom
+        },
     )
 
     // 검색 화면
@@ -203,6 +208,7 @@ fun HomeScreen(
     cameraLongitude: Double,
     cameraZoom: Float,
     onAction: (HomeUiAction) -> Unit,
+    onCameraMove: (latitude: Double, longitude: Double, zoom: Float) -> Unit,
 ) {
     BottomSheetScaffold(
         containerColor = Color.White,
@@ -295,7 +301,7 @@ fun HomeScreen(
             showingMarkers = if (isRouteMode) findWayMarkers else uiState.showingMarkers,
             showingToggleMarkers = if (isRouteMode) persistentListOf() else uiState.showingToggleMarkers,
             routeResult = uiState.selectedRoute,
-            onCameraMove = { _, _, _ -> }, // iOS는 아직 카메라 이동 감지 미구현
+            onCameraMove = onCameraMove,
             onBuildingMarkerClick = { onAction(HomeUiAction.OnBuildingMarkerClick(it)) },
             onGateMarkerClick = { onAction(HomeUiAction.OnGateMarkerClick(it)) },
             onSpecialMarkerClick = { onAction(HomeUiAction.OnSpecialMarkerClick(it)) },

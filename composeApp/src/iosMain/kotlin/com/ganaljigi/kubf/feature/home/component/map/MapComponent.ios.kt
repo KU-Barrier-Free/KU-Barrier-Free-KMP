@@ -111,6 +111,11 @@ actual fun MapComponent(
     val currentOnGateImageClick = rememberUpdatedState(onGateImageClick)
     val currentOnMapClick = rememberUpdatedState(onMapClick)
 
+    // 마지막으로 맵에 설정한 카메라 위치 추적 (불필요한 카메라 이동 방지)
+    val lastSetCameraLat = remember { mutableStateOf(cameraLatitude) }
+    val lastSetCameraLng = remember { mutableStateOf(cameraLongitude) }
+    val lastSetCameraZoom = remember { mutableStateOf(cameraZoom) }
+
     // Delegate를 remember로 유지하여 가비지 컬렉션 방지
     val delegate = remember {
         object : NSObject(), GMSMapViewDelegateProtocol {
@@ -454,13 +459,21 @@ actual fun MapComponent(
                 }
             }
 
-            // 카메라 위치 업데이트
-            val newCamera = GMSCameraPosition.cameraWithLatitude(
-                latitude = cameraLatitude,
-                longitude = cameraLongitude,
-                zoom = cameraZoom
-            )
-            mapView.camera = newCamera
+            // 카메라 위치 업데이트 (실제 변경이 있을 때만 - 드래그 중 토글 시 스냅백 방지)
+            val latChanged = (lastSetCameraLat.value - cameraLatitude).absoluteValue > 0.00001
+            val lngChanged = (lastSetCameraLng.value - cameraLongitude).absoluteValue > 0.00001
+            val zoomChanged = (lastSetCameraZoom.value - cameraZoom).absoluteValue > 0.01f
+            if (latChanged || lngChanged || zoomChanged) {
+                val newCamera = GMSCameraPosition.cameraWithLatitude(
+                    latitude = cameraLatitude,
+                    longitude = cameraLongitude,
+                    zoom = cameraZoom
+                )
+                mapView.camera = newCamera
+                lastSetCameraLat.value = cameraLatitude
+                lastSetCameraLng.value = cameraLongitude
+                lastSetCameraZoom.value = cameraZoom
+            }
 
             // 선택된 마커가 있으면 InfoWindow 표시
             if (markerToSelect != null) {
