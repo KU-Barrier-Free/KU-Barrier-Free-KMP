@@ -1,6 +1,6 @@
 Pod::Spec.new do |spec|
     spec.name                     = 'composeApp'
-    spec.version                  = '1.1.0'
+    spec.version                  = '1.1.5'
     spec.homepage                 = 'https://github.com/ganaljigi/KU-Barrier-Free-KMP'
     spec.source                   = { :http=> ''}
     spec.authors                  = ''

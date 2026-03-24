@@ -18,6 +18,7 @@ actual fun NoticeWebView(
     val webView = remember {
         WebView(context).apply {
             settings.javaScriptEnabled = true
+            settings.domStorageEnabled = true
             webViewClient = WebViewClient()
         }
     }

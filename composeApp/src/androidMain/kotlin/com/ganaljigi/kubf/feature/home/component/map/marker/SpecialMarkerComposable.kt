@@ -41,8 +41,8 @@ fun SpecialMarkerComposable(
                 .data(imageUrl)
                 .allowHardware(false)
                 .build(),
-            placeholder = painterResource(R.drawable.img_special_info),
-            error = painterResource(R.drawable.img_special_info),
+            placeholder = painterResource(R.drawable.ic_launcher_foreground),
+            error = painterResource(R.drawable.ic_launcher_foreground),
             onSuccess = { isImageLoaded[index] = true },
             onError = { isImageLoaded[index] = true },
         )
