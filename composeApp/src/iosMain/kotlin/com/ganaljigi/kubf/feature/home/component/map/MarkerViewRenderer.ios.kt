@@ -216,16 +216,44 @@ fun createGateInfoWindowView(
     description: String,
     imageUrls: List<String>,
 ): UIView {
-    // Android: 320dp max width, 12dp padding, 20dp cornerRadius
+    // Android: widthIn(max = 320dp), cornerRadius 20dp
     val maxWidth = 320.0
-    val padding = 12.0
+    val horizontalPadding = 24.0
+    val verticalPadding = 12.0
     val cornerRadius = 20.0
+    val imageSize = 80.0
+    val imageSpacing = 8.0
 
-    // 컨테이너 크기 계산
-    val contentWidth = maxWidth - (padding * 2)
+    // 콘텐츠 너비 계산 (Android widthIn 동작: 콘텐츠에 맞게 줄어들고 max 제한)
+    val titleLabel = UILabel()
+    titleLabel.text = gateName
+    titleLabel.font = UIFont.boldSystemFontOfSize(16.0)
+    titleLabel.sizeToFit()
+    val titleWidth = titleLabel.frame.useContents { size.width }
+
+    val imageCount = imageUrls.size.coerceAtMost(2)
+    val imageAreaWidth = if (imageCount > 0) {
+        (imageSize * imageCount) + (imageSpacing * (imageCount - 1))
+    } else 0.0
+
+    val descLabel = UILabel()
+    descLabel.text = description
+    descLabel.font = UIFont.systemFontOfSize(14.0, weight = UIFontWeightSemibold)
+    descLabel.numberOfLines = 0
+    descLabel.sizeToFit()
+    val descIntrinsicWidth = descLabel.frame.useContents { size.width }
+
+    val maxContentWidth = maxWidth - (horizontalPadding * 2)
+    val contentWidth = maxOf(titleWidth, imageAreaWidth, descIntrinsicWidth).coerceAtMost(maxContentWidth)
+    val containerWidth = contentWidth + (horizontalPadding * 2)
+
+    // 설명 텍스트를 실제 contentWidth에 맞게 다시 계산 (줄바꿈 반영)
+    descLabel.setFrame(CGRectMake(0.0, 0.0, contentWidth, 0.0))
+    descLabel.sizeToFit()
+    descLabel.setFrame(CGRectMake(horizontalPadding, 0.0, contentWidth, descLabel.frame.useContents { size.height }))
+
     val estimatedHeight = if (imageUrls.isNotEmpty()) 220.0 else 100.0
-
-    val containerView = UIView(frame = CGRectMake(0.0, 0.0, maxWidth, estimatedHeight))
+    val containerView = UIView(frame = CGRectMake(0.0, 0.0, containerWidth, estimatedHeight))
     containerView.backgroundColor = UIColor.whiteColor
     containerView.layer.cornerRadius = cornerRadius
 
@@ -239,24 +267,19 @@ fun createGateInfoWindowView(
     containerView.layer.shadowOpacity = 0.3f
     containerView.layer.shadowRadius = 4.0
 
-    var currentY = padding
+    var currentY = verticalPadding
 
     // 제목 (gateName)
-    val titleLabel = UILabel(frame = CGRectMake(padding, currentY, contentWidth, 24.0))
-    titleLabel.text = gateName
-    titleLabel.font = UIFont.boldSystemFontOfSize(16.0)
-    titleLabel.textColor = UIColor.blackColor
+    titleLabel.setFrame(CGRectMake(horizontalPadding, currentY, contentWidth, 24.0))
     titleLabel.textAlignment = NSTextAlignmentCenter
+    titleLabel.textColor = UIColor.blackColor
     containerView.addSubview(titleLabel)
     currentY += 32.0
 
-    // 이미지 영역 (Android: 160dp * scale, Row로 2개까지)
-    if (imageUrls.isNotEmpty()) {
-        val imageCount = imageUrls.size.coerceAtMost(2)
-        val imageSize = 80.0
-        val imageSpacing = 8.0
+    // 이미지 영역
+    if (imageCount > 0) {
         val totalImageWidth = (imageSize * imageCount) + (imageSpacing * (imageCount - 1))
-        val imageStartX = (maxWidth - totalImageWidth) / 2.0
+        val imageStartX = (containerWidth - totalImageWidth) / 2.0
 
         for (i in 0 until imageCount) {
             val frameRect = CGRectMake(
@@ -284,19 +307,16 @@ fun createGateInfoWindowView(
         currentY += imageSize + 16.0
     }
 
-    // 설명 텍스트 (Android: semiBold14, 21sp fontSize)
-    val descHeight = 60.0
-    val descLabel = UILabel(frame = CGRectMake(padding, currentY, contentWidth, descHeight))
-    descLabel.text = description
-    descLabel.font = UIFont.systemFontOfSize(14.0, weight = UIFontWeightSemibold)
-    descLabel.textColor = UIColor.blackColor
+    // 설명 텍스트
+    descLabel.setFrame(CGRectMake(horizontalPadding, currentY, contentWidth, descLabel.frame.useContents { size.height }))
     descLabel.textAlignment = NSTextAlignmentCenter
-    descLabel.numberOfLines = 0
+    descLabel.textColor = UIColor.blackColor
     containerView.addSubview(descLabel)
-    currentY += descHeight + padding
+    val descHeight = descLabel.frame.useContents { size.height }
+    currentY += descHeight + verticalPadding
 
     // 컨테이너 최종 높이 조정
-    containerView.setFrame(CGRectMake(0.0, 0.0, maxWidth, currentY))
+    containerView.setFrame(CGRectMake(0.0, 0.0, containerWidth, currentY))
 
     return containerView
 }
@@ -309,24 +329,49 @@ fun createSpecialInfoWindowView(
     description: String,
     imageUrls: List<String>,
 ): UIView {
-    // Android: 214dp max width, 12dp padding, 20dp cornerRadius, 80dp imageSize
+    // Android: widthIn(max = 214dp), padding 12dp, cornerRadius 20dp
     val maxWidth = 214.0
     val padding = 12.0
     val cornerRadius = 20.0
+    val imageSize = 60.0
+    val imageSpacing = 8.0
 
-    // 컨테이너 크기 계산
-    val contentWidth = maxWidth - (padding * 2)
+    // 콘텐츠 너비 계산
+    val titleLabel = UILabel()
+    titleLabel.text = "특이사항"
+    titleLabel.font = UIFont.boldSystemFontOfSize(14.0)
+    titleLabel.sizeToFit()
+    val titleWidth = titleLabel.frame.useContents { size.width }
+
+    val imageCount = imageUrls.size.coerceAtMost(2)
+    val imageAreaWidth = if (imageCount > 0) {
+        (imageSize * imageCount) + (imageSpacing * (imageCount - 1))
+    } else 0.0
+
+    val descLabel = UILabel()
+    descLabel.text = description
+    descLabel.font = UIFont.systemFontOfSize(14.0, weight = UIFontWeightSemibold)
+    descLabel.numberOfLines = 0
+    descLabel.sizeToFit()
+    val descIntrinsicWidth = descLabel.frame.useContents { size.width }
+
+    val maxContentWidth = maxWidth - (padding * 2)
+    val contentWidth = maxOf(titleWidth, imageAreaWidth, descIntrinsicWidth).coerceAtMost(maxContentWidth)
+    val containerWidth = contentWidth + (padding * 2)
+
+    // 설명 텍스트를 실제 contentWidth에 맞게 다시 계산
+    descLabel.setFrame(CGRectMake(0.0, 0.0, contentWidth, 0.0))
+    descLabel.sizeToFit()
+    descLabel.setFrame(CGRectMake(padding, 0.0, contentWidth, descLabel.frame.useContents { size.height }))
+
     val estimatedHeight = if (imageUrls.isNotEmpty()) 200.0 else 90.0
-
-    val containerView = UIView(frame = CGRectMake(0.0, 0.0, maxWidth, estimatedHeight))
+    val containerView = UIView(frame = CGRectMake(0.0, 0.0, containerWidth, estimatedHeight))
     containerView.backgroundColor = UIColor.whiteColor
     containerView.layer.cornerRadius = cornerRadius
 
-    // 테두리 (Android: Gray2.copy(alpha = 0.5f))
     containerView.layer.borderWidth = 1.0
     containerView.layer.borderColor = UIColor.colorWithRed(0.9, green = 0.9, blue = 0.9, alpha = 0.5).CGColor
 
-    // 그림자
     containerView.layer.shadowColor = UIColor.blackColor.CGColor
     containerView.layer.shadowOffset = CGSizeMake(0.0, 2.0)
     containerView.layer.shadowOpacity = 0.3f
@@ -334,22 +379,17 @@ fun createSpecialInfoWindowView(
 
     var currentY = padding
 
-    // 제목 "특이사항"
-    val titleLabel = UILabel(frame = CGRectMake(padding, currentY, contentWidth, 20.0))
-    titleLabel.text = "특이사항"
-    titleLabel.font = UIFont.boldSystemFontOfSize(14.0)
-    titleLabel.textColor = UIColor.blackColor
+    // 제목
+    titleLabel.setFrame(CGRectMake(padding, currentY, contentWidth, 20.0))
     titleLabel.textAlignment = NSTextAlignmentCenter
+    titleLabel.textColor = UIColor.blackColor
     containerView.addSubview(titleLabel)
     currentY += 28.0
 
-    // 이미지 영역 (Android: 80dp * scale, Row로 2개까지)
-    if (imageUrls.isNotEmpty()) {
-        val imageCount = imageUrls.size.coerceAtMost(2)
-        val imageSize = 60.0
-        val imageSpacing = 8.0
+    // 이미지 영역
+    if (imageCount > 0) {
         val totalImageWidth = (imageSize * imageCount) + (imageSpacing * (imageCount - 1))
-        val imageStartX = (maxWidth - totalImageWidth) / 2.0
+        val imageStartX = (containerWidth - totalImageWidth) / 2.0
 
         for (i in 0 until imageCount) {
             val frameRect = CGRectMake(
@@ -377,19 +417,16 @@ fun createSpecialInfoWindowView(
         currentY += imageSize + 16.0
     }
 
-    // 설명 텍스트 (Android: semiBold14, 14sp fontSize)
-    val descHeight = 50.0
-    val descLabel = UILabel(frame = CGRectMake(padding, currentY, contentWidth, descHeight))
-    descLabel.text = description
-    descLabel.font = UIFont.systemFontOfSize(14.0, weight = UIFontWeightSemibold)
-    descLabel.textColor = UIColor.blackColor
+    // 설명 텍스트
+    descLabel.setFrame(CGRectMake(padding, currentY, contentWidth, descLabel.frame.useContents { size.height }))
     descLabel.textAlignment = NSTextAlignmentCenter
-    descLabel.numberOfLines = 0
+    descLabel.textColor = UIColor.blackColor
     containerView.addSubview(descLabel)
+    val descHeight = descLabel.frame.useContents { size.height }
     currentY += descHeight + padding
 
     // 컨테이너 최종 높이 조정
-    containerView.setFrame(CGRectMake(0.0, 0.0, maxWidth, currentY))
+    containerView.setFrame(CGRectMake(0.0, 0.0, containerWidth, currentY))
 
     return containerView
 }
