@@ -35,7 +35,7 @@ kotlin {
     cocoapods {
         summary = "KU Barrier Free KMP"
         homepage = "https://github.com/ganaljigi/KU-Barrier-Free-KMP"
-        version = "1.1.0"
+        version = "1.1.5"
         ios.deploymentTarget = "15.0"
 
         framework {
@@ -135,8 +135,8 @@ android {
         applicationId = "com.ganalijigi.kubf"
         minSdk = 30
         targetSdk = 35
-        versionCode = 13
-        versionName = "1.1.0"
+        versionCode = 20
+        versionName = "1.1.7"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
@@ -150,10 +150,20 @@ android {
         buildConfigField("String", "BASE_URL", localProperties["BASE_URL"]?.toString() ?: "\"\"")
     }
 
+    signingConfigs {
+        create("release") {
+            storeFile = file(localProperties.getProperty("RELEASE_STORE_FILE"))
+            storePassword = localProperties.getProperty("RELEASE_STORE_PASSWORD")
+            keyAlias = localProperties.getProperty("RELEASE_KEY_ALIAS")
+            keyPassword = localProperties.getProperty("RELEASE_KEY_PASSWORD")
+        }
+    }
+
     buildTypes {
         release {
             isMinifyEnabled = true
             isShrinkResources = true
+            signingConfig = signingConfigs.getByName("release")
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
