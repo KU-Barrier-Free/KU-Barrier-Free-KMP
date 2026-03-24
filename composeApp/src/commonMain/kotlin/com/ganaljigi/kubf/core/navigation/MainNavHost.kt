@@ -7,10 +7,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
 import com.ganaljigi.kubf.feature.building.screen.BuildingInfoScreen
-import com.ganaljigi.kubf.feature.helper.screen.DisableStudentHelperScreen
 import com.ganaljigi.kubf.feature.helper.screen.HelperScreen
-import com.ganaljigi.kubf.feature.helper.screen.JobInformationScreen
-import com.ganaljigi.kubf.feature.helper.screen.SupportScreen
 import com.ganaljigi.kubf.feature.home.screen.HomeRoute
 import com.ganaljigi.kubf.feature.room.RoomInfoScreen
 import org.koin.compose.viewmodel.koinViewModel
@@ -37,9 +34,6 @@ fun MainNavHost(
             HelperScreen(
                 padding = padding,
                 onBackClick = { navController.popBackStack() },
-                navigateToDisableStudentHelper = { navController.navigate(Routes.DisableStudentHelper) },
-                navigateToSupport = { navController.navigate(Routes.Support) },
-                navigateToJobInformation = { navController.navigate(Routes.JobInformation) },
             )
         }
 
@@ -76,25 +70,5 @@ fun MainNavHost(
             )
         }
 
-        composable<Routes.DisableStudentHelper> {
-            DisableStudentHelperScreen(
-                padding = padding,
-                onBackClick = { navController.popBackStack() },
-            )
-        }
-
-        composable<Routes.Support> {
-            SupportScreen(
-                padding = padding,
-                onBackClick = { navController.popBackStack() },
-            )
-        }
-
-        composable<Routes.JobInformation> {
-            JobInformationScreen(
-                padding = padding,
-                onBackClick = { navController.popBackStack() },
-            )
-        }
     }
 }

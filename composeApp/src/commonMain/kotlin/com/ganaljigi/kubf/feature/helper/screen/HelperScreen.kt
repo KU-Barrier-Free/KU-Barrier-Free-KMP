@@ -45,9 +45,6 @@ import org.koin.compose.viewmodel.koinViewModel
 fun HelperScreen(
     padding: PaddingValues = PaddingValues(),
     onBackClick: () -> Unit,
-    navigateToDisableStudentHelper: () -> Unit,
-    navigateToSupport: () -> Unit,
-    navigateToJobInformation: () -> Unit,
     viewModel: HelperViewModel = koinViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -57,9 +54,6 @@ fun HelperScreen(
     ObserveAsEvents(viewModel.uiEvent) { event ->
         when (event) {
             is HelperUiEvent.NavigateBack -> onBackClick()
-            is HelperUiEvent.NavigateToDisableStudentHelper -> navigateToDisableStudentHelper()
-            is HelperUiEvent.NavigateToSupport -> navigateToSupport()
-            is HelperUiEvent.NavigateToJobInformation -> navigateToJobInformation()
             is HelperUiEvent.OpenUrl -> uriHandler.openUri(event.url)
             is HelperUiEvent.ShowToast -> {
                 platformContext.showToast(event.message)

@@ -65,15 +65,21 @@ class HelperViewModel(
     }
 
     private fun onDisableStudentHelperClick() {
-        viewModelScope.launch { sendEvent(HelperUiEvent.NavigateToDisableStudentHelper) }
+        viewModelScope.launch {
+            sendEvent(HelperUiEvent.OpenUrl("https://www.konkuk.ac.kr/csd/15235/subview.do"))
+        }
     }
 
     private fun onSupportClick() {
-        viewModelScope.launch { sendEvent(HelperUiEvent.NavigateToSupport) }
+        viewModelScope.launch {
+            sendEvent(HelperUiEvent.OpenUrl("https://www.konkuk.ac.kr/csd/15230/subview.do"))
+        }
     }
 
     private fun onJobInformationClick() {
-        viewModelScope.launch { sendEvent(HelperUiEvent.NavigateToJobInformation) }
+        viewModelScope.launch {
+            sendEvent(HelperUiEvent.OpenUrl("https://www.konkuk.ac.kr/csd/15240/subview.do"))
+        }
     }
 
     // "yyyy.MM.dd" 형식 파싱
