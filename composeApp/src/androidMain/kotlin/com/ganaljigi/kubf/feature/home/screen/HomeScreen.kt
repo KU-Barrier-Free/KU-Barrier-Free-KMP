@@ -30,8 +30,10 @@ import androidx.compose.material3.rememberStandardBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
@@ -100,8 +102,9 @@ actual fun HomeRoute(
     BindEffect(permissionsController)
 
     // 첫 진입 시 권한 요청
+    var isLocationPermissionGranted by remember { mutableStateOf(false) }
     LaunchedEffect(Unit) {
-        permissionsController.ensureLocationPermission()
+        isLocationPermissionGranted = permissionsController.ensureLocationPermission()
     }
 
     HomeScreen(
@@ -110,6 +113,8 @@ actual fun HomeRoute(
         navigateToBuildingInfo = navigateToBuildingInfo,
         viewModel = viewModel,
         permissionsController = permissionsController,
+        isLocationPermissionGranted = isLocationPermissionGranted,
+        onLocationPermissionGranted = { isLocationPermissionGranted = true },
     )
 }
 // endregion
@@ -123,6 +128,8 @@ fun HomeScreen(
     navigateToBuildingInfo: (Long) -> Unit,
     viewModel: HomeViewModel,
     permissionsController: PermissionsController,
+    isLocationPermissionGranted: Boolean,
+    onLocationPermissionGranted: () -> Unit,
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val context = LocalContext.current
@@ -159,6 +166,7 @@ fun HomeScreen(
             HomeUiEvent.RequestMyLocation -> {
                 scope.launch {
                     getLocationWithPermission(context, permissionsController)?.let { location ->
+                        onLocationPermissionGranted()
                         cameraPositionState.animate(
                             CameraUpdateFactory.newLatLngZoom(location, 17f),
                         )
@@ -210,6 +218,7 @@ fun HomeScreen(
         scaffoldState = scaffoldState,
         cameraPositionState = cameraPositionState,
         onAction = viewModel::onHomeUiAction,
+        isLocationPermissionGranted = isLocationPermissionGranted,
     )
 
     // 검색 화면
@@ -232,6 +241,7 @@ fun HomeScreen(
     scaffoldState: BottomSheetScaffoldState,
     cameraPositionState: CameraPositionState,
     onAction: (HomeUiAction) -> Unit,
+    isLocationPermissionGranted: Boolean = false,
 ) {
     val focusManager = LocalFocusManager.current
 
@@ -333,6 +343,7 @@ fun HomeScreen(
             onSpecialImageClick = { onAction(HomeUiAction.OnSpecialImageClick(it)) },
             onGateImageClick = { onAction(HomeUiAction.OnGateImageClick(it)) },
             onMapClick = { onAction(HomeUiAction.OnMapClick) },
+            isMyLocationEnabled = isLocationPermissionGranted,
         )
 
         // UI 오버레이

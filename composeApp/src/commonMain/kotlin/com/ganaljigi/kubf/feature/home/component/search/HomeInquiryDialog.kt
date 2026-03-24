@@ -21,7 +21,9 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -50,7 +52,6 @@ fun HomeInquiryDialog(
 ) {
     val interactionSource = remember { MutableInteractionSource() }
     val isFocused by interactionSource.collectIsFocusedAsState()
-    val textFieldValue = TextFieldValue(inquiryField.text.toString())
 
     Dialog(
         onDismissRequest = onDismissRequest,
@@ -74,12 +75,7 @@ fun HomeInquiryDialog(
                     .fillMaxWidth()
                     .height(160.dp)
                     .background(color = Color.White, shape = RoundedCornerShape(10.dp)),
-                inquiryField = textFieldValue,
-                onInquiryFieldChange = { newValue ->
-                    inquiryField.edit {
-                        replace(0, length, newValue.text)
-                    }
-                },
+                inquiryField = inquiryField,
                 interactionSource = interactionSource,
                 isFocused = isFocused,
             )
@@ -124,11 +120,14 @@ fun HomeInquiryDialog(
 @Composable
 private fun InquiryTextField(
     modifier: Modifier = Modifier,
-    inquiryField: TextFieldValue,
-    onInquiryFieldChange: (TextFieldValue) -> Unit = {},
+    inquiryField: TextFieldState,
     interactionSource: MutableInteractionSource,
     isFocused: Boolean,
 ) {
+    var textFieldValue by remember {
+        mutableStateOf(TextFieldValue(inquiryField.text.toString()))
+    }
+
     Box(
         modifier = modifier
             .conditionalModifier(
@@ -151,19 +150,23 @@ private fun InquiryTextField(
     ) {
         BasicTextField(
             modifier = Modifier.align(Alignment.TopStart),
-            value = inquiryField,
-            onValueChange = {
-                if (it.text.length <= 100) {
-                    onInquiryFieldChange(it)
+            value = textFieldValue,
+            onValueChange = { newValue ->
+                val limitedValue = if (newValue.text.length <= 100) {
+                    newValue
                 } else {
-                    onInquiryFieldChange(it.copy(text = it.text.take(100)))
+                    newValue.copy(text = newValue.text.take(100))
+                }
+                textFieldValue = limitedValue
+                inquiryField.edit {
+                    replace(0, length, limitedValue.text)
                 }
             },
-            cursorBrush = SolidColor(Gray4), // Cursor color
+            cursorBrush = SolidColor(Gray4),
             textStyle = KUBFAndroidTheme.typography.medium15.copy(),
             interactionSource = interactionSource,
             decorationBox = { innerTextField ->
-                if (inquiryField.text.isEmpty()) {
+                if (textFieldValue.text.isEmpty()) {
                     Text(
                         text = "예: OO 편의시설 정보가 없어요, 장애인 화장실 위치도 알려주세요",
                         style = KUBFAndroidTheme.typography.medium15.copy(
@@ -180,7 +183,7 @@ private fun InquiryTextField(
             horizontalArrangement = Arrangement.spacedBy(4.dp),
         ) {
             Text(
-                text = inquiryField.text.length.toString(),
+                text = textFieldValue.text.length.toString(),
                 style = KUBFAndroidTheme.typography.medium16.copy(
                     color = MainGreen,
                 ),

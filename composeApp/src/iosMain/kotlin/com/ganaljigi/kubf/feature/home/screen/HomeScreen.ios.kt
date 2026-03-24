@@ -64,6 +64,7 @@ import com.ganaljigi.kubf.feature.home.viewmodel.HomeUiEvent
 import com.ganaljigi.kubf.feature.home.viewmodel.HomeUiMode
 import com.ganaljigi.kubf.feature.home.viewmodel.HomeUiState
 import com.ganaljigi.kubf.feature.home.viewmodel.HomeViewModel
+import com.ganaljigi.kubf.core.ui.util.ensureLocationPermission
 import com.ganaljigi.kubf.core.ui.util.getLocationWithPermission
 import dev.icerock.moko.permissions.compose.rememberPermissionsControllerFactory
 import kotlinx.collections.immutable.persistentListOf
@@ -117,6 +118,12 @@ fun HomeScreen(
     )
     val bottomSheetState = scaffoldState.bottomSheetState
 
+    // 위치 권한 상태
+    var isLocationPermissionGranted by remember { mutableStateOf(false) }
+    LaunchedEffect(Unit) {
+        isLocationPermissionGranted = permissionsController.ensureLocationPermission()
+    }
+
     // 카메라 상태 (iOS용 간단한 구현)
     var cameraLatitude by remember { mutableStateOf(37.5407) }
     var cameraLongitude by remember { mutableStateOf(127.0785) }
@@ -136,6 +143,7 @@ fun HomeScreen(
             HomeUiEvent.RequestMyLocation -> {
                 scope.launch {
                     getLocationWithPermission(permissionsController)?.let { (lat, lng) ->
+                        isLocationPermissionGranted = true
                         cameraLatitude = lat
                         cameraLongitude = lng
                         cameraZoom = 17f
@@ -184,6 +192,7 @@ fun HomeScreen(
             cameraLongitude = lng
             cameraZoom = zoom
         },
+        isLocationPermissionGranted = isLocationPermissionGranted,
     )
 
     // 검색 화면
@@ -209,6 +218,7 @@ fun HomeScreen(
     cameraZoom: Float,
     onAction: (HomeUiAction) -> Unit,
     onCameraMove: (latitude: Double, longitude: Double, zoom: Float) -> Unit,
+    isLocationPermissionGranted: Boolean = false,
 ) {
     BottomSheetScaffold(
         containerColor = Color.White,
@@ -308,6 +318,7 @@ fun HomeScreen(
             onSpecialImageClick = { onAction(HomeUiAction.OnSpecialImageClick(it)) },
             onGateImageClick = { onAction(HomeUiAction.OnGateImageClick(it)) },
             onMapClick = { onAction(HomeUiAction.OnMapClick) },
+            isMyLocationEnabled = isLocationPermissionGranted,
         )
 
         // UI 오버레이

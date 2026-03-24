@@ -39,4 +39,5 @@ expect fun MapComponent(
     onSpecialImageClick: (List<String>) -> Unit = {},
     onGateImageClick: (List<String>) -> Unit = {},
     onMapClick: () -> Unit = {},
+    isMyLocationEnabled: Boolean = false,
 )

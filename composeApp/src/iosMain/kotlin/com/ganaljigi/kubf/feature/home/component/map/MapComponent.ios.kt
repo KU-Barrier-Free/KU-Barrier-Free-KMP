@@ -98,6 +98,7 @@ actual fun MapComponent(
     onSpecialImageClick: (List<String>) -> Unit,
     onGateImageClick: (List<String>) -> Unit,
     onMapClick: () -> Unit,
+    isMyLocationEnabled: Boolean,
 ) {
     // delegate가 최신 상태/콜백에 접근할 수 있도록 State로 관리
     val markerInfoState = remember { mutableStateOf<MarkerInfo?>(null) }
@@ -115,6 +116,17 @@ actual fun MapComponent(
     val lastSetCameraLat = remember { mutableStateOf(cameraLatitude) }
     val lastSetCameraLng = remember { mutableStateOf(cameraLongitude) }
     val lastSetCameraZoom = remember { mutableStateOf(cameraZoom) }
+
+    // 마커 rebuild 판단용 이전 상태 추적
+    val prevShowingMarkers = remember { mutableStateOf(showingMarkers) }
+    val prevShowingToggleMarkers = remember { mutableStateOf(showingToggleMarkers) }
+    val prevRouteResult = remember { mutableStateOf(routeResult) }
+    val prevSelectedMarker = remember { mutableStateOf(selectedMarker) }
+    val prevSelectedMarkerInfo = remember { mutableStateOf<MarkerInfo?>(null) }
+    val prevCameraZoom = remember { mutableStateOf(cameraZoom) }
+
+    // GMSMarker 참조 저장 (clear 없이 개별 마커 업데이트 가능하게)
+    val gmsMarkerMap = remember { mutableStateOf(mutableMapOf<String, GMSMarker>()) }
 
     // Delegate를 remember로 유지하여 가비지 컬렉션 방지
     val delegate = remember {
@@ -245,7 +257,7 @@ actual fun MapComponent(
             mapView.delegate = delegate
 
             // 지도 설정 (Android와 동일하게)
-            mapView.setMyLocationEnabled(false)
+            mapView.setMyLocationEnabled(isMyLocationEnabled)
             mapView.setMinZoom(MapParam.MIN_ZOOM, maxZoom = MapParam.MAX_ZOOM)
 
             // 카메라 이동 영역 제한 (건국대 캠퍼스)
@@ -273,197 +285,264 @@ actual fun MapComponent(
         },
         modifier = modifier,
         update = { mapView ->
-            // delegate가 최신 markerInfo에 접근할 수 있도록 업데이트
             markerInfoState.value = selectedMarkerInfo
+            mapView.setMyLocationEnabled(isMyLocationEnabled)
 
-            // 기존 오버레이 제거
-            mapView.clear()
-
-            // 선택된 마커를 추적 (InfoWindow 표시용)
-            var markerToSelect: GMSMarker? = null
-
-            // 마커 스케일 계산
+            val zoomChanged = (prevCameraZoom.value - cameraZoom).absoluteValue > 0.01f
+            val needsFullRebuild = showingMarkers != prevShowingMarkers.value ||
+                showingToggleMarkers != prevShowingToggleMarkers.value ||
+                routeResult != prevRouteResult.value ||
+                zoomChanged
+            val selectionChanged = selectedMarker != prevSelectedMarker.value
+            val markerInfoChanged = selectedMarkerInfo != prevSelectedMarkerInfo.value
             val markerScale = MapParam.calculateMarkerScale(cameraZoom)
 
-            // Polyline 추가 (길찾기 경로)
-            routeResult?.let { route ->
-                if (route.pathPoints.isNotEmpty()) {
-                    val path = GMSMutablePath()
-                    route.pathPoints.forEach { point ->
-                        val coordinate = cValue<CLLocationCoordinate2D> {
-                            latitude = point.latitude
-                            longitude = point.longitude
+            // region Full rebuild (마커 리스트, 줌, 경로 변경 시)
+            if (needsFullRebuild) {
+                prevShowingMarkers.value = showingMarkers
+                prevShowingToggleMarkers.value = showingToggleMarkers
+                prevRouteResult.value = routeResult
+                prevSelectedMarker.value = selectedMarker
+                prevSelectedMarkerInfo.value = selectedMarkerInfo
+                prevCameraZoom.value = cameraZoom
+
+                mapView.clear()
+                val newMap = mutableMapOf<String, GMSMarker>()
+                var markerToSelect: GMSMarker? = null
+
+                // Polyline
+                routeResult?.let { route ->
+                    if (route.pathPoints.isNotEmpty()) {
+                        val path = GMSMutablePath()
+                        route.pathPoints.forEach { point ->
+                            val coordinate = cValue<CLLocationCoordinate2D> {
+                                latitude = point.latitude
+                                longitude = point.longitude
+                            }
+                            path.addCoordinate(coordinate)
                         }
-                        path.addCoordinate(coordinate)
+                        val polyline = GMSPolyline.polylineWithPath(path)
+                        polyline.strokeColor = MapParam.mainGreenColor
+                        polyline.strokeWidth = 10.0 * markerScale
+                        polyline.zIndex = 2
+                        polyline.map = mapView
                     }
-                    val polyline = GMSPolyline.polylineWithPath(path)
-                    polyline.strokeColor = MapParam.mainGreenColor
-                    polyline.strokeWidth = 10.0 * markerScale
-                    polyline.zIndex = 2
-                    polyline.map = mapView
+                }
+
+                // Toggle 마커
+                showingToggleMarkers.forEach { marker ->
+                    val gmsMarker = GMSMarker()
+                    val position = cValue<CLLocationCoordinate2D> {
+                        latitude = marker.latitude
+                        longitude = marker.longitude
+                    }
+                    gmsMarker.position = position
+                    gmsMarker.userData = marker
+
+                    when (marker.toggleType) {
+                        MapToggle.CURB -> {
+                            val size = 16.0 * markerScale
+                            UIImage.imageNamed("ic_curb_marker")?.scaled(size, size)?.let { gmsMarker.icon = it }
+                        }
+                        MapToggle.SLOPE -> {
+                            val size = 16.0 * markerScale
+                            UIImage.imageNamed("ic_slope_marker")?.scaled(size, size)?.let { gmsMarker.icon = it }
+                        }
+                        MapToggle.STAIRS -> {
+                            val size = 16.0 * markerScale
+                            UIImage.imageNamed("ic_stairs_marker")?.scaled(size, size)?.let { gmsMarker.icon = it }
+                        }
+                        MapToggle.SPECIAL_MARK -> {
+                            val isSelected = selectedMarker?.id == marker.id && selectedMarker is ToggleMarker
+                            val baseSize = 20.0
+                            val finalScale = if (isSelected) markerScale * 2.0f else markerScale
+                            val size = baseSize * finalScale
+                            val iconName = if (isSelected) "ic_special_selected" else "ic_special_marker"
+                            UIImage.imageNamed(iconName)?.let {
+                                val imgW = it.size.useContents { width }
+                                val imgH = it.size.useContents { height }
+                                val scaledHeight = if (imgW > 0) size * imgH / imgW else size
+                                gmsMarker.icon = it.scaled(size, scaledHeight)
+                            }
+                            if (isSelected) {
+                                gmsMarker.zIndex = Int.MAX_VALUE
+                                if (selectedMarkerInfo is com.ganaljigi.kubf.feature.home.viewmodel.SpecialMarkerInfo) {
+                                    markerToSelect = gmsMarker
+                                }
+                            }
+                        }
+                    }
+                    gmsMarker.map = mapView
+                    newMap["toggle_${marker.id}"] = gmsMarker
+                }
+
+                // 기본 마커
+                showingMarkers.forEach { marker ->
+                    when (marker) {
+                        is BuildingMarker -> {
+                            val gmsMarker = GMSMarker()
+                            val position = cValue<CLLocationCoordinate2D> {
+                                latitude = marker.latitude
+                                longitude = marker.longitude
+                            }
+                            gmsMarker.position = position
+                            gmsMarker.userData = marker
+                            val isSelected = selectedMarker?.id == marker.id && selectedMarker is BuildingMarker
+                            createBuildingMarkerView(marker.name, isSelected, markerScale).toUIImage()?.let {
+                                gmsMarker.icon = it
+                                gmsMarker.groundAnchor = cValue<CGPoint> { x = 0.5; y = 1.0 }
+                            }
+                            if (isSelected) gmsMarker.zIndex = Int.MAX_VALUE
+                            gmsMarker.map = mapView
+                            newMap["building_${marker.id}"] = gmsMarker
+                        }
+                        is DoorMarker -> {
+                            val gmsMarker = GMSMarker()
+                            val position = cValue<CLLocationCoordinate2D> {
+                                latitude = marker.latitude
+                                longitude = marker.longitude
+                            }
+                            gmsMarker.position = position
+                            gmsMarker.userData = marker
+                            createDoorMarkerView(marker.label, marker.isWheelChairAccessible, markerScale).toUIImage()?.let {
+                                gmsMarker.icon = it
+                            }
+                            gmsMarker.map = mapView
+                            newMap["door_${marker.id}"] = gmsMarker
+                        }
+                        is GateMarker -> {
+                            val gmsMarker = GMSMarker()
+                            val position = cValue<CLLocationCoordinate2D> {
+                                latitude = marker.latitude
+                                longitude = marker.longitude
+                            }
+                            gmsMarker.position = position
+                            gmsMarker.userData = marker
+                            val size = 30.0 * markerScale
+                            UIImage.imageNamed("ic_gate_pin")?.scaled(size, size)?.let { gmsMarker.icon = it }
+                            val isSelected = selectedMarker?.id == marker.id && selectedMarker is GateMarker
+                            if (isSelected) {
+                                gmsMarker.zIndex = Int.MAX_VALUE
+                                if (selectedMarkerInfo is com.ganaljigi.kubf.feature.home.viewmodel.GateMarkerInfo) {
+                                    markerToSelect = gmsMarker
+                                }
+                            }
+                            gmsMarker.map = mapView
+                            newMap["gate_${marker.id}"] = gmsMarker
+                        }
+                    }
+                }
+
+                gmsMarkerMap.value = newMap
+                if (markerToSelect != null) {
+                    mapView.selectedMarker = markerToSelect
+                } else {
+                    mapView.selectedMarker = null
                 }
             }
+            // endregion
 
-            // Toggle 마커 렌더링 (Assets.xcassets SVG 사용)
-            showingToggleMarkers.forEach { marker ->
-                val gmsMarker = GMSMarker()
-                val position = cValue<CLLocationCoordinate2D> {
-                    latitude = marker.latitude
-                    longitude = marker.longitude
-                }
-                gmsMarker.position = position
-                gmsMarker.userData = marker
+            // region 선택 변경 (마커 아이콘만 교체, rebuild 없음)
+            else if (selectionChanged) {
+                val prevSel = prevSelectedMarker.value
+                val newSel = selectedMarker
+                prevSelectedMarker.value = selectedMarker
+                prevSelectedMarkerInfo.value = selectedMarkerInfo
+                val map = gmsMarkerMap.value
 
-                // 마커 타입별 아이콘 (Android와 동일한 크기)
-                when (marker.toggleType) {
-                    MapToggle.CURB -> {
-                        // Android: 16dp
-                        val size = 16.0 * markerScale
-                        val icon = UIImage.imageNamed("ic_curb_marker")?.scaled(size, size)
-                        if (icon != null) {
-                            gmsMarker.icon = icon
+                // 이전 선택 해제
+                if (prevSel != null) {
+                    when (prevSel) {
+                        is BuildingMarker -> {
+                            map["building_${prevSel.id}"]?.let { gms ->
+                                createBuildingMarkerView(prevSel.name, false, markerScale).toUIImage()?.let { gms.icon = it }
+                                gms.zIndex = 0
+                            }
                         }
-                    }
-                    MapToggle.SLOPE -> {
-                        // Android: 16dp
-                        val size = 16.0 * markerScale
-                        val icon = UIImage.imageNamed("ic_slope_marker")?.scaled(size, size)
-                        if (icon != null) {
-                            gmsMarker.icon = icon
+                        is GateMarker -> {
+                            map["gate_${prevSel.id}"]?.let { gms -> gms.zIndex = 0 }
                         }
-                    }
-                    MapToggle.STAIRS -> {
-                        // Android: 16dp
-                        val size = 16.0 * markerScale
-                        val icon = UIImage.imageNamed("ic_stairs_marker")?.scaled(size, size)
-                        if (icon != null) {
-                            gmsMarker.icon = icon
-                        }
-                    }
-                    MapToggle.SPECIAL_MARK -> {
-                        val isSelected = selectedMarker?.id == marker.id && selectedMarker is ToggleMarker
-                        // Android: 20dp, selected시 2x scale (40dp)
-                        val baseSize = 20.0
-                        val finalScale = if (isSelected) markerScale * 2.0f else markerScale
-                        val size = baseSize * finalScale
-                        val iconName = if (isSelected) "ic_special_selected" else "ic_special_marker"
-                        val originalIcon = UIImage.imageNamed(iconName)
-                        val icon = originalIcon?.let {
-                            val imgW = it.size.useContents { width }
-                            val imgH = it.size.useContents { height }
-                            val scaledHeight = if (imgW > 0) size * imgH / imgW else size
-                            it.scaled(size, scaledHeight)
-                        }
-                        if (icon != null) {
-                            gmsMarker.icon = icon
-                        }
-                        if (isSelected) {
-                            gmsMarker.zIndex = Int.MAX_VALUE
-                            // InfoWindow를 표시하기 위해 마커 저장
-                            if (selectedMarkerInfo is com.ganaljigi.kubf.feature.home.viewmodel.SpecialMarkerInfo) {
-                                markerToSelect = gmsMarker
+                        is ToggleMarker -> if (prevSel.toggleType == MapToggle.SPECIAL_MARK) {
+                            map["toggle_${prevSel.id}"]?.let { gms ->
+                                val size = 20.0 * markerScale
+                                UIImage.imageNamed("ic_special_marker")?.let {
+                                    val imgW = it.size.useContents { width }
+                                    val imgH = it.size.useContents { height }
+                                    val scaledHeight = if (imgW > 0) size * imgH / imgW else size
+                                    gms.icon = it.scaled(size, scaledHeight)
+                                }
+                                gms.zIndex = 0
                             }
                         }
                     }
                 }
 
-                gmsMarker.map = mapView
-            }
-
-            // 기본 마커 렌더링 (건물, 문, 교문)
-            showingMarkers.forEach { marker ->
-                when (marker) {
-                    is BuildingMarker -> {
-                        val gmsMarker = GMSMarker()
-                        val position = cValue<CLLocationCoordinate2D> {
-                            latitude = marker.latitude
-                            longitude = marker.longitude
-                        }
-                        gmsMarker.position = position
-                        // title 제거: 기본 InfoWindow 대신 바텀시트 사용
-                        gmsMarker.userData = marker
-
-                        // 선택 상태에 따라 다른 색상/크기
-                        val isSelected = selectedMarker?.id == marker.id && selectedMarker is BuildingMarker
-
-                        // 커스텀 마커 뷰 생성 (아이콘 + 텍스트)
-                        val markerView = createBuildingMarkerView(
-                            buildingName = marker.name,
-                            isSelected = isSelected,
-                            scale = markerScale
-                        )
-                        val customIcon = markerView.toUIImage()
-
-                        if (customIcon != null) {
-                            gmsMarker.icon = customIcon
-                            // 마커 앵커를 하단 중앙으로 설정 (텍스트 아래가 위치를 가리킴)
-                            gmsMarker.groundAnchor = cValue<CGPoint> { x = 0.5; y = 1.0 }
-                        }
-
-                        // 선택된 마커는 더 크게
-                        if (isSelected) {
-                            gmsMarker.zIndex = Int.MAX_VALUE
-                        }
-
-                        gmsMarker.map = mapView
-                    }
-                    is DoorMarker -> {
-                        val gmsMarker = GMSMarker()
-                        val position = cValue<CLLocationCoordinate2D> {
-                            latitude = marker.latitude
-                            longitude = marker.longitude
-                        }
-                        gmsMarker.position = position
-                        gmsMarker.userData = marker
-
-                        // Android와 동일한 커스텀 마커 (원형 배경 + 라벨)
-                        val markerView = createDoorMarkerView(
-                            labelText = marker.label,
-                            isWheelChairAccessible = marker.isWheelChairAccessible,
-                            scale = markerScale
-                        )
-                        val customIcon = markerView.toUIImage()
-                        if (customIcon != null) {
-                            gmsMarker.icon = customIcon
-                        }
-
-                        gmsMarker.map = mapView
-                    }
-                    is GateMarker -> {
-                        val gmsMarker = GMSMarker()
-                        val position = cValue<CLLocationCoordinate2D> {
-                            latitude = marker.latitude
-                            longitude = marker.longitude
-                        }
-                        gmsMarker.position = position
-                        gmsMarker.userData = marker
-
-                        // Android: 30dp
-                        val size = 30.0 * markerScale
-                        val icon = UIImage.imageNamed("ic_gate_pin")?.scaled(size, size)
-                        if (icon != null) {
-                            gmsMarker.icon = icon
-                        }
-
-                        val isSelected = selectedMarker?.id == marker.id && selectedMarker is GateMarker
-                        if (isSelected) {
-                            gmsMarker.zIndex = Int.MAX_VALUE
-                            // InfoWindow를 표시하기 위해 마커 저장
-                            if (selectedMarkerInfo is com.ganaljigi.kubf.feature.home.viewmodel.GateMarkerInfo) {
-                                markerToSelect = gmsMarker
+                // 새 선택 적용
+                mapView.selectedMarker = null
+                if (newSel != null) {
+                    when (newSel) {
+                        is BuildingMarker -> {
+                            map["building_${newSel.id}"]?.let { gms ->
+                                createBuildingMarkerView(newSel.name, true, markerScale).toUIImage()?.let { gms.icon = it }
+                                gms.zIndex = Int.MAX_VALUE
                             }
                         }
-
-                        gmsMarker.map = mapView
+                        is GateMarker -> {
+                            map["gate_${newSel.id}"]?.let { gms ->
+                                gms.zIndex = Int.MAX_VALUE
+                                if (selectedMarkerInfo is com.ganaljigi.kubf.feature.home.viewmodel.GateMarkerInfo) {
+                                    mapView.selectedMarker = gms
+                                }
+                            }
+                        }
+                        is ToggleMarker -> if (newSel.toggleType == MapToggle.SPECIAL_MARK) {
+                            map["toggle_${newSel.id}"]?.let { gms ->
+                                val finalScale = markerScale * 2.0f
+                                val size = 20.0 * finalScale
+                                UIImage.imageNamed("ic_special_selected")?.let {
+                                    val imgW = it.size.useContents { width }
+                                    val imgH = it.size.useContents { height }
+                                    val scaledHeight = if (imgW > 0) size * imgH / imgW else size
+                                    gms.icon = it.scaled(size, scaledHeight)
+                                }
+                                gms.zIndex = Int.MAX_VALUE
+                                if (selectedMarkerInfo is com.ganaljigi.kubf.feature.home.viewmodel.SpecialMarkerInfo) {
+                                    mapView.selectedMarker = gms
+                                }
+                            }
+                        }
                     }
                 }
             }
+            // endregion
 
-            // 카메라 위치 업데이트 (실제 변경이 있을 때만 - 드래그 중 토글 시 스냅백 방지)
+            // region InfoWindow만 갱신 (API 응답 도착 시)
+            else if (markerInfoChanged) {
+                prevSelectedMarkerInfo.value = selectedMarkerInfo
+                val sel = selectedMarker
+                val map = gmsMarkerMap.value
+                if (selectedMarkerInfo != null && sel != null) {
+                    val key = when (sel) {
+                        is BuildingMarker -> "building_${sel.id}"
+                        is GateMarker -> "gate_${sel.id}"
+                        is ToggleMarker -> "toggle_${sel.id}"
+                        else -> null
+                    }
+                    key?.let { map[it] }?.let { gms ->
+                        mapView.selectedMarker = null
+                        mapView.selectedMarker = gms
+                    }
+                } else {
+                    mapView.selectedMarker = null
+                }
+            }
+            // endregion
+
+            // 카메라 위치 업데이트
             val latChanged = (lastSetCameraLat.value - cameraLatitude).absoluteValue > 0.00001
             val lngChanged = (lastSetCameraLng.value - cameraLongitude).absoluteValue > 0.00001
-            val zoomChanged = (lastSetCameraZoom.value - cameraZoom).absoluteValue > 0.01f
-            if (latChanged || lngChanged || zoomChanged) {
+            val cameraZoomChanged = (lastSetCameraZoom.value - cameraZoom).absoluteValue > 0.01f
+            if (latChanged || lngChanged || cameraZoomChanged) {
                 val newCamera = GMSCameraPosition.cameraWithLatitude(
                     latitude = cameraLatitude,
                     longitude = cameraLongitude,
@@ -473,14 +552,6 @@ actual fun MapComponent(
                 lastSetCameraLat.value = cameraLatitude
                 lastSetCameraLng.value = cameraLongitude
                 lastSetCameraZoom.value = cameraZoom
-            }
-
-            // 선택된 마커가 있으면 InfoWindow 표시
-            if (markerToSelect != null) {
-                mapView.selectedMarker = markerToSelect
-            } else {
-                // 선택된 마커가 없으면 InfoWindow 닫기
-                mapView.selectedMarker = null
             }
         }
     )

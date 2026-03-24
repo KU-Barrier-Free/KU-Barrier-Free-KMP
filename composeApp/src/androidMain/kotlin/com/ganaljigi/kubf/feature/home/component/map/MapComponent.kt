@@ -62,6 +62,7 @@ actual fun MapComponent(
     onSpecialImageClick: (List<String>) -> Unit,
     onGateImageClick: (List<String>) -> Unit,
     onMapClick: () -> Unit,
+    isMyLocationEnabled: Boolean,
 ) {
     val cameraPositionState = rememberCameraPositionState {
         position = CameraPosition.fromLatLngZoom(LatLng(cameraLatitude, cameraLongitude), cameraZoom)
@@ -89,7 +90,7 @@ actual fun MapComponent(
         modifier = modifier,
         onMapClick = { onMapClick() },
         cameraPositionState = cameraPositionState,
-        properties = MapParam.mapProperties.copy(isMyLocationEnabled = false),
+        properties = MapParam.mapProperties.copy(isMyLocationEnabled = isMyLocationEnabled),
         uiSettings = MapParam.mapUiSettings,
         googleMapOptionsFactory = { MapParam.mapOptions },
     ) {
