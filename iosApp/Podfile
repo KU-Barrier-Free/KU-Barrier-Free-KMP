@@ -6,6 +6,9 @@ target 'iosApp' do
   # Google Maps
   pod 'GoogleMaps', '~> 8.4'
 
+  # Firebase
+  pod 'FirebaseAnalytics'
+
   # Kotlin Multiplatform Framework
   pod 'composeApp', :path => '../composeApp'
 end
