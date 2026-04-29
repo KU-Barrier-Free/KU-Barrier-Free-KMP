@@ -1,40 +1,120 @@
 # KU-Barrier-Free KMP (쿠맵)
 
-건국대학교 장애학생을 위한 배리어프리 캠퍼스 지도 앱
+건국대학교 장애학생을 위한 배리어프리 캠퍼스 지도 앱 (Kotlin Multiplatform)
 
 ## 기술 스택
 
-- **Language**: Kotlin 2.0.0
-- **UI**: Jetpack Compose (BOM 2024.09.00)
-- **Architecture**: MVVM + Repository Pattern
-- **DI**: Koin Annotations 2.0.0
-- **Network**: Retrofit 3.0.0 + OkHttp 4.12.0 + Kotlinx Serialization
-- **Maps**: Google Maps Compose 4.4.1
-- **Navigation**: Type-safe Navigation (Serializable routes)
-- **Image**: Coil 3.1.0
-- **Analytics**: Firebase Crashlytics
+| 분류 | 기술 |
+|------|------|
+| **Language** | Kotlin 2.2.20 |
+| **UI** | Compose Multiplatform 1.7.3 |
+| **Architecture** | MVVM + Repository Pattern |
+| **DI** | Koin 4.1.1 (Manual DI for commonMain) |
+| **Network** | Ktor 3.0.3 + Kotlinx Serialization |
+| **Navigation** | JetBrains Navigation Compose 2.8.0-alpha12 |
+| **Maps** | Google Maps Compose (Android) / Google Maps SDK via CocoaPods (iOS) |
+| **Image** | Coil 3.1.0 |
+| **Logging** | Napier 2.7.1 |
+| **Analytics** | Firebase Crashlytics (Android) |
 
 ## 프로젝트 구조
 
 ```
-app/src/main/java/com/ganaljigi/kubf/
-├── core/
-│   ├── data/
-│   │   ├── di/              # Koin 모듈 (AppModule, NetworkModule, ApiModule)
-│   │   ├── repository/      # Repository 인터페이스
-│   │   └── repositoryimpl/  # Repository 구현체 (@Single)
-│   ├── network/
-│   │   ├── service/         # Retrofit 서비스
-│   │   └── response/        # DTO 모델
-│   ├── mapper/              # DTO → Domain 변환
-│   ├── navigation/          # 네비게이션 라우트
-│   └── designsystem/        # 공통 컴포넌트, 테마
-└── feature/
-    ├── home/                # 홈(지도) 화면
-    ├── building/            # 건물 정보 화면
-    ├── room/                # 방 정보 화면
-    └── helper/              # 도움말 화면
+KU-Barrier-Free-KMP/
+├── composeApp/                      # KMP 공유 모듈
+│   └── src/
+│       ├── commonMain/kotlin/.../   # 공통 코드
+│       │   ├── core/
+│       │   │   ├── data/
+│       │   │   │   ├── di/          # Koin 모듈 (Manual)
+│       │   │   │   ├── repository/  # Repository 인터페이스
+│       │   │   │   └── repositoryimpl/
+│       │   │   ├── network/
+│       │   │   │   ├── service/     # Ktor API Service
+│       │   │   │   └── response/    # DTO
+│       │   │   ├── mapper/
+│       │   │   ├── model/           # 공통 모델 (LatLng 등)
+│       │   │   ├── navigation/      # Type-safe Routes
+│       │   │   ├── designsystem/    # 테마, 공통 컴포넌트
+│       │   │   └── ui/util/         # PlatformContext (expect)
+│       │   └── feature/
+│       │       ├── home/            # 홈(지도) - expect/actual
+│       │       ├── building/        # 건물 정보
+│       │       ├── room/            # 방 정보
+│       │       └── helper/          # 도움말
+│       ├── androidMain/kotlin/.../  # Android actual 구현
+│       └── iosMain/kotlin/.../      # iOS actual 구현
+├── androidApp/                      # Android 앱 진입점
+└── iosApp/                          # iOS 앱 (Xcode)
 ```
+
+## expect/actual 패턴
+
+플랫폼별 구현이 필요한 기능:
+
+| expect | Android actual | iOS actual |
+|--------|---------------|------------|
+| `PlatformContext` | Context wrapper | UIViewController wrapper |
+| `HomeRoute` | Google Maps Compose | Google Maps SDK (UIKitView) |
+| `MapComponent` | Google Maps Compose | Google Maps SDK (UIKitView) |
+| `createHttpClient()` | Android engine | Darwin engine |
+
+### PlatformContext 사용법
+```kotlin
+// commonMain (expect)
+expect class PlatformContext
+@Composable expect fun getPlatformContext(): PlatformContext
+expect fun PlatformContext.showToast(message: String)
+expect fun PlatformContext.copyToClipboard(text: String)
+expect fun PlatformContext.openPhoneDialer(phoneNumber: String)
+
+// Screen에서 사용
+@Composable
+fun SomeScreen() {
+    val context = getPlatformContext()
+    Button(onClick = { context.showToast("완료") }) { ... }
+}
+```
+
+### iOS UIKitView 패턴 (중요)
+iOS에서 `UIKitView`로 네이티브 뷰(GMSMapView 등) 사용 시 주의사항:
+
+```kotlin
+@Composable
+fun MapComponent(..., onMapClick: () -> Unit) {
+    // 1. Delegate를 remember로 관리 (가비지 컬렉션 방지)
+    val delegate = remember {
+        object : NSObject(), GMSMapViewDelegateProtocol {
+            override fun mapView(...) {
+                // currentOnMapClick.value() 사용
+            }
+        }
+    }
+
+    // 2. 콜백은 rememberUpdatedState로 관리 (최신 콜백 접근)
+    val currentOnMapClick = rememberUpdatedState(onMapClick)
+
+    // 3. 상태도 remember로 관리 (delegate에서 최신 상태 접근)
+    val markerInfoState = remember { mutableStateOf<MarkerInfo?>(null) }
+
+    UIKitView(
+        factory = {
+            val mapView = GMSMapView(...)
+            mapView.delegate = delegate  // remember된 delegate 사용
+            mapView
+        },
+        update = { mapView ->
+            markerInfoState.value = selectedMarkerInfo  // 상태 업데이트
+            // ... 마커 렌더링
+        }
+    )
+}
+```
+
+**핵심 포인트:**
+- `factory` 블록은 한 번만 실행됨 → 내부에서 캡처한 값은 갱신 안 됨
+- Delegate, 콜백을 `remember`/`rememberUpdatedState`로 관리 필수
+- Kotlin Native에서 delegate가 가비지 컬렉션될 수 있음 주의
 
 ## 주요 화면
 
@@ -54,6 +134,8 @@ app/src/main/java/com/ganaljigi/kubf/
 - Component: `*Component` 또는 기능명
 - DTO: `*ResponseDto`
 - UI State: `*UiState`
+- expect 파일: `*.kt` (commonMain)
+- actual 파일: `*.android.kt`, `*.ios.kt`
 
 ### State 관리
 ```kotlin
@@ -65,26 +147,39 @@ val uiState: StateFlow<HomeUiState> = _uiState.asStateFlow()
 _uiState.update { it.copy(isLoading = true) }
 ```
 
-### Repository 패턴
+### Repository 패턴 (Manual Koin)
 ```kotlin
 // 인터페이스
 interface HomeRepository {
     suspend fun getHomeData(): Result<HomeData>
 }
 
-// 구현체 (Koin Annotations)
-@Single(binds = [HomeRepository::class])
+// 구현체
 class HomeRepositoryImpl(
     private val service: HomeService
-) : HomeRepository
+) : HomeRepository { ... }
+
+// DI 모듈 (commonMain)
+val repositoryModule = module {
+    single<HomeRepository> { HomeRepositoryImpl(get()) }
+}
 ```
 
-### ViewModel
+### ViewModel (Manual Koin)
 ```kotlin
-@KoinViewModel
+// ViewModel 정의
 class HomeViewModel(
     private val repository: HomeRepository
-) : ViewModel()
+) : ViewModel() { ... }
+
+// DI 모듈
+val viewModelModule = module {
+    viewModel { HomeViewModel(get()) }
+    // SavedStateHandle이 필요한 경우
+    viewModel { (savedStateHandle: SavedStateHandle) ->
+        BuildingViewModel(savedStateHandle, get())
+    }
+}
 
 // Screen에서 사용
 @Composable
@@ -97,28 +192,35 @@ fun HomeScreen(
 ```kotlin
 repository.getData().fold(
     onSuccess = { data -> /* 처리 */ },
-    onFailure = { error -> Log.e(TAG, "Error", error) }
+    onFailure = { error -> Napier.e("Error", error) }
 )
 ```
 
 ## 빌드 & 실행
 
 ```bash
-# 디버그 빌드
-./gradlew assembleDebug
+# Android 디버그 빌드
+./gradlew :composeApp:assembleDebug
 
-# 릴리즈 빌드
-./gradlew assembleRelease
+# Android 릴리즈 빌드
+./gradlew :composeApp:assembleRelease
+
+# iOS (Xcode에서 빌드)
+# CocoaPods 사용 → 반드시 .xcworkspace로 열어야 함 (.xcodeproj 아님)
+open iosApp/iosApp.xcworkspace
 
 # 테스트
-./gradlew test
+./gradlew :composeApp:test
 ```
 
 ## 주의사항
 
 1. **Google Maps API 키** 필요 (`local.properties`)
-2. **Firebase 설정** 필요 (`google-services.json`)
-3. **ProGuard** 릴리즈 빌드 시 난독화 적용됨
+2. **Firebase 설정** 필요 (`androidApp/google-services.json`)
+3. **iOS 빌드** Xcode 15+ 필요
+4. **expect/actual** commonMain에서 Android/iOS 특정 코드 사용 금지
+
+---
 
 ## 이슈 컨벤션
 
@@ -211,40 +313,17 @@ repository.getData().fold(
 <!-- 리뷰어에게 전달할 내용 -->
 ```
 
-### 예시
-```markdown
-## 🚀 이슈번호
-- closed #14
-
-## ✏️ 변경사항
-- 지도에 건물 마커 표시 기능 구현
-- 마커 클릭 시 건물 정보 바텀시트 표시
-- 건물 검색 기능 추가
-
-## 📷 스크린샷
-<img src="screenshot.png" width="360"/>
-
-## ✍️ 사용법
-1. 홈 화면에서 지도 확인
-2. 건물 마커 클릭
-3. 바텀시트에서 상세 정보 확인
-
-## 🎸 기타
-- API 연동 완료
-- 오프라인 캐시는 다음 PR에서 진행
-```
-
 ### 브랜치 네이밍
 ```
-<type>/<간단한-설명>
+<type>/#<issue-number>-<간단한-설명>
 ```
 
 | 타입 | 예시 |
 |------|------|
-| `feat` | `feat/building-search` |
-| `fix` | `fix/marker-crash` |
-| `refactor` | `refactor/viewmodel-split` |
-| `chore` | `chore/gradle-update` |
+| `feat` | `feat/#12-building-search` |
+| `fix` | `fix/#15-marker-crash` |
+| `refactor` | `refactor/#20-viewmodel-split` |
+| `chore` | `chore/#24-compose-multiplatform-migration` |
 
 ---
 

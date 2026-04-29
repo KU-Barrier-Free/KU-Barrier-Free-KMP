@@ -1,5 +1,6 @@
 *.iml
 .gradle
+.kotlin
 /local.properties
 /.idea/caches
 /.idea/libraries
@@ -235,3 +236,49 @@ fabric.properties
 !/gradle/wrapper/gradle-wrapper.jar
 
 # End of https://www.toptal.com/developers/gitignore/api/android,androidstudio,kotlin,macos
+
+### Kotlin Multiplatform ###
+# KMP build outputs
+*.framework
+*.xcframework
+
+### iOS / Xcode ###
+# Xcode
+iosApp/*.xcodeproj/project.xcworkspace/
+iosApp/*.xcodeproj/xcuserdata/
+iosApp/*.xcworkspace/xcuserdata/
+iosApp/Pods/
+iosApp/Podfile.lock
+DerivedData/
+*.pbxuser
+!default.pbxuser
+*.mode1v3
+!default.mode1v3
+*.mode2v3
+!default.mode2v3
+*.perspectivev3
+!default.perspectivev3
+xcuserdata/
+*.xccheckout
+*.moved-aside
+*.hmap
+*.ipa
+*.dSYM.zip
+*.dSYM
+timeline.xctimeline
+playground.xcworkspace
+
+# CocoaPods
+Pods/
+
+# Swift Package Manager
+.swiftpm/
+Package.resolved
+
+### Compose Multiplatform ###
+# Generated Compose Resources
+**/generated/
+
+### iOS Secrets ###
+iosApp/Config/Secrets.xcconfig
+iosApp/Configuration/Config.local.xcconfig

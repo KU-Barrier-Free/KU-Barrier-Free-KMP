@@ -1,0 +1,26 @@
+package com.ganaljigi.kubf.core.ui.util
+
+interface MultipleEventsCutter {
+    fun processEvent(event: () -> Unit)
+
+    companion object
+}
+
+fun MultipleEventsCutter.Companion.get(): MultipleEventsCutter =
+    MultipleEventsCutterImpl()
+
+internal expect fun currentTimeMillis(): Long
+
+private class MultipleEventsCutterImpl : MultipleEventsCutter {
+    private val now: Long
+        get() = currentTimeMillis()
+
+    private var lastEventTimeMs: Long = 0
+
+    override fun processEvent(event: () -> Unit) {
+        if (now - lastEventTimeMs >= 500L) {
+            event.invoke()
+        }
+        lastEventTimeMs = now
+    }
+}
