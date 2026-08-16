@@ -1,6 +1,8 @@
 package com.ganaljigi.kubf.feature.helper.viewmodel
 
 import androidx.lifecycle.viewModelScope
+import com.ganaljigi.kubf.core.analytics.AnalyticsScreen
+import com.ganaljigi.kubf.core.analytics.AnalyticsTracker
 import com.ganaljigi.kubf.core.ui.viewmodel.BaseViewModel
 import com.ganaljigi.kubf.feature.helper.mapper.toUiState
 import com.ganaljigi.kubf.feature.helper.repository.HelperRepository
@@ -12,12 +14,14 @@ import kotlinx.datetime.LocalDate
 
 class HelperViewModel(
     private val repository: HelperRepository,
+    private val analyticsTracker: AnalyticsTracker,
 ) : BaseViewModel<HelperUiEvent>() {
 
     private val _uiState = MutableStateFlow(HelperUiState())
     val uiState = _uiState.asStateFlow()
 
     init {
+        analyticsTracker.logScreenView(AnalyticsScreen.HELPER)
         loadNotices()
     }
 

@@ -52,13 +52,13 @@ val repositoryModule = module {
 }
 
 val viewModelModule = module {
-    viewModel { HomeViewModel(get(), get(), get(), get()) }
+    viewModel { HomeViewModel(get(), get(), get(), get(), get()) }
     viewModel { (savedStateHandle: androidx.lifecycle.SavedStateHandle) ->
-        BuildingViewModel(savedStateHandle, get())
+        BuildingViewModel(savedStateHandle, get(), get())
     }
-    viewModel { HelperViewModel(get()) }
+    viewModel { HelperViewModel(get(), get()) }
     viewModel { (savedStateHandle: androidx.lifecycle.SavedStateHandle) ->
-        RoomInfoViewModel(savedStateHandle, get())
+        RoomInfoViewModel(savedStateHandle, get(), get())
     }
 }
 
@@ -66,5 +66,6 @@ val appModules = listOf(
     networkModule,
     apiModule,
     repositoryModule,
+    analyticsModule,
     viewModelModule,
 )

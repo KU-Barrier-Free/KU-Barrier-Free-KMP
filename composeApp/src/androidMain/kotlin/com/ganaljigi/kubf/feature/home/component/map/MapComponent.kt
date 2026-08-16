@@ -216,7 +216,7 @@ private fun calculateMarkerScale(
 
 object MapParam {
     const val MIN_ZOOM = 16.0f
-    const val MAX_ZOOM = 18.0f
+    const val MAX_ZOOM = 19.0f
 
     val mapProperties = MapProperties(
         isBuildingEnabled = true,

@@ -4,6 +4,8 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
+import com.ganaljigi.kubf.core.analytics.AnalyticsScreen
+import com.ganaljigi.kubf.core.analytics.AnalyticsTracker
 import com.ganaljigi.kubf.core.data.repository.BuildingInfoRepository
 import com.ganaljigi.kubf.core.navigation.Routes
 import com.ganaljigi.kubf.core.ui.viewmodel.BaseViewModel
@@ -19,6 +21,7 @@ import kotlinx.coroutines.launch
 class BuildingViewModel(
     savedStateHandle: SavedStateHandle,
     private val buildingInfoRepository: BuildingInfoRepository,
+    private val analyticsTracker: AnalyticsTracker,
 ) : BaseViewModel<BuildingUiEvent>() {
 
     private val buildingId: Long = savedStateHandle.toRoute<Routes.BuildingInfo>().number
@@ -29,6 +32,10 @@ class BuildingViewModel(
     private var sourceRoom: List<Room> = emptyList()
 
     init {
+        analyticsTracker.logScreenView(
+            screen = AnalyticsScreen.BUILDING,
+            params = mapOf("building_id" to buildingId),
+        )
         loadBuildingInfo()
     }
 
@@ -107,11 +114,25 @@ class BuildingViewModel(
     }
 
     private fun onRoomClick(room: Room, buildingName: String) {
+        analyticsTracker.logBuildingRoomClick(
+            buildingId = buildingId,
+            buildingName = buildingName,
+            roomId = room.id,
+            roomNumber = room.number,
+            roomName = room.name,
+        )
         viewModelScope.launch { sendEvent(BuildingUiEvent.NavigateToRoomInfo(room, buildingName)) }
     }
 
     private fun onSearchResultClick(result: RoomSearchResult) {
         result.room?.let { room ->
+            analyticsTracker.logBuildingRoomClick(
+                buildingId = buildingId,
+                buildingName = _uiState.value.currentBuildingName,
+                roomId = room.id,
+                roomNumber = room.number,
+                roomName = room.name,
+            )
             viewModelScope.launch {
                 sendEvent(
                     BuildingUiEvent.NavigateToRoomInfo(

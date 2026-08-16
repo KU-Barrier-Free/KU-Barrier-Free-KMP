@@ -225,7 +225,7 @@ fun HomeScreen(
         sheetContainerColor = Color.White,
         modifier = Modifier.padding(padding),
         scaffoldState = scaffoldState,
-        sheetTonalElevation = 4.dp,
+        sheetTonalElevation = 0.dp,
         sheetDragHandle = {},
         sheetContent = {
             when (uiState.bottomSheetType) {

@@ -44,7 +44,7 @@ import kotlin.math.absoluteValue
 // Android MapParam과 동일한 설정
 private object MapParam {
     const val MIN_ZOOM = 16.0f
-    const val MAX_ZOOM = 18.0f
+    const val MAX_ZOOM = 19.0f
 
     // 건국대학교 캠퍼스 영역 (Android와 동일)
     const val SOUTH_WEST_LAT = 37.5373

@@ -2,6 +2,9 @@ package com.ganaljigi.kubf.feature.home.viewmodel
 
 import androidx.compose.foundation.text.input.TextFieldState
 import androidx.lifecycle.viewModelScope
+import com.ganaljigi.kubf.core.analytics.AnalyticsPinType
+import com.ganaljigi.kubf.core.analytics.AnalyticsScreen
+import com.ganaljigi.kubf.core.analytics.AnalyticsTracker
 import com.ganaljigi.kubf.core.data.repository.BuildingRepository
 import com.ganaljigi.kubf.core.data.repository.HomeRepository
 import com.ganaljigi.kubf.core.data.repository.InquiryRepository
@@ -29,12 +32,14 @@ class HomeViewModel(
     private val buildingRepository: BuildingRepository,
     private val routeRepository: RouteRepository,
     private val inquiryRepository: InquiryRepository,
+    private val analyticsTracker: AnalyticsTracker,
 ) : BaseViewModel<HomeUiEvent>() {
 
     private val _uiState = MutableStateFlow(HomeUiState())
     val uiState: StateFlow<HomeUiState> = _uiState.asStateFlow()
 
     init {
+        analyticsTracker.logScreenView(AnalyticsScreen.HOME)
         fetchInitData()
     }
 
@@ -46,7 +51,13 @@ class HomeViewModel(
             HomeUiAction.OnFromLocationClick -> setSearchScreen(true, SearchMode.DEPARTURE)
             HomeUiAction.OnToLocationClick -> setSearchScreen(true, SearchMode.DESTINATION)
             is HomeUiAction.OnToggleClick -> updateToggleState(action.toggle)
-            HomeUiAction.OnFindWayClick -> enterFindWayMode()
+            HomeUiAction.OnFindWayClick -> {
+                analyticsTracker.logFindWayClick(
+                    hasFrom = _uiState.value.fromLocation != null,
+                    hasTo = _uiState.value.toLocation != null,
+                )
+                enterFindWayMode()
+            }
             HomeUiAction.OnFindWayCloseClick -> exitFindWayMode()
             HomeUiAction.OnSwapLocationClick -> swapAndFetchRoute()
             is HomeUiAction.OnRouteClick -> selectRoute(action.route)
@@ -63,9 +74,29 @@ class HomeViewModel(
             // 지도 영역
             HomeUiAction.OnMapClick -> resetToDefaultState()
             HomeUiAction.OnBottomSheetHidden -> resetToDefaultState()
-            is HomeUiAction.OnGateMarkerClick -> fetchGateMarkerInfo(action.marker)
-            is HomeUiAction.OnSpecialMarkerClick -> fetchSpecialMarkerInfo(action.marker)
-            is HomeUiAction.OnBuildingMarkerClick -> selectBuildingMarker(action.marker)
+            is HomeUiAction.OnGateMarkerClick -> {
+                analyticsTracker.logMapPinClick(
+                    pinType = AnalyticsPinType.GATE,
+                    pinId = action.marker.id,
+                    pinName = action.marker.name,
+                )
+                fetchGateMarkerInfo(action.marker)
+            }
+            is HomeUiAction.OnSpecialMarkerClick -> {
+                analyticsTracker.logMapPinClick(
+                    pinType = AnalyticsPinType.SPECIAL_MARK,
+                    pinId = action.marker.id,
+                )
+                fetchSpecialMarkerInfo(action.marker)
+            }
+            is HomeUiAction.OnBuildingMarkerClick -> {
+                analyticsTracker.logMapPinClick(
+                    pinType = AnalyticsPinType.BUILDING,
+                    pinId = action.marker.id,
+                    pinName = action.marker.name,
+                )
+                selectBuildingMarker(action.marker)
+            }
             // 이미지 다이얼로그
             is HomeUiAction.OnGateImageClick -> showImageDialog(action.imageUrls)
             is HomeUiAction.OnSpecialImageClick -> showImageDialog(action.imageUrls)
@@ -74,7 +105,13 @@ class HomeViewModel(
             // 네비게이션
             HomeUiAction.OnMyLocationClick -> sendEventAsync(HomeUiEvent.RequestMyLocation)
             HomeUiAction.OnHelperClick -> sendEventAsync(HomeUiEvent.NavigateToHelper)
-            is HomeUiAction.OnBuildingInfoClick -> navigateToBuildingInfo(action.buildingId)
+            is HomeUiAction.OnBuildingInfoClick -> {
+                analyticsTracker.logBuildingBottomSheetClick(
+                    buildingId = action.buildingId,
+                    buildingName = _uiState.value.buildingSheetInfo?.name,
+                )
+                navigateToBuildingInfo(action.buildingId)
+            }
             is HomeUiAction.OnBuildingViewClick -> navigateToBuildingInfo(action.buildingId)
             // 배리어프리 모드
             HomeUiAction.OnShowBarrierFreeInfoClick -> setHomeUiMode(HomeUiMode.BARRIER_FREE_INFO)
@@ -177,7 +214,7 @@ class HomeViewModel(
                 selectedMarkerInfo = null,
             )
         }
-        sendEventAsync(HomeUiEvent.MoveCamera(marker.latitude, marker.longitude))
+        sendEventAsync(HomeUiEvent.MoveCamera(marker.latitude, marker.longitude, 18.5f))
         fetchBuildingInfo(marker.id)
     }
 
@@ -260,10 +297,12 @@ class HomeViewModel(
     }
 
     private fun updateToggleState(toggle: MapToggle) {
+        var selected = false
         _uiState.update {
             it.toggleStates.forEach { toggleUiState ->
                 if (toggleUiState.toggle == toggle) {
                     toggleUiState.isSelected = !toggleUiState.isSelected
+                    selected = toggleUiState.isSelected
                 }
             }
 
@@ -284,6 +323,7 @@ class HomeViewModel(
                 selectedMarkerInfo = null,
             )
         }
+        analyticsTracker.logMapToggleClick(toggle.name.lowercase(), selected)
     }
 
     private fun sendEventAsync(event: HomeUiEvent) {

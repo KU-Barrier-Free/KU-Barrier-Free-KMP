@@ -3,6 +3,8 @@ package com.ganaljigi.kubf.feature.room.viewmodel
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
+import com.ganaljigi.kubf.core.analytics.AnalyticsScreen
+import com.ganaljigi.kubf.core.analytics.AnalyticsTracker
 import com.ganaljigi.kubf.core.navigation.Routes
 import com.ganaljigi.kubf.core.ui.viewmodel.BaseViewModel
 import com.ganaljigi.kubf.core.mapper.toUiState
@@ -17,6 +19,7 @@ import kotlinx.coroutines.launch
 class RoomInfoViewModel(
     savedStateHandle: SavedStateHandle,
     private val repository: RoomInfoRepository,
+    private val analyticsTracker: AnalyticsTracker,
 ) : BaseViewModel<RoomInfoUiEvent>() {
 
     private val route: Routes.RoomInfo = savedStateHandle.toRoute()
@@ -25,6 +28,13 @@ class RoomInfoViewModel(
     val uiState = _uiState.asStateFlow()
 
     init {
+        analyticsTracker.logScreenView(
+            screen = AnalyticsScreen.ROOM,
+            params = mapOf(
+                "building_id" to route.buildingId,
+                "room_id" to route.spaceId,
+            ),
+        )
         loadRoomInfo()
     }
 

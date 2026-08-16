@@ -57,6 +57,8 @@ kotlin {
         pod("GoogleMaps") {
             version = "~> 8.4"
         }
+
+        pod("FirebaseAnalytics")
     }
 
     sourceSets {
