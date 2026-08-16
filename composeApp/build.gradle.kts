@@ -142,12 +142,12 @@ kotlin {
 
 android {
     namespace = "com.ganalijigi.kubf"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.ganalijigi.kubf"
         minSdk = 30
-        targetSdk = 35
+        targetSdk = 36
         versionCode = 20
         versionName = "1.1.7"
 
